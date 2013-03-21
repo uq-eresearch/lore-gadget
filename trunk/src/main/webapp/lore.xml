@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Module>
+
+  <ModulePrefs author="Simon McNaughton" author_email="simon.mcnaughton@uqconnect.edu.au"
+    description="Literature Object Re-use and Exchange" title="LORE">
+  </ModulePrefs>
+
+  <Content type="html" view="home, profile, preview"><![CDATA[
+        <script type="text/javascript" src="lib/jquery-1.6.3.min.js"></script>
+        <script type="text/javascript" src="lib/ext3.2/adapter/jquery/ext-jquery-adapter-debug.js"></script>
+        <script type="text/javascript" src="lib/ext3.2/ext-all-debug.js"></script>
+        <script type="text/javascript" src="lib/ext/ux/PagingStore.js"></script>
+        
+        <link rel="stylesheet" type="text/css" href="lib/ext3.2/resources/css/ext-all.css"/>
+        <link rel="stylesheet" type="text/css" href="loreui.css"/>
+        <link rel="stylesheet" type="text/css" href="lore_ore.css"/>
+        
+        <script type="text/javascript" src="CompoundObjectDataView.js"></script>
+        <script type="text/javascript" src="PagingToolbar.js"></script>
+        <script type="text/javascript" src="SearchPanel.js"></script>
+        
+        <div id="tabs1">
+    	    <div id="tabs2">
+		    </div>
+	    </div>
+  ]]></Content>
+</Module>
