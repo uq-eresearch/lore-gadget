@@ -13,8 +13,11 @@ Ext.onReady(function() {
         	}
            
         	var predicate = "?p";
-	   	   	if (matchpred != null) {
-	   	   		predicate = "<" + matchpred + ">";
+	   	   	if (matchpred != null || matchpred) {
+	   	   		matchpred = String(matchpred);
+	   	   		if (matchpred.length != 0) {
+	   	   			predicate = "<" + matchpred + ">";
+	   	   		}
 	   	   	}
            
 	   	   	var queryURL = "http://localhost:3030/ds/query?query=";
@@ -24,7 +27,7 @@ Ext.onReady(function() {
 	   	   	if (matchuri) {
 	   	   		queryURL += encodeURIComponent("?r <http://www.openarchives.org/ore/terms/aggregates> <" + matchuri + ">.");
 	   	   	}
-	   	   	queryURL += encodeURIComponent("?g " + predicate + " ?o .");
+	   	   	queryURL += encodeURIComponent("?s " + predicate + " ?o .");
 	   	   	queryURL += encodeURIComponent("OPTIONAL {?g <http://purl.org/dc/elements/1.1/creator> ?a}.");
 	   	   	queryURL += encodeURIComponent("OPTIONAL {?g <http://purl.org/dc/terms/modified> ?m}.");
 	   	   	queryURL += encodeURIComponent("OPTIONAL {?g <http://purl.org/dc/elements/1.1/title> ?t}.");
@@ -32,12 +35,11 @@ Ext.onReady(function() {
 	   	   	queryURL += encodeURIComponent("OPTIONAL {?g <http://auselit.metadata.net/lorestore/isPrivate> ?user}.");
 		   
 		   	if (matchval != null) {
-			    matchval = String(match);
-			    queryURL += encodeURIComponent("FILTER regex(str(?o), \"" + matchval + "\", \"i\").");
-				if (matchval.startsWith("\"") && matchval.endsWith("\"")) {
-					var temp = matchVal.substring(1, matchVal.length() - 1);
+			    matchval = String(matchval);
+				if (matchval[0] == "\"" && matchval[matchval.length - 1] == "\"") {
+					var temp = matchval.substring(1, matchval.length - 1);
 					queryURL += encodeURIComponent("FILTER regex(str(?o), \"" + temp + "\", \"i\").");
-				} else if (matchVal.contains(" ")) {
+				} else if (matchval.indexOf(" ") != -1) {
 					var terms = matchval.split(" ");
 					for (var i = 0; i < terms.length; i++) {
 						queryURL += encodeURIComponent("FILTER regex(str(?o), \"" + terms[i] + "\", \"i\"). ");
