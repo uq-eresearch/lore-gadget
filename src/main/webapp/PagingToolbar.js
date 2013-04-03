@@ -1,5 +1,5 @@
 Ext.onReady(function() {
-			
+				
 	Ext.reg('pagingToolbar', Ext.extend(Ext.PagingToolbar, {
 		pageSize: 5,
 	       initComponent : function(){

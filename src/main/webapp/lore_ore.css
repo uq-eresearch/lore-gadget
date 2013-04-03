@@ -18,64 +18,64 @@
 	list-style-type: none;
 }
 .imageicon {
-	list-style-image: url(../../skin/icons/ore/image.png);
+	list-style-image: url(./skin/icons/ore/image.png);
 }
 .htmlicon {
-	list-style-image: url(../../skin/icons/ore/page_html.gif);
+	list-style-image: url(./skin/icons/ore/page_html.gif);
 }
 .videoicon {
-	list-style-image: url(../../skin/icons/ore/film.png);
+	list-style-image: url(./skin/icons/ore/film.png);
 }
 .pdficon {
-	list-style-image: url(../../skin/icons/ore/file_acrobat.gif);
+	list-style-image: url(./skin/icons/ore/file_acrobat.gif);
 }
 .audioicon {
-	list-style-image: url(../../skin/icons/ore/page_sound.gif);
+	list-style-image: url(./skin/icons/ore/page_sound.gif);
 }
 .xmlicon {
-	list-style-image: url(../../skin/icons/ore/page_code.png);
+	list-style-image: url(./skin/icons/ore/page_code.png);
 	padding-top:2px;
 }
 .annoicon {
-	list-style-image: url(../../skin/icons/comment.png);
+	list-style-image: url(./skin/icons/comment.png);
 }
 .dataseticon {
-	list-style-image: url(../../skin/icons/ore/database_table.png);
+	list-style-image: url(./skin/icons/ore/database_table.png);
 	padding-top:2px;
 }
 .collectionicon {
-	list-style-image: url(../../skin/icons/ore/page_white_stack.png);
+	list-style-image: url(./skin/icons/ore/page_white_stack.png);
 	padding-top:2px;
 }
 .texticon{
-	list-style-image: url(../../skin/icons/ore/page_white_text.png);
+	list-style-image: url(./skin/icons/ore/page_white_text.png);
 	padding-top:2px;
 }
 .objicon {
-	list-style-image: url(../../skin/icons/ore/chair.png);
+	list-style-image: url(./skin/icons/ore/chair.png);
 	padding-top:2px;
 }
 .softwareicon {
-	list-style-image: url(../../skin/icons/ore/application.png);
+	list-style-image: url(./skin/icons/ore/application.png);
 }
 .serviceicon {
-	list-style-image: url(../../skin/icons/ore/server-network.png);
+	list-style-image: url(./skin/icons/ore/server-network.png);
 	padding-top:2px;
 }
 .interactiveicon {
-	list-style-image: url(../../skin/icons/ore/map_cursor.png);
+	list-style-image: url(./skin/icons/ore/map_cursor.png);
 	padding-top:2px;
 }
 .eventicon {
-	list-style-image: url(../../skin/icons/ore/alarm-clock-select.png);
+	list-style-image: url(./skin/icons/ore/alarm-clock-select.png);
 	padding-top:2px;
 }
 .oreicon {
-	list-style-image: url(../../skin/icons/oaioreicon-sm.png); 
+	list-style-image: url(./skin/icons/oaioreicon-sm.png); 
 	padding-top:2px;
 }
 .rdficon {
-	background-image: url(../../skin/icons/ore/rdf.png) !important;	
+	background-image: url(./skin/icons/ore/rdf.png) !important;	
 }
 
 /* Graphical Editor styles */
@@ -157,7 +157,7 @@
 	font-size: 2px;
 }
 .co-tl {
-	background: url(../../skin/resourcenodecircleminus.gif) no-repeat top left;
+	background: url(./skin/resourcenodecircleminus.gif) no-repeat top left;
 }
 .entity_resource {
 	-moz-border-radius: 15px;
@@ -178,16 +178,16 @@
 	text-align:left;
 }
 .co-bl {
-	background: url(../../skin/resourcenodecircleminus.gif) no-repeat bottom left;
+	background: url(./skin/resourcenodecircleminus.gif) no-repeat bottom left;
 }
 .co-br {
-	background: url(../../skin/resourcenodecircleminus.gif) no-repeat bottom right;
+	background: url(./skin/resourcenodecircleminus.gif) no-repeat bottom right;
 }
 .co-tr-minus {
-	background: url(../../skin/resourcenodecircleminus.gif) no-repeat top right;
+	background: url(./skin/resourcenodecircleminus.gif) no-repeat top right;
 }
 .co-tr-plus {
-	background: url(../../skin/resourcenodecircleplus.gif) no-repeat top right;
+	background: url(./skin/resourcenodecircleplus.gif) no-repeat top right;
 }
 .ctxtConnLabel {
 	color: #51666b !important;
@@ -196,20 +196,24 @@
 
 /* main tabs content styles */
 
+.code-icon {
+	background-image: url(./skin/icons/ore/page_code.png) !important; 
+}
+
 .graph-icon {
-	background-image: url(../../skin/icons/ore/layout_pencil.png) !important; 
+	background-image: url(./skin/icons/ore/layout_pencil.png) !important; 
 }
 .list-icon {
-	background-image: url(../../skin/icons/ore/table_edit.png) !important; 
+	background-image: url(./skin/icons/ore/table_edit.png) !important; 
 }
 .detail-icon {
-	background-image: url(../../skin/icons/ore/application_view_detail.png) !important; 
+	background-image: url(./skin/icons/ore/application_view_detail.png) !important; 
 }
 .slide-icon {
-	background-image: url(../../skin/icons/ore/picture_empty.png) !important; 
+	background-image: url(./skin/icons/ore/picture_empty.png) !important; 
 }
 .explore-icon {
-	background-image: url(../../skin/icons/ore/network.png) !important; 
+	background-image: url(./skin/icons/ore/network.png) !important; 
 }
 .exploreHistory {
     vertical-align:middle;
@@ -301,7 +305,7 @@
 .explore-loading{
 	background-position: center;
 	background-repeat: no-repeat;
-	background-image: url(../../skin/icons/ore/loading.png);
+	background-image: url(./skin/icons/ore/loading.png);
 }
 span.exploreclose {
     color:white;
@@ -315,7 +319,7 @@ span.exploreclose:hover {
 }
 span.explorename {
     cursor: pointer;
-    background-image: url(../../skin/icons/ore/transparentwhite.png);
+    background-image: url(./skin/icons/ore/transparentwhite.png);
 }
 div.exploretip-title {
     font-size: smaller;
@@ -394,40 +398,40 @@ div.coListing:hover {
 
 /* icons used to indicate co source in listings */
 .oreresult {
-	background-image: url(../../skin/icons/oaioreicon-sm.png) !important;
+	background-image: url(./skin/icons/oaioreicon-sm.png) !important;
 }
 .ro-oreresult {
-    background-image: url(../../skin/icons/oaioreicon-grey.png) !important; 
+    background-image: url(./skin/icons/oaioreicon-grey.png) !important; 
 }
 
 
 /* Context menu icons for listings menu */
 .add-icon {
-	background-image: url(../../skin/icons/add.png);
+	background-image: url(./skin/icons/add.png);
 }
 .delete-icon {
-    background-image: url(../../skin/icons/ore/database_delete.png);
+    background-image: url(./skin/icons/ore/database_delete.png);
 }
 .edit-icon {
-    background-image: url(../../skin/icons/pencil.png);
+    background-image: url(./skin/icons/pencil.png);
 }
 
 /* Property panel:  relationship icons */
 .rel-to {
-	background-image: url(../../skin/icons/ore/arrow_left.png);
+	background-image: url(./skin/icons/ore/arrow_left.png);
 	background-repeat:no-repeat;
 }
 .rel-from {
-	background-image: url(../../skin/icons/ore/arrow_right.png);
+	background-image: url(./skin/icons/ore/arrow_right.png);
 	background-repeat:no-repeat;
 }
 .rel-with {
-    background-image: url(../../skin/icons/ore/arrow_both.png);
+    background-image: url(./skin/icons/ore/arrow_both.png);
     background-repeat:no-repeat;
 }
 /* Formatting toolbox for popup property editor */
 .x-edit-pt {
-	background-image: url(../../skin/icons/ore/toolbox_pencil.png) !important;
+	background-image: url(./skin/icons/ore/toolbox_pencil.png) !important;
 }
 /* Override superbox select for property editor */
 .x-superboxselect-btns div {float: left; width: 16px; height: 16px; margin-top: 1px;}

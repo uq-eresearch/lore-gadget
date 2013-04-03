@@ -243,13 +243,52 @@ Ext.onReady(function() {
         }
     });
     
-    loadCompoundObjectFromURL = function(rdfURL){        
+    formatXML = function(xml) {
+        var formatted = '';
+        var reg = /(>)(<)(\/*)/g;
+        xml = xml.replace(reg, '$1\r\n$2$3');
+        var pad = 0;
+        jQuery.each(xml.split('\r\n'), function(index, node) {
+            var indent = 0;
+            if (node.match( /.+<\/\w[^>]*>$/ )) {
+                indent = 0;
+            } else if (node.match( /^<\/\w/ )) {
+                if (pad != 0) {
+                    pad -= 1;
+                }
+            } else if (node.match( /^<\w[^>]*[^\/]>.*$/ )) {
+                indent = 1;
+            } else {
+                indent = 0;
+            }
+
+            var padding = '';
+            for (var i = 0; i < pad; i++) {
+                padding += '  ';
+            }
+
+            formatted += padding + node + '\r\n';
+            pad += indent;
+        });
+
+        return formatted;
+    }
+    
+    loadCompoundObject = function(rdf) {
+    	Ext.get('centerPanel').update('<pre>' + formatXML(rdf)
+    			.replace(/&/g, "&amp;")
+    			.replace(/>/g, "&gt;")
+    			.replace(/</g, "&lt;")
+    			.replace(/"/g, "&quot;") + '</pre>');
+    }
+    
+    loadCompoundObjectFromURL = function(rdfURL){    	
         var xhr = new XMLHttpRequest();
         xhr.open('GET', "http://localhost:3030/ds/data?graph=" + rdfURL);
         xhr.onreadystatechange = function(aEvt) {
             if (xhr.readyState == 4) {
                 if (xhr.responseText && xhr.status != 204 && xhr.status < 400) {
-                    Ext.get('centerPanel').update(xhr.responseText);
+                	loadCompoundObject(xhr.responseText);
                 }
             }
         };
@@ -259,9 +298,37 @@ Ext.onReady(function() {
 	new Ext.Viewport({
 		layout: 'border',
         items: [
-	        {
+	        /*{
 	            region: 'center',
         		html: '<p id="centerPanel">north - generally for menus, toolbars and/or advertisements</p>'
+	        },*/
+	        {
+	        	region: 'center',
+	        	items: [
+					new Ext.TabPanel({
+					    renderTo: 'tabs3',
+					    activeTab: 0,
+					    frame:true,
+					    defaults:{autoHeight: true},
+					    applyTo: 'tabs3',
+					    border : false,
+					    items : [
+							{
+								title: 'Raw RDF',
+								html: '<p id="centerPanel"></p>',
+								iconCls: "code-icon"
+							}
+							,
+							{
+	                            title : "Graphical Editor",
+	                            tabTip: "View or edit the Resource Map graphically",
+	                            id : "drawingarea",
+	                            xtype : "grapheditor",
+	                            iconCls: "graph-icon"
+	                        }
+			            ]
+					})        
+	        	]
 	        },
 	        {
 		        region: 'west',
@@ -274,121 +341,164 @@ Ext.onReady(function() {
 				        frame:true,
 				        defaults:{autoHeight: true},
 				        applyTo: 'tabs1',
-				        items : [ 
-					        new Ext.Panel({
-					         	layout : "hbox",
-					             title : "Keyword",
-					             tabTip: "Search by keyword across all fields",
-					             id : "kwsearchform",
-					             padding : 3,
-					             layoutConfig : {
-					                 pack : 'start',
-					                 align : 'stretchmax'
-					             },
-					             border : false,
-					             autoHeight : true,
-					             items : [{
-					                    xtype : "textfield",
-					                    id : "kwsearchval",
-					                    flex : 1
-					                },
-					                new Ext.Button(action1)
-					             ]
-					        }), 
-				            new Ext.FormPanel({
-				                url:'save-form.php',
-				                frame:true,
-				                width: 250,
-				                defaults: {width: 245},
-				                defaultType: 'textfield',
-				                
-				                title : "Advanced",
-				                tabTip: "Search specific fields",
-				                autoHeight : true,
-				                autoWidth : true,
-				                id : "advsearchform",
-				                border : false,
-				                bodyStyle : "padding: 0 10px 4px 4px",
-				                labelWidth : 75,
-				                items: [{
-				                        xtype : "label",
-				                        id : "find-co-label",
-				                        text : "Find Resource Maps",
-				                        style : "font-family: arial, tahoma, helvetica, sans-serif; font-size:11px;line-height:2em"
-				                    },{
-				                        fieldLabel: 'containing',
-				                        id : "searchuri",
-				                        allowBlank:false,
-				                        emptyText : "any resource URI"
-				                    },{
-				                    	xtype:          'combo',
-				                        mode:           'local',
-				                        triggerAction:  'all',
-				                        forceSelection: true,
-				                        editable:       false,
-				                        fieldLabel : "having",
-				                        id : "searchpred",
-				                        displayField : 'curie',
-				                        valueField : 'uri',
-				                        emptyText : "any property or relationship",
-				                        store : new Ext.data.ArrayStore({
-				                            storeId: 'advancedSearchPredStore',
-				                            fields : ['uri', 'curie'],
-				                            data : []
-				                        })
-				                    },{
-				                        fieldLabel: 'matching',
-				                        id : "searchval",
-				                        allowBlank:false,
-				                        emptyText : ""
-				                    }
-				                ],
-				
-				                buttons: [
-				                    new Ext.Button(action2)
-							    ]
-				            })
-			        	]
-		        	})
-			        ,
-			        {
-			            minHeight: 0,
-			            normal: false,
 			            border : false,
-			            layout: "anchor",
-			            "id": "searchResultPanel",
-			            autoScroll: true
-			            , 
-		                "tbar": {
-		                    "xtype": "pagingToolbar",
-		                    "store": searchStore,
-		                    "id": "spager"		                    
-		                }
-			        	,
-			            items: [
-							new Ext.DataView({
-							    store: searchStore,
-							    tpl: tpl,
-							    autoHeight:true,
-							    itemSelector:'div.coListing',
-							    //emptyText: 'No images to display',
-							    plugins: [],
-							    prepareData: function(data){
-							        return data;
-							    },
-					            loadingText: "Loading Resource Maps...",
-					            singleSelect: true,
-					            style: "overflow-y:auto;overflow-x:hidden",
-							    listeners: {}
-							})
-//							,
-//			                {
-//			                    "xtype": "codataview",
-//			                    "store": searchStore,
-//			                    "id": "cosview"
-//			                }
-			            ]
-			        }
+				        items : [
+							new Ext.Panel({
+								title: 'Search',
+					            border : false,
+                                items:[
+	                                new Ext.TabPanel({
+									    renderTo: 'tabs2',
+									    activeTab: 0,
+									    frame:true,
+									    defaults:{autoHeight: true},
+									    applyTo: 'tabs2',
+									    items : [ 
+									        new Ext.Panel({
+									         	layout : "hbox",
+									             title : "Keyword",
+									             tabTip: "Search by keyword across all fields",
+									             id : "kwsearchform",
+									             padding : 3,
+									             layoutConfig : {
+									                 pack : 'start',
+									                 align : 'stretchmax'
+									             },
+									             border : false,
+									             autoHeight : true,
+									             items : [{
+									                    xtype : "textfield",
+									                    id : "kwsearchval",
+									                    flex : 1
+									                },
+									                new Ext.Button(action1)
+									             ]
+									        }), 
+									        new Ext.FormPanel({
+									            url:'save-form.php',
+									            frame:true,
+									            width: 250,
+									            defaults: {width: 245},
+									            defaultType: 'textfield',
+									            
+									            title : "Advanced",
+									            tabTip: "Search specific fields",
+									            autoHeight : true,
+									            autoWidth : true,
+									            id : "advsearchform",
+									            border : false,
+									            bodyStyle : "padding: 0 10px 4px 4px",
+									            labelWidth : 75,
+									            items: [{
+									                    xtype : "label",
+									                    id : "find-co-label",
+									                    text : "Find Resource Maps",
+									                    style : "font-family: arial, tahoma, helvetica, sans-serif; font-size:11px;line-height:2em"
+									                },{
+									                    fieldLabel: 'containing',
+									                    id : "searchuri",
+									                    allowBlank:false,
+									                    emptyText : "any resource URI"
+									                },{
+									                	xtype:          'combo',
+									                    mode:           'local',
+									                    triggerAction:  'all',
+									                    forceSelection: true,
+									                    editable:       false,
+									                    fieldLabel : "having",
+									                    id : "searchpred",
+									                    displayField : 'curie',
+									                    valueField : 'uri',
+									                    emptyText : "any property or relationship",
+									                    store : new Ext.data.ArrayStore({
+									                        storeId: 'advancedSearchPredStore',
+									                        fields : ['uri', 'curie'],
+									                        data : []
+									                    })
+									                },{
+									                    fieldLabel: 'matching',
+									                    id : "searchval",
+									                    allowBlank:false,
+									                    emptyText : ""
+									                }
+									            ],
+									
+									            buttons: [
+									                new Ext.Button(action2)
+											    ]
+									        })
+										]
+									}),
+	    				            {
+	    							    minHeight: 0,
+	    							    normal: false,
+	    							    border : false,
+	    							    layout: "anchor",
+	    							    "id": "searchResultPanel",
+	    							    autoScroll: true, 
+	    							    "tbar": {
+	    							        "xtype": "pagingToolbar",
+	    							        "store": searchStore,
+	    							        "id": "spager"		                    
+	    							    }
+	    								,
+	    							    items: [
+	    									new Ext.DataView({
+	    									    store: searchStore,
+	    									    tpl: tpl,
+	    	    							    border : false,
+	    									    autoHeight:true,
+	    									    itemSelector:'div.coListing',
+	    									    emptyText: 'No images to display',
+	    									    plugins: [],
+	    									    prepareData: function(data){
+	    									        return data;
+	    									    },
+	    							            loadingText: "Loading Resource Maps...",
+	    							            singleSelect: true,
+	    							            style: "overflow-y:auto;overflow-x:hidden",
+	    									    listeners: {}
+	    									})
+	    							//							,
+	    							//			                {
+	    							//			                    "xtype": "codataview",
+	    							//			                    "store": searchStore,
+	    							//			                    "id": "cosview"
+	    							//			                }
+	    							    ]
+	    							}
+	                            ]
+                            })
+							,
+					        new Ext.Panel({
+				                title: 'Properties',
+				                layout:'anchor',
+				                height: "500px",
+				                items: [
+									{
+	                                    title : 'Resource Map Properties',
+	                                    id : "remgrid",
+	                                    propertyType: "property",
+	                                    xtype : "propertyeditor"
+	                                }
+									, 
+									{
+	                                    title : "Resource Properties",
+	                                    id : "nodegrid",
+	                                    propertyType: "property",
+	                                    xtype : "propertyeditor"
+	                                }
+	                                , 
+	                                {
+	                                    title: "Relationships",
+	                                    id: "relsgrid",
+	                                    propertyType: "relationship",
+	                                    xtype: "relationshipeditor"
+	                                }
+								]
+				            })
+	                	]
+			        })
 			    ]
 	        }	        
 //	        ,
