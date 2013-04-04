@@ -2,7 +2,7 @@
  * @class lore.ore.ui.GraphicalEditor Panel that provides the graphical editor for Resource Maps
  * @extends Ext.Panel
  */
-var GraphicalEditor = Ext.extend(Ext.Panel,{ 
+lore.ore.ui.GraphicalEditor = Ext.extend(Ext.Panel,{ 
    constructor: function (config){
         config = config || {};
         config.autoHeight = true;
@@ -10,7 +10,7 @@ var GraphicalEditor = Ext.extend(Ext.Panel,{
         config.bodyStyle = { backgroundColor : 'transparent' };
         // add a menu button to tab  : to make it easier for Mac users to access context menu
         config.menuHandler = "GraphicalEditor.coGraph.onContextMenu(0, 0);";
-        GraphicalEditor.superclass.constructor.call(this, config);
+        lore.ore.ui.GraphicalEditor.superclass.constructor.call(this, config);
 
         /** Default width of new nodes in graphical editor 
           * @const */
@@ -33,7 +33,7 @@ var GraphicalEditor = Ext.extend(Ext.Panel,{
         
    },
    initComponent: function(config){
-	   GraphicalEditor.superclass.initComponent.call(this,config); 
+	   lore.ore.ui.GraphicalEditor.superclass.initComponent.call(this,config); 
    },
    /** bindModel, update listeners */
    bindModel: function(co){
@@ -72,7 +72,7 @@ var GraphicalEditor = Ext.extend(Ext.Panel,{
                     'copy' : false
             });
             droptarget.notifyDrop = function(dd, e, data) {
-                var ge = GraphicalEditor;
+                var ge = lore.ore.ui.GraphicalEditor;
                 var coGraph = ge.coGraph;
                 var figopts = {
                     url : data.draggedRecord.data.uri,
@@ -342,13 +342,13 @@ var GraphicalEditor = Ext.extend(Ext.Panel,{
             // try to find a node that the predicate applies to
             var srcfig = this.lookupFigure(opts.subject);
             if (!srcfig) {
-                srcfig = GraphicalEditor
+                srcfig = lore.ore.ui.GraphicalEditor
                         .lookupFigure(lore.util.unescapeHTML(opts.subject
                                 .replace('%3C', '<').replace('%3F', '>')));
             }
             if (srcfig) {
                 var relresult = lore.util.splitTerm(opts.pred);
-                var tgtfig = GraphicalEditor.lookupFigure(opts.obj);
+                var tgtfig = lore.ore.ui.GraphicalEditor.lookupFigure(opts.obj);
                 if (tgtfig && (srcfig != tgtfig)) { 
                     // this is a connection
                     var srcPort = srcfig.getPort("output");
@@ -539,4 +539,4 @@ var GraphicalEditor = Ext.extend(Ext.Panel,{
         }
     }
 });
-Ext.reg('grapheditor',GraphicalEditor);
+Ext.reg('grapheditor',lore.ore.ui.GraphicalEditor);

@@ -2,7 +2,7 @@
  * @class RelationshipEditor Grid-based editor for resource relationships
  * @extends Ext.grid.EditorGridPanel
  */
-var RelationshipEditor = Ext.extend(Ext.grid.EditorGridPanel,{ 
+lore.ore.ui.RelationshipEditor = Ext.extend(Ext.grid.EditorGridPanel,{ 
     initComponent: function(config){
         Ext.apply(this, { 
             clicksToEdit : 1,
@@ -195,7 +195,7 @@ var RelationshipEditor = Ext.extend(Ext.grid.EditorGridPanel,{
             ]
                         
         });
-        RelationshipEditor.superclass.initComponent.call(this,config);
+        lore.ore.ui.RelationshipEditor.superclass.initComponent.call(this,config);
         
         // hide/show when the collapse/expand button in the toolbar is triggered
         this.on('beforecollapse', function(p){p.body.setStyle('display','none');});
@@ -288,4 +288,4 @@ var RelationshipEditor = Ext.extend(Ext.grid.EditorGridPanel,{
  
 });
 
-Ext.reg('relationshipeditor',RelationshipEditor);
+Ext.reg('relationshipeditor',lore.ore.ui.RelationshipEditor);

@@ -21,17 +21,33 @@
         <script type="text/javascript" src="lib/ext/ux/SuperBoxSelect.js"></script>
         <script type="text/javascript" src="lib/ext/ux/PagingStore.js"></script>
         
+        <script type="text/javascript" src="namespaces.js"></script>
+        <script type="text/javascript" src="constants.js"></script>
+        <script type="text/javascript" src="util.js"></script>
+        <script type="text/javascript" src="debug.js"></script>
+        <script type="text/javascript" src="uiglobal.js"></script>
+        <script type="text/javascript" src="init.js"></script>
+        
+        <script type="text/javascript" src="thesaurus.js"></script>
+        
+        <script type="text/javascript" src="model/ResourceProperties.js"></script>
+        <script type="text/javascript" src="model/CompoundObject.js"></script>
+        <script type="text/javascript" src="model/CompoundObjectCache.js"></script>
+        <script type="text/javascript" src="model/CompoundObjectList.js"></script>
+        <script type="text/javascript" src="model/CompoundObjectListManager.js"></script>
+        <script type="text/javascript" src="model/HistoryManager.js"></script>
+        <script type="text/javascript" src="model/OntologyManager.js"></script>
+                
+        <script type="text/javascript" src="ui/CompoundObjectDataView.js"></script>
+        <script type="text/javascript" src="ui/PagingToolbar.js"></script>
+        <script type="text/javascript" src="ui/PropertyEditor.js"></script>
+        <script type="text/javascript" src="ui/RelationshipEditor.js"></script>
+        <script type="text/javascript" src="ui/GraphicalEditor.js"></script>
+        <script type="text/javascript" src="ui/SearchPanel.js"></script>
+        
         <link rel="stylesheet" type="text/css" href="lib/ext3.2/resources/css/ext-all.css"/>
         <link rel="stylesheet" type="text/css" href="loreui.css"/>
         <link rel="stylesheet" type="text/css" href="lore_ore.css"/>
-        
-        <script type="text/javascript" src="CompoundObjectDataView.js"></script>
-        <script type="text/javascript" src="thesaurus.js"></script>
-        <script type="text/javascript" src="PagingToolbar.js"></script>
-        <script type="text/javascript" src="PropertyEditor.js"></script>
-        <script type="text/javascript" src="RelationshipEditor.js"></script>
-        <script type="text/javascript" src="GraphicalEditor.js"></script>
-        <script type="text/javascript" src="SearchPanel.js"></script>
         
         <div id="tabs1">
     	    <div id="tabs2">

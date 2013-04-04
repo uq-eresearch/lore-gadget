@@ -280,6 +280,63 @@ Ext.onReady(function() {
     			.replace(/>/g, "&gt;")
     			.replace(/</g, "&lt;")
     			.replace(/"/g, "&quot;") + '</pre>');
+    	
+    	try{
+            // Check if the currently loaded Resource Map has been modified and if it has prompt the user to save changes
+            var currentCO = lore.ore.cache.getLoadedCompoundObject();
+            if (currentCO && currentCO.isDirty() && !this.readOnly){
+                Ext.Msg.show({
+                    title : 'Save Resource Map?',
+                    buttons : Ext.MessageBox.YESNOCANCEL,
+                    msg : 'Would you like to save the current Resource Map before proceeding?',
+                    fn : function(btn) {
+                        if (btn === 'yes') {
+                            var currentCO = lore.ore.cache.getLoadedCompoundObject();
+                            // TODO: #56 check that the save completed successfully 
+                            lore.ore.reposAdapter.saveCompoundObject(currentCO,function(remid){
+                                lore.ore.controller.afterSaveCompoundObject(remid);
+                                 Ext.MessageBox.show({
+                                        msg: 'Loading Resource Map',
+                                        width:250,
+                                        defaultTextHeight: 0,
+                                        closable: false,
+                                        cls: 'co-load-msg'
+                                 });
+                                 if (lore.ore.reposAdapter){
+                                     lore.ore.reposAdapter.loadCompoundObject(rdfURL, lore.ore.controller.loadCompoundObject, lore.ore.controller.afterLoadCompoundObjectFail);
+                                 } 
+                            });
+                            
+                        } else if (btn === 'no') {
+                            Ext.MessageBox.show({
+                                msg: 'Loading Resource Map',
+                                width:250,
+                                defaultTextHeight: 0,
+                                closable: false,
+                                cls: 'co-load-msg'
+                         });
+                         if (lore.ore.reposAdapter){
+                             lore.ore.reposAdapter.loadCompoundObject(rdfURL, lore.ore.controller.loadCompoundObject, lore.ore.controller.afterLoadCompoundObjectFail);
+                         }
+                        }
+                    }
+                });
+            } else {
+                Ext.MessageBox.show({
+                        msg: 'Loading Resource Map',
+                        width:250,
+                        defaultTextHeight: 0,
+                        closable: false,
+                        cls: 'co-load-msg'
+                 });
+                 if (lore.ore.reposAdapter){
+                     lore.ore.reposAdapter.loadCompoundObject(rdfURL, this.loadCompoundObject, this.afterLoadCompoundObjectFail);
+                 }
+            }
+    
+        } catch (e){
+            lore.debug.ore("Error in loadCompoundObjectFromURL",e);
+        }
     }
     
     loadCompoundObjectFromURL = function(rdfURL){    	

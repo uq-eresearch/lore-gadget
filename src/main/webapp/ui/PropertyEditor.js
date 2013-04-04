@@ -9,7 +9,7 @@ Ext.intercept(Ext.form.HtmlEditor.prototype, 'execCmd', function() {
  * @extends Ext.grid.EditorGridPanel
  */
 
-var PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{ 
+lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{ 
     initComponent: function(config){
         Ext.apply(this, { 
             clicksToEdit : 1,
@@ -365,7 +365,7 @@ var PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
             ]
                         
         });
-        PropertyEditor.superclass.initComponent.call(this,config);   
+        lore.ore.ui.PropertyEditor.superclass.initComponent.call(this,config);   
         // hide/show the properties when the collapse/expand button in the toolbar is triggered
         this.on('beforecollapse', function(p){
             p.body.setStyle('display','none');
@@ -1005,9 +1005,13 @@ var PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
     }
 });
 
+Ext.reg('propertyeditor',lore.ore.ui.PropertyEditor);
 
-Ext.reg('propertyeditor', PropertyEditor);
+/**
+ * ToggleFormatting used by Resource Maps Property Editor
+ */
 
+ 
 Ext.ux.form.HtmlEditor.ToggleFormatting = Ext.extend(Ext.util.Observable, {
     init: function(cmp){
         this.cmp = cmp;

@@ -1,6 +1,6 @@
 Ext.onReady(function() {
 				
-	Ext.reg('pagingToolbar', Ext.extend(Ext.PagingToolbar, {
+lore.ore.ui.PagingToolbar = Ext.extend(Ext.PagingToolbar, {
 		pageSize: 5,
 	       initComponent : function(){
 	        var pagingItems = [this.prev = new Ext.Toolbar.Button({
@@ -166,6 +166,8 @@ Ext.onReady(function() {
 	        this.cursor = (o.params && o.params[p.start]) ? o.params[p.start] : 0;
 	        this.onChange();
 	    }
-	}));
+	});
+
+	Ext.reg('pagingToolbar', lore.ore.ui.PagingToolbar);
 	    
 });
