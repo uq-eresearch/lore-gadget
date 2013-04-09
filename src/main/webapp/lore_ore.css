@@ -81,7 +81,7 @@
 /* Graphical Editor styles */
 /* Allow uri of nodes to be expanded */
 .menuIcon {
-	background-image:url(../lib/ext3.2/resources/images/gray/panel/tools-sprites-trans.gif);
+	background-image:url(./lib/ext3.2/resources/images/gray/panel/tools-sprites-trans.gif);
 	background-position: 0 -90px;
 	opacity:.8;
 }
@@ -444,7 +444,7 @@ div.coListing:hover {
     padding-right:19px;
 }
 .x-tab-strip .x-tab-strip-with-menu a.x-tab-strip-menu {	
-	background-image:url(../lib/ext3.2/resources/images/gray/panel/tools-sprites-trans.gif);
+	background-image:url(./lib/ext3.2/resources/images/gray/panel/tools-sprites-trans.gif);
     background-position:0 -90px;
 	opacity:.6;
     background-repeat:no-repeat;

@@ -1,8 +1,8 @@
 /**
- * @class lore.ore.ui.GraphicalEditor Panel that provides the graphical editor for Resource Maps
+ * @class lore.ore.ui.graphicalEditor Panel that provides the graphical editor for Resource Maps
  * @extends Ext.Panel
  */
-lore.ore.ui.GraphicalEditor = Ext.extend(Ext.Panel,{ 
+lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{ 
    constructor: function (config){
         config = config || {};
         config.autoHeight = true;
@@ -10,8 +10,7 @@ lore.ore.ui.GraphicalEditor = Ext.extend(Ext.Panel,{
         config.bodyStyle = { backgroundColor : 'transparent' };
         // add a menu button to tab  : to make it easier for Mac users to access context menu
         config.menuHandler = "GraphicalEditor.coGraph.onContextMenu(0, 0);";
-        lore.ore.ui.GraphicalEditor.superclass.constructor.call(this, config);
-
+        lore.ore.ui.graphicalEditor.superclass.constructor.call(this, config);
         /** Default width of new nodes in graphical editor 
           * @const */
         this.NODE_WIDTH   = 220;
@@ -33,7 +32,7 @@ lore.ore.ui.GraphicalEditor = Ext.extend(Ext.Panel,{
         
    },
    initComponent: function(config){
-	   lore.ore.ui.GraphicalEditor.superclass.initComponent.call(this,config); 
+	   lore.ore.ui.graphicalEditor.superclass.initComponent.call(this,config); 
    },
    /** bindModel, update listeners */
    bindModel: function(co){
@@ -50,59 +49,54 @@ lore.ore.ui.GraphicalEditor = Ext.extend(Ext.Panel,{
    },
    /** Initialize the graphical editor */
    initGraph: function(){
-    try{
-        Ext.getCmp("loreviews").activate("drawingarea");
-        this.dummylayoutx = this.NODE_SPACING;
-        this.dummylayouty = this.NODE_SPACING;
-        this.lookup = {};
+    Ext.getCmp("loreviews").activate("drawingarea");
+    this.dummylayoutx = this.NODE_SPACING;
+    this.dummylayouty = this.NODE_SPACING;
+    this.lookup = {};
+    
+    var coGraph = this.coGraph;
+    if (coGraph) {
+        coGraph.getCommandStack().removeCommandStackEventListener(this); 
+        coGraph.removeSelectionListener(this);
+        coGraph.clear();
+    } else {
+        coGraph = new lore.ore.ui.graph.COGraph(this.id);
+        this.coGraph = coGraph;
+        coGraph.setScrollArea(document.getElementById(this.id).parentNode);
         
-        var coGraph = this.coGraph;
-        if (coGraph) {
-            coGraph.getCommandStack().removeCommandStackEventListener(this); 
-            coGraph.removeSelectionListener(this);
-            coGraph.clear();
-        } else {
-            coGraph = new lore.ore.ui.graph.COGraph(this.id);
-            this.coGraph = coGraph;
-            coGraph.setScrollArea(document.getElementById(this.id).parentNode);
-            
-            // create drop target for dropping new nodes onto editor from the Resource Maps dataview
-            var droptarget = new Ext.dd.DropTarget(this.id, {
-                    'ddGroup' : 'coDD',
-                    'copy' : false
-            });
-            droptarget.notifyDrop = function(dd, e, data) {
-                var ge = lore.ore.ui.GraphicalEditor;
-                var coGraph = ge.coGraph;
-                var figopts = {
-                    url : data.draggedRecord.data.uri,
-                    x : (e.xy[0] - coGraph.getAbsoluteX() + coGraph.getScrollLeft()),
-                    y : (e.xy[1] - coGraph.getAbsoluteY() + coGraph.getScrollTop()),
-                    props : {
-                        "rdf:type_0" : lore.constants.RESOURCE_MAP,
-                        "dc:title_0" : data.draggedRecord.data.title
-                    }
-                };
-                ge.addFigure(figopts);
-                
-                return true;
+        // create drop target for dropping new nodes onto editor from the Resource Maps dataview
+        var droptarget = new Ext.dd.DropTarget(this.id, {
+                'ddGroup' : 'coDD',
+                'copy' : false
+        });
+        droptarget.notifyDrop = function(dd, e, data) {
+            var ge = lore.ore.ui.graphicalEditor;
+            var coGraph = ge.coGraph;
+            var figopts = {
+                url : data.draggedRecord.data.uri,
+                x : (e.xy[0] - coGraph.getAbsoluteX() + coGraph.getScrollLeft()),
+                y : (e.xy[1] - coGraph.getAbsoluteY() + coGraph.getScrollTop()),
+                props : {
+                    "rdf:type_0" : lore.constants.RESOURCE_MAP,
+                    "dc:title_0" : data.draggedRecord.data.title
+                }
             };
-        }
-        coGraph.addSelectionListener(this);
-        coGraph.getCommandStack().addCommandStackEventListener(this);
-        
-    // clear the node properties
+            ge.addFigure(figopts);
+            
+            return true;
+        };
+    }
+    coGraph.addSelectionListener(this);
+    coGraph.getCommandStack().addCommandStackEventListener(this);
+    
+    /*// clear the node properties
     if (lore.ore.ui.nodegrid) {
         lore.ore.ui.grid.expand();
         lore.ore.ui.nodegrid.store.removeAll();
         lore.ore.ui.nodegrid.collapse();
         lore.ore.ui.relsgrid.store.removeAll();
         lore.ore.ui.relsgrid.collapse();
-    }
-    
-    } catch (e) {
-        lore.debug.ore("Error in GraphicalEditor: initGraph",e);
-    }
+    }*/
    },
    /**
     * Updates the views when nodes or connections are selected
@@ -342,13 +336,13 @@ lore.ore.ui.GraphicalEditor = Ext.extend(Ext.Panel,{
             // try to find a node that the predicate applies to
             var srcfig = this.lookupFigure(opts.subject);
             if (!srcfig) {
-                srcfig = lore.ore.ui.GraphicalEditor
+                srcfig = lore.ore.ui.graphicalEditor
                         .lookupFigure(lore.util.unescapeHTML(opts.subject
                                 .replace('%3C', '<').replace('%3F', '>')));
             }
             if (srcfig) {
                 var relresult = lore.util.splitTerm(opts.pred);
-                var tgtfig = lore.ore.ui.GraphicalEditor.lookupFigure(opts.obj);
+                var tgtfig = lore.ore.ui.graphicalEditor.lookupFigure(opts.obj);
                 if (tgtfig && (srcfig != tgtfig)) { 
                     // this is a connection
                     var srcPort = srcfig.getPort("output");
@@ -381,7 +375,6 @@ lore.ore.ui.GraphicalEditor = Ext.extend(Ext.Panel,{
     * @return {}
     */
    addFigure : function(opts) {
-    try{
         if (!opts.batch && lore.ore.controller.checkReadOnly()){
             return;
         }
@@ -507,9 +500,6 @@ lore.ore.ui.GraphicalEditor = Ext.extend(Ext.Panel,{
             this.nextXY(opts.x,opts.y);
         }
         return fig;
-      } catch (ex){
-          lore.debug.ore("Error in add Figure",ex);
-      }
     },
     /**
      * Get the figure that represents a resource
@@ -539,4 +529,4 @@ lore.ore.ui.GraphicalEditor = Ext.extend(Ext.Panel,{
         }
     }
 });
-Ext.reg('grapheditor',lore.ore.ui.GraphicalEditor);
+Ext.reg('grapheditor',lore.ore.ui.graphicalEditor);

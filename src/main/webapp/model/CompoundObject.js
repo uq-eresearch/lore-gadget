@@ -530,7 +530,7 @@ lore.ore.WordSerializer = function(){
     // Load xslt from local file for transforming body content to ooxml for inclusion in docx
     var xhr = new XMLHttpRequest();                
     xhr.overrideMimeType('text/xml');
-    xhr.open("GET", '../export/html2word.xsl');
+    xhr.open("GET", '../lore/export/html2word.xsl');
     xhr.onreadystatechange= function(){
         if (xhr.readyState == 4) {
             oThis.bodyStylesheet = xhr.responseXML;

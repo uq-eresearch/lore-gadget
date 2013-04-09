@@ -15,13 +15,20 @@
         <script type="text/javascript" src="lib/jquery.simpletip-1.3.1.js"></script>
         <script type="text/javascript" src="lib/jquery.imgareaselect.js"></script>
         
+        <script type="text/javascript" src="lib/ext/ux/carousel.js"></script>
+        <script type="text/javascript" src="lib/ext/ux/MultilineTreeNodeUI.js"></script>
         <script type="text/javascript" src="lib/ext/ux/StatusBar.js"></script>
         <script type="text/javascript" src="lib/ext/ux/uxvismode.js"></script>
+        <script type="text/javascript" src="lib/ext/ux/PagingStore.js"></script>
+        <script type="text/javascript" src="lib/ext/ux/Ext.ux.ScrollMenu.js"></script>
         <script type="text/javascript" src="lib/ext/ux/MidasCommand.js"></script>
         <script type="text/javascript" src="lib/ext/ux/SuperBoxSelect.js"></script>
-        <script type="text/javascript" src="lib/ext/ux/PagingStore.js"></script>
         
         <script type="text/javascript" src="namespaces.js"></script>
+        <script type="text/javascript" src="lib/raphael.js"></script>
+        <script type="text/javascript" src="lib/jit.js"></script>
+        
+        <script type="text/javascript" src="Controller.js"></script>
         <script type="text/javascript" src="constants.js"></script>
         <script type="text/javascript" src="util.js"></script>
         <script type="text/javascript" src="debug.js"></script>
@@ -38,12 +45,31 @@
         <script type="text/javascript" src="model/HistoryManager.js"></script>
         <script type="text/javascript" src="model/OntologyManager.js"></script>
                 
-        <script type="text/javascript" src="ui/CompoundObjectDataView.js"></script>
         <script type="text/javascript" src="ui/PagingToolbar.js"></script>
+        <script type="text/javascript" src="ui/CompoundObjectDataView.js"></script>
+        <script type="text/javascript" src="ui/GraphicalEditor.js"></script>
         <script type="text/javascript" src="ui/PropertyEditor.js"></script>
         <script type="text/javascript" src="ui/RelationshipEditor.js"></script>
-        <script type="text/javascript" src="ui/GraphicalEditor.js"></script>
+        <script type="text/javascript" src="ui/ResourceListPanel.js"></script>
+        <script type="text/javascript" src="ui/DetailsPanel.js"></script>
+        <script type="text/javascript" src="ui/SlidePanel.js"></script>
+        <script type="text/javascript" src="ui/SlideShowPanel.js"></script> 
+        <script type="text/javascript" src="ui/ExplorePanel.js"></script>
+        <script type="text/javascript" src="ui/Viewport.js"></script>
         <script type="text/javascript" src="ui/SearchPanel.js"></script>
+
+        <script type="text/javascript" src="lib/draw2d.js"></script>
+        <script type="text/javascript" src="ui/graph/draw2d.commands.js"></script>
+        <script type="text/javascript" src="ui/graph/ResizeHandle.js"></script>
+        <script type="text/javascript" src="ui/graph/Label.js"></script>
+        <script type="text/javascript" src="ui/graph/LabelLocator.js"></script>
+        <script type="text/javascript" src="ui/graph/Connection.js"></script>
+        <script type="text/javascript" src="ui/graph/Port.js"></script>
+        <script type="text/javascript" src="ui/graph/EntityFigure.js"></script>
+        <script type="text/javascript" src="ui/graph/ResourceFigure.js"></script>
+        <script type="text/javascript" src="ui/graph/COGraph.js"></script>
+        <script type="text/javascript" src="ui/graph/Layout.js"></script>
+        <script type="text/javascript" src="ui/graph/FanConnectionRouter.js"></script>
         
         <link rel="stylesheet" type="text/css" href="lib/ext3.2/resources/css/ext-all.css"/>
         <link rel="stylesheet" type="text/css" href="loreui.css"/>

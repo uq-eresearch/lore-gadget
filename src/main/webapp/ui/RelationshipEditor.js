@@ -266,7 +266,6 @@ lore.ore.ui.RelationshipEditor = Ext.extend(Ext.grid.EditorGridPanel,{
      * @param {} panel
      */
     helpRelationshipAction : function (ev,toolEl, panel) {
-        try{
         var sel = panel.getSelectionModel().getSelected();
         if (panel.collapsed){
             lore.ore.ui.vp.info("Please expand the panel and select a relationship");
@@ -280,9 +279,6 @@ lore.ore.ui.RelationshipEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                 });
         } else {
             lore.ore.ui.vp.info("Please click on a relationship prior to selecting the help button");
-        }
-        } catch (e){
-            lore.debug.ore("Error in helpRelationshipAction",e);
         }
     }
  

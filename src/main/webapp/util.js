@@ -941,13 +941,13 @@ lore.util = {
         // the docshell object will be created.
         // dochsell must be set before loading the page
         // so reload the page
-        iframe.docShell.allowAuth = false;
+        //iframe.docShell.allowAuth = false;
         
         // As the pages are being loaded in XUL content iframes, it should be ok to allow Javascript
         //iframe.docShell.allowJavascript = false;
         
-        iframe.docShell.allowMetaRedirects = false;
-        iframe.docShell.allowPlugins = false;
+        //iframe.docShell.allowMetaRedirects = false;
+        //iframe.docShell.allowPlugins = false;
         iframe.setAttribute("src",theurl);
         iframe.addEventListener("load", lore.util.insertSecureFrameStyle, true, true);        
     },
@@ -960,15 +960,11 @@ lore.util = {
     createSecureIFrame : function(win, theurl, extraFunc) {
         var iframe = lore.util.createXULIFrame(win);
         iframe.addEventListener("load", function onLoadTrigger (event) {
-                try {
-                    iframe.removeEventListener("load", onLoadTrigger, true);
-                    lore.util.setSecureXULIFrameContent(iframe, theurl);
-                    if ( extraFunc) {
-                        extraFunc();
-                    }
-                } catch (e ) {
-                    lore.debug.ui("Error in iframe(onload): " + e, e);
-                }
+	            iframe.removeEventListener("load", onLoadTrigger, true);
+	            lore.util.setSecureXULIFrameContent(iframe, theurl);
+	            if ( extraFunc) {
+	                extraFunc();
+	            }
             }, true);
         // trigger onload
         iframe.setAttribute("src", "data:text/html,%3Chtml%3E%3Cbody%3ELoading...%3C/body%3E%3C/html%3E");
@@ -1040,47 +1036,40 @@ lore.util = {
      * Basic HTML Sanitizer using Firefox's parseFragment
      * @param {Object} html
      */
-    sanitizeHTML : function(html, win, asHTML) {
-        try{
-            var serializer = Components.classes["@mozilla.org/xmlextras/xmlserializer;1"]
-                .createInstance(Components.interfaces.nsIDOMSerializer);
-            
-            html = html.replace(/<br>$/,'');
-            // parseFragment sanitizes html content
-            var fragment = Components.classes["@mozilla.org/feed-unescapehtml;1"]  
-                .getService(Components.interfaces.nsIScriptableUnescapeHTML)  
-                .parseFragment(html, false, null, win.document.body);
-            
-            if (fragment) {
-                if (asHTML){ 
-                    // use a temporary element to serialize sanitized fragment to plain HTML
-                    var doc = win.document;
-                    var divEl = doc.getElementById('sanitize');
-                    if (!divEl){
-                        divEl = doc.createElement("div");
-                        divEl.setAttribute("id","sanitize");
-                        divEl.style.display = "none";
-                    }
-                    divEl.appendChild(fragment);
-                    // read inner HTML to serialize to HTML : used for annotations
-                    var serializedContent = divEl.innerHTML;
-                    divEl.removeChild(divEl.firstChild);
-                    return serializedContent;
-                } else {
-                    // use XML Serializer to serialize fragment to XML
-                    var buf = serializer.serializeToString(fragment);
-                    // remove garbage
-                    return buf.replace(/[\x80-\xff|\u0080-\uFFFF]*/g, '');
-                }
-            } else {
-                return "";
-            }
-        } catch (ex){
-            lore.debug.ui("Error sanitizing html",ex);
-            return "";
+    sanitizeHTML : function(html, win, asHTML) {        
+        html = html.replace(/<br>$/,'');
+        // parseFragment sanitizes html content
+        if (typeof Components != 'undefined') {
+	        var fragment = Components.classes["@mozilla.org/feed-unescapehtml;1"]  
+	            .getService(Components.interfaces.nsIScriptableUnescapeHTML)  
+	            .parseFragment(html, false, null, win.document.body);
+	        if (fragment) {
+	            if (asHTML){ 
+	                // use a temporary element to serialize sanitized fragment to plain HTML
+	                var doc = win.document;
+	                var divEl = doc.getElementById('sanitize');
+	                if (!divEl){
+	                    divEl = doc.createElement("div");
+	                    divEl.setAttribute("id","sanitize");
+	                    divEl.style.display = "none";
+	                }
+	                divEl.appendChild(fragment);
+	                // read inner HTML to serialize to HTML : used for annotations
+	                var serializedContent = divEl.innerHTML;
+	                divEl.removeChild(divEl.firstChild);
+	                return serializedContent;
+	            } else {
+	                var serializer = Components.classes["@mozilla.org/xmlextras/xmlserializer;1"]
+	                	.createInstance(Components.interfaces.nsIDOMSerializer); 
+	                
+	                // use XML Serializer to serialize fragment to XML
+	                var buf = serializer.serializeToString(fragment);
+	                // remove garbage
+	                return buf.replace(/[\x80-\xff|\u0080-\uFFFF]*/g, '');
+	            }
+	        }
         }
-        
-        
+        return "";
     },
     /**
      * Add target="_blank" to all links in an html string

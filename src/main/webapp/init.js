@@ -7,19 +7,15 @@ lore.ore.ui.initUIComponents = function() {
     // make sure popup windows appear above everything else, particularly when over the graphical editor
     Ext.WindowMgr.zseed = 10000;
 
-    try {
-        Ext.MessageBox.show({
-           msg: 'Loading LORE...',
-           width:250,
-           defaultTextHeight: 0,
-           closable: false,
-           cls: 'co-load-msg'
-       });
-        lore.ore.ui.vp = new lore.ore.ui.Viewport();
-        lore.ore.ui.vp.show();
-    } catch (e) {
-        lore.debug.ore("Error creating Ext UI components from spec", e);
-    }
+    Ext.MessageBox.show({
+       msg: 'Loading LORE...',
+       width:250,
+       defaultTextHeight: 0,
+       closable: false,
+       cls: 'co-load-msg'
+    });
+    lore.ore.ui.vp = new lore.ore.ui.Viewport();
+    lore.ore.ui.vp.show();
 
     // set up glocal variable references to main UI components
     lore.ore.ui.grid = Ext.getCmp("remgrid");
@@ -84,73 +80,69 @@ lore.ore.ui.initUIComponents = function() {
  * Initialise Resource Maps component of LORE
  */
 lore.ore.ui.init = function() {
-    try {
-        var currentURL;
-        if (lore.ore.firefox){
-            // Get a reference to the overlay
-            lore.ore.ui.topView = lore.global.ui.topWindowView.get(window.instanceId);
-            currentURL = window.top.getBrowser().selectedBrowser.contentWindow.location.href;
-        } else {
-            currentURL = "http://austlit.edu.au";
-        }
-        lore.ore.controller = new lore.ore.Controller({
-            currentURL: currentURL
-        });
-        if (lore.ore.ui.topView){
-            lore.global.ui.compoundObjectView.registerView(lore.ore.controller,window.instanceId);
-            lore.ore.am = lore.ore.ui.topView.getAuthManager();
-            if (!lore.ore.am){
-                lore.ore.am = lore.ore.ui.topView.setAuthManager(new lore.AuthManager(window));
-            }
-            
-            lore.ore.am.on('error', lore.ore.controller.onAuthErrorOrCancel);
-            lore.ore.am.on('cancel', lore.ore.controller.onAuthErrorOrCancel);
-        
-        }
-        
-        lore.ore.ontologyManager = new lore.ore.model.OntologyManager();
-        
-        if (lore.ore.firefox){
-            lore.ore.ui.topView.loadCompoundObjectPrefs(true);
-        } else {
-            // load preference defaults for Google Chrome
-            lore.ore.controller.handlePreferencesChanged(new Store("settings", {
-                creator: "Anonymous",
-                relonturl: "/content/ontologies/austlitoaiore.owl",
-                rdfrepos: "http://austlit.edu.au/auselit/ore/",
-                rdfrepostype: "lorestore",
-                annoserver: "http://austlit.edu.au/auselit/annotea",
-                disable: false,
-                ontologies: '[{\"nsprefix\":\"austlit\",\"locurl\":\"/content/ontologies/AustLit.xml\",\"useanno\":\"true\",\"useco\":\"false\", \"status\":\"default\", \"nsuri\":\"http://austlit.edu.au/owl/austlit.owl#\"},{\"nsuri\":\"http://RDVocab.info/Elements/\",\"nsprefix\":\"rda\",\"locurl\":\"/content/ontologies/rda.rdf\",\"useanno\":\"false\",\"useco\":\"false\", \"status\":\"custom\"},{\"nsprefix\":\"lore\", \"locurl\":\"/content/ontologies/austlitoaiore.owl\",\"useanno\":\"false\",\"useco\":\"true\", \"status\":\"default\", \"nsuri\":\"http://austlit.edu.au/owl/austlitore.owl#\"}]',
-                editor: "grapheditor"
-            }).toObject());
-            chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-              if (request.action == 'gpmeGetOptions') {
-                var settings = new Store("settings",{});
-                lore.ore.controller.handlePreferencesChanged(settings.toObject());
-              }
-            });
-        }
-        lore.ore.coListManager = new lore.ore.model.CompoundObjectListManager();
-        lore.ore.historyManager = new lore.ore.model.HistoryManager(lore.ore.coListManager);
-        lore.ore.cache = new lore.ore.model.CompoundObjectCache();    
-        
-        lore.ore.ui.initUIComponents();
-        lore.ore.ui.graphicalEditor = Ext.getCmp("drawingarea");
-        
-        lore.ore.ui.vp.info("Welcome to LORE");
-        
-        lore.ore.controller.createCompoundObject();
-
-        if (lore.ore.ui.topView && lore.ore.ui.topView.compoundObjectsVisible()){
-            lore.ore.controller.onShow();
-        }
-
-        lore.debug.ui("LORE Resource Maps init complete", lore);
-        Ext.Msg.hide();
-        Ext.getCmp("drawingarea").focus();
-        
-    } catch (e) {
-        lore.debug.ui("Error in Resource Map init", e);
+    var currentURL;
+    if (lore.ore.firefox){
+        // Get a reference to the overlay
+        lore.ore.ui.topView = lore.global.ui.topWindowView.get(window.instanceId);
+        currentURL = window.top.getBrowser().selectedBrowser.contentWindow.location.href;
+    } else {
+        currentURL = "http://austlit.edu.au";
     }
+    lore.ore.controller = new lore.ore.Controller({
+        currentURL: currentURL
+    });
+    if (lore.ore.ui.topView){
+        lore.global.ui.compoundObjectView.registerView(lore.ore.controller,window.instanceId);
+        lore.ore.am = lore.ore.ui.topView.getAuthManager();
+        if (!lore.ore.am){
+            lore.ore.am = lore.ore.ui.topView.setAuthManager(new lore.AuthManager(window));
+        }
+        
+        lore.ore.am.on('error', lore.ore.controller.onAuthErrorOrCancel);
+        lore.ore.am.on('cancel', lore.ore.controller.onAuthErrorOrCancel);
+    
+    }
+    
+    lore.ore.ontologyManager = new lore.ore.model.OntologyManager();
+    
+    if (lore.ore.firefox){
+        lore.ore.ui.topView.loadCompoundObjectPrefs(true);
+    } else {
+        // load preference defaults for Google Chrome
+        lore.ore.controller.handlePreferencesChanged(new Store("settings", {
+            creator: "Anonymous",
+            relonturl: "/content/ontologies/austlitoaiore.owl",
+            rdfrepos: "http://austlit.edu.au/auselit/ore/",
+            rdfrepostype: "lorestore",
+            annoserver: "http://austlit.edu.au/auselit/annotea",
+            disable: false,
+            ontologies: '[{\"nsprefix\":\"austlit\",\"locurl\":\"/content/ontologies/AustLit.xml\",\"useanno\":\"true\",\"useco\":\"false\", \"status\":\"default\", \"nsuri\":\"http://austlit.edu.au/owl/austlit.owl#\"},{\"nsuri\":\"http://RDVocab.info/Elements/\",\"nsprefix\":\"rda\",\"locurl\":\"/content/ontologies/rda.rdf\",\"useanno\":\"false\",\"useco\":\"false\", \"status\":\"custom\"},{\"nsprefix\":\"lore\", \"locurl\":\"/content/ontologies/austlitoaiore.owl\",\"useanno\":\"false\",\"useco\":\"true\", \"status\":\"default\", \"nsuri\":\"http://austlit.edu.au/owl/austlitore.owl#\"}]',
+            editor: "grapheditor"
+        }).toObject());
+        
+        chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+          if (request.action == 'gpmeGetOptions') {
+            var settings = new Store("settings",{});
+            lore.ore.controller.handlePreferencesChanged(settings.toObject());
+          }
+        });
+    }
+    lore.ore.coListManager = new lore.ore.model.CompoundObjectListManager();
+    lore.ore.historyManager = new lore.ore.model.HistoryManager(lore.ore.coListManager);
+    lore.ore.cache = new lore.ore.model.CompoundObjectCache();    
+
+    lore.ore.ui.graphicalEditor = Ext.getCmp("drawingarea");
+    lore.ore.ui.initUIComponents();
+    
+    lore.ore.ui.vp.info("Welcome to LORE");
+    
+    lore.ore.controller.createCompoundObject();
+
+    if (lore.ore.ui.topView && lore.ore.ui.topView.compoundObjectsVisible()){
+        lore.ore.controller.onShow();
+    }
+
+    lore.debug.ui("LORE Resource Maps init complete", lore);
+    Ext.Msg.hide();
+    Ext.getCmp("drawingarea").focus();
 };

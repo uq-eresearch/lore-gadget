@@ -281,62 +281,175 @@ Ext.onReady(function() {
     			.replace(/</g, "&lt;")
     			.replace(/"/g, "&quot;") + '</pre>');
     	
-    	try{
-            // Check if the currently loaded Resource Map has been modified and if it has prompt the user to save changes
-            var currentCO = lore.ore.cache.getLoadedCompoundObject();
-            if (currentCO && currentCO.isDirty() && !this.readOnly){
-                Ext.Msg.show({
-                    title : 'Save Resource Map?',
-                    buttons : Ext.MessageBox.YESNOCANCEL,
-                    msg : 'Would you like to save the current Resource Map before proceeding?',
-                    fn : function(btn) {
-                        if (btn === 'yes') {
-                            var currentCO = lore.ore.cache.getLoadedCompoundObject();
-                            // TODO: #56 check that the save completed successfully 
-                            lore.ore.reposAdapter.saveCompoundObject(currentCO,function(remid){
-                                lore.ore.controller.afterSaveCompoundObject(remid);
-                                 Ext.MessageBox.show({
-                                        msg: 'Loading Resource Map',
-                                        width:250,
-                                        defaultTextHeight: 0,
-                                        closable: false,
-                                        cls: 'co-load-msg'
-                                 });
-                                 if (lore.ore.reposAdapter){
-                                     lore.ore.reposAdapter.loadCompoundObject(rdfURL, lore.ore.controller.loadCompoundObject, lore.ore.controller.afterLoadCompoundObjectFail);
-                                 } 
-                            });
-                            
-                        } else if (btn === 'no') {
-                            Ext.MessageBox.show({
-                                msg: 'Loading Resource Map',
-                                width:250,
-                                defaultTextHeight: 0,
-                                closable: false,
-                                cls: 'co-load-msg'
-                         });
-                         if (lore.ore.reposAdapter){
-                             lore.ore.reposAdapter.loadCompoundObject(rdfURL, lore.ore.controller.loadCompoundObject, lore.ore.controller.afterLoadCompoundObjectFail);
-                         }
+        lore.ore.ui.graphicalEditor.initGraph();
+        
+        var rdfDoc;
+        if (typeof rdf != 'object') {
+            rdfDoc = new DOMParser().parseFromString(rdf, "text/xml");
+        } else {
+            showInHistory = true;
+            rdfDoc = rdf.responseXML;
+        }
+        // lore.debug.timeElapsed("creating databank");
+        var databank = jQuery.rdf.databank();
+        for (ns in lore.constants.NAMESPACES) {
+            databank.prefix(ns, lore.constants.NAMESPACES[ns]);
+        }
+        databank.load(rdfDoc);
+        var loadedRDF = jQuery.rdf({
+                    databank : databank
+        });
+        // Display the properties for the Resource Map
+        var remQuery = loadedRDF.where('?aggre rdf:type ore:Aggregation')
+                .where('?rem ore:describes ?aggre');
+        var aggreurl, remurl;
+        var res = remQuery.get(0);
+        var isPrivate = false;
+        
+        if (res) {
+            remurl = res.rem.value.toString();
+            aggreurl = res.aggre.value.toString();
+            this.loadedCO = new lore.ore.model.CompoundObject();
+            this.loadedCO.load({
+                        format : 'application/rdf+xml',
+                        content : rdfDoc
+            });
+            /*if (this.loadedCO.properties.getProperty(lore.constants.NAMESPACES["lorestore"] + "isLocked")){
+                lore.ore.controller.setLockCompoundObject(true);
+            } else {
+                lore.ore.controller.setLockCompoundObject(false);
+            }*/
+            isPrivate = this.loadedCO.properties.getProperty(lore.constants.NAMESPACES["lorestore"] + "isPrivate");
+            lore.ore.cache.add(remurl, this.loadedCO);
+            lore.ore.cache.setLoadedCompoundObjectUri(remurl);
+            lore.ore.cache.setLoadedCompoundObjectIsNew(false);
+            lore.ore.cache.setLoadedCompoundObjectUri(remurl);
+            lore.ore.controller.bindViews(lore.ore.cache.getLoadedCompoundObject());
+            
+        } else {
+            lore.ore.ui.vp.warning("No Resource Map found");
+            lore.debug.ore("Error: no remurl found in RDF", loadedRDF);
+            return;
+        }
+
+        // lore.debug.timeElapsed("create figure for each resource ");
+        // create a node figure for each aggregated resource, restoring the layout
+        var counter = 0;
+        var numResources = 
+        loadedRDF.where('<' + aggreurl + '> ore:aggregates ?url')
+                .optional('?url layout:x ?x')
+                .optional('?url layout:y ?y')
+                .optional('?url layout:width ?w')
+                .optional('?url layout:height ?h')
+                .optional('?url layout:originalHeight ?oh')
+                .optional('?url layout:highlightColor ?hc')
+                .optional('?url layout:orderIndex ?order')
+                .optional('?url layout:abstractPreview ?abstractPreview')
+                .optional('?url layout:isPlaceholder ?placeholder')
+                .optional('?url dc:format ?format')
+                .optional('?url rdf:type ?rdftype')
+                .optional('?url dc:title ?title')
+                .each(function() {
+                    var resourceURL = this.url.value.toString();
+                    var fig;
+                    var opts = {
+                        batch : true,
+                        url : resourceURL
+                    };
+                    if (this.x && this.y) {
+                        for (prop in this) {
+                            if (prop != 'url' && prop != 'format'
+                                    && prop != 'rdftype' && prop != 'title'
+                                    && prop != 'hc') {
+                                opts[prop] = parseInt(this[prop].value);
+                            } else {
+                                opts[prop] = this[prop].value.toString();
+                            }
+                        }
+                        if (opts.x < 0) {
+                            opts.x = 0;
+                        }
+                        if (opts.y < 0) {
+                            opts.y = 0;
                         }
                     }
+                    if (counter < lore.ore.controller.MAXSIZE){
+                     fig = lore.ore.ui.graphicalEditor.addFigure(opts);
+                    }
+                    counter++;
                 });
+        var ccounter = 0;
+        // iterate over all predicates to create node connection figures
+        loadedRDF.where('?subj ?pred ?obj')
+        .filter(function() {
+            // filter out the layout properties and predicates about the
+            // resource map as well as literals
+            if (this.pred.value.toString()
+                    .match(lore.constants.NAMESPACES["layout"])
+                    || this.pred.value.toString() === (lore.constants.NAMESPACES["dc"] + "format")
+                    || this.subj.value.toString().match(remurl)) {
+                return false;
             } else {
-                Ext.MessageBox.show({
-                        msg: 'Loading Resource Map',
-                        width:250,
-                        defaultTextHeight: 0,
-                        closable: false,
-                        cls: 'co-load-msg'
-                 });
-                 if (lore.ore.reposAdapter){
-                     lore.ore.reposAdapter.loadCompoundObject(rdfURL, this.loadCompoundObject, this.afterLoadCompoundObjectFail);
-                 }
+                return true;
             }
-    
-        } catch (e){
-            lore.debug.ore("Error in loadCompoundObjectFromURL",e);
+        }).each(function() {
+            
+            var connopts = {
+                subject: this.subj.value.toString(),
+                obj : this.obj.value.toString(),
+                pred: this.pred.value.toString()
+            };
+            
+            if (ccounter <= lore.ore.controller.MAXCONNECTIONS){
+                var fig = lore.ore.ui.graphicalEditor.addConnection(connopts);
+                if (fig) {
+                    ccounter ++;
+                }
+            }
+            
+            
+        });
+        
+        // Temporary workaround to set drawing area size on load
+        // problem still exists if a node is added that extends the boundaries
+        lore.ore.ui.graphicalEditor.coGraph.resizeMask();
+
+        if (counter > lore.ore.controller.MAXSIZE){
+            lore.ore.ui.vp.error("Resource Map is too big for LORE graphical editor! " + (counter - lore.ore.controller.MAXSIZE) + " resources not shown");
         }
+        if (ccounter >= lore.ore.controller.MAXCONNECTIONS){
+            lore.ore.ui.vp.error("Resource Map has too many connections for graphical editor! Some connections not displayed");
+        }
+        Ext.Msg.hide();
+        
+        // preload nested Resource Maps to cache
+        lore.ore.cache.cacheNested(loadedRDF, 0);
+        
+        var title = lore.ore.ui.grid.getPropertyValue("dc:title")
+		        || lore.ore.ui.grid.getPropertyValue("dcterms:title");
+		if (!title) {
+		    title = "Untitled";
+		}
+        
+        /*// lore.ore.populateResourceDetailsCombo();
+        // lore.debug.timeElapsed("show in history");
+        if (showInHistory) {
+            lore.ore.historyManager.addToHistory(remurl, title, (isPrivate && isPrivate.value == true ? true: false));
+        }*/
+        if (lore.ore.ui.topView
+                && lore.ore.ui.graphicalEditor.lookup[lore.ore.controller.currentURL]) {
+            lore.ore.ui.topView.hideAddIcon(true);
+        } else if (lore.ore.ui.topView) {
+            lore.ore.ui.topView.hideAddIcon(false);
+        }
+        // lore.debug.timeElapsed("done");
+        var readOnly = true;
+        Ext.getCmp('currentCOMsg').setText(
+                Ext.util.Format.ellipsis(title, 50)
+                        + (readOnly ? ' (read-only)' : ''), false);
+        Ext.getCmp("currentCOSavedMsg").setText("");
+        lore.ore.controller.isDirty = false;
+        lore.ore.controller.wasClean = true;
     }
     
     loadCompoundObjectFromURL = function(rdfURL){    	
@@ -363,12 +476,62 @@ Ext.onReady(function() {
 	        	region: 'center',
 	        	items: [
 					new Ext.TabPanel({
+		                id : "loreviews",
 					    renderTo: 'tabs3',
 					    activeTab: 0,
 					    frame:true,
 					    defaults:{autoHeight: true},
 					    applyTo: 'tabs3',
 					    border : false,
+					    itemTpl: new Ext.XTemplate(
+		                    '<li class="{cls}" id="{id}"><a class="x-tab-strip-close"></a>',
+		                    '<tpl if="menuHandler">',
+		                        '<a title="{text} Menu" href="#" onclick="{menuHandler}" class="x-tab-strip-menu"></a>',
+		                    '</tpl>',
+		                    '<a class="x-tab-right" href="#"><em class="x-tab-left">',
+		                    '<span class="x-tab-strip-inner"><span class="x-tab-strip-text {iconCls}">{text}</span></span>',
+		                    '</em></a>',
+		                    '</li>'
+		                ),
+		                /** 
+		                 * Override to allow menuHandler to be passed in as config
+		                 */
+		                getTemplateArgs: function(item) {
+		                    var result = Ext.TabPanel.prototype.getTemplateArgs.call(this, item);
+		                    if (item.menuHandler){
+		                        result.cls = result.cls + " x-tab-strip-with-menu";
+		                    }
+		                    return Ext.apply(result, {
+		                        closable: item.closable,
+		                        menuHandler: item.menuHandler
+		                    });
+		                },
+		                /** Override to allow mouse clicks on menu button */
+		                onStripMouseDown: function(e){
+		                    var menu = e.getTarget('.x-tab-strip-active a.x-tab-strip-menu', this.strip);
+		                    if (menu || e.button !== 0){
+		                        // default onclick behaviour will result
+		                        return;
+		                    }
+		                    e.preventDefault();
+		                    var t = this.findTargets(e);
+		                    if(t.close){
+		                        if (t.item.fireEvent('beforeclose', t.item) !== false) {
+		                            t.item.fireEvent('close', t.item);
+		                            this.remove(t.item);
+		                        }
+		                        return;
+		                    }
+		                    if(t.item && t.item != this.activeTab){
+		                        this.setActiveTab(t.item);
+		                    }
+		                },
+		                enableTabScroll : true,
+		                // Ext plugin to change hideMode to ensure tab contents are not reloaded
+		                plugins : new Ext.ux.plugin.VisibilityMode({
+		                            hideMode : 'nosize',
+		                            bubble : false
+		                }),
 					    items : [
 							{
 								title: 'Raw RDF',
@@ -382,12 +545,72 @@ Ext.onReady(function() {
 	                            id : "drawingarea",
 	                            xtype : "grapheditor",
 	                            iconCls: "graph-icon"
+	                        },
+	                        {
+	                            title : "Resource List",
+	                            tabTip: "View or edit the list of resources in the Resource Map",
+	                            xtype : "resourcepanel",
+	                            id : "remlistview",
+	                            iconCls: "list-icon"
+	                        },  {
+	                            title : "Details",
+	                            id: "remdetailsview",
+	                            tabTip: "View detailed description of Resource Map contents including properties and relationships",
+	                            xtype: "detailspanel",
+	                            iconCls: "detail-icon"
+	                        },  {
+	                            layout : 'fit',
+	                            id : "remslideview",
+	                            title : "Slideshow",
+	                            iconCls: "slide-icon",
+	                            tabTip: "View Resource Map contents as a slideshow",
+	                            items : [{
+                                    id : 'newss',
+                                    xtype : "slideshowpanel",
+                                    autoScroll : true
+                                }]
+	                        },	{
+	                            title : "Explore",
+	                            tabTip: "Discover related resources from the repository",
+	                            id : "remexploreview",
+	                            xtype : "explorepanel",
+	                            iconCls: "explore-icon"
 	                        }
 			            ]
 					})        
 	        	]
-	        },
-	        {
+	        },{
+	            region : "south",
+	            height : 25,
+	            xtype : "statusbar",
+	            id : "lorestatus",
+	            defaultText : "",
+	            autoClear : 6000,
+	            items: [
+	                '-',
+	                {
+	                    xtype:'label',
+	                    id:'currentCOMsg', 
+	                    text: 'New Resource Map'
+	                },
+	                ' ',
+	                {
+	                    xtype: 'label',
+	                    id:'currentCOSavedMsg',
+	                    text:'',
+	                    style: 'color:red'
+	                },
+	                ' ',
+	                {
+	                    xtype: 'button',
+	                    hidden: true,
+	                    id: 'lockButton',
+	                    icon: '../skin/icons/ore/lock.png',
+	                    tooltip: 'Resource Map is locked',
+	                    scope: lore.ore.controller
+	                }
+	            ]
+	        },{
 		        region: 'west',
 		        width: 350,
                 split:true,
@@ -396,6 +619,7 @@ Ext.onReady(function() {
 				        renderTo: 'tabs1',
 				        activeTab: 0,
 				        frame:true,
+			            id : "propertytabs",
 				        defaults:{autoHeight: true},
 				        applyTo: 'tabs1',
 			            border : false,
@@ -622,4 +846,20 @@ Ext.onReady(function() {
         alert(e);
     };
     
+    //alert('123');
+    //lore.ore.ui.vp = Ext.getCmp("viewport");
+    //lore.ore.ui.vp.show();
+    //alert('789');
+    
+    lore.ore.cache = new lore.ore.model.CompoundObjectCache();  
+    lore.ore.controller = new lore.ore.Controller({
+        currentURL: "http://austlit.edu.au"
+    });
+    
+    lore.ore.ui.graphicalEditor = Ext.getCmp("drawingarea");
+    
+    lore.ore.ui.grid = Ext.getCmp("remgrid");
+    lore.ore.ui.nodegrid = Ext.getCmp("nodegrid");
+    lore.ore.ui.relsgrid = Ext.getCmp("relsgrid");
+    lore.ore.ui.status = Ext.getCmp("lorestatus");
 });
