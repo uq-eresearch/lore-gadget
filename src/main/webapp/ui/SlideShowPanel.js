@@ -103,7 +103,7 @@ lore.ore.ui.SlideShowPanel = Ext.extend(Ext.Panel,{
                         icon: '../lore/skin/icons/arrow_refresh.png',
                         handler: this.resetSlide.createDelegate(this)
                     },
-                    //'->',
+                    '->',
                     {
                         id: 'move-prev',
                         tooltip: 'Move to previous slide',

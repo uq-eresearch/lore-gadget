@@ -9,7 +9,7 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
         config.autoWidth = true;
         config.bodyStyle = { backgroundColor : 'transparent' };
         // add a menu button to tab  : to make it easier for Mac users to access context menu
-        config.menuHandler = "GraphicalEditor.coGraph.onContextMenu(0, 0);";
+        config.menuHandler = "lore.ore.ui.graphicalEditor.coGraph.onContextMenu(0, 0);";
         lore.ore.ui.graphicalEditor.superclass.constructor.call(this, config);
         /** Default width of new nodes in graphical editor 
           * @const */
@@ -177,14 +177,14 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
                
             }
             lore.ore.ui.relsgrid.expand();
-            lore.ore.ui.grid.collapse();
+        	lore.ore.ui.grid.collapse();
         } else {
             //lore.ore.ui.nodegrid.store.removeAll();
             lore.ore.ui.nodegrid.bindModel(null);
             lore.ore.ui.relsgrid.store.removeAll();
             
             // Background selected: only show Resource Map properties
-            lore.ore.ui.relsgrid.collapse();
+        	lore.ore.ui.relsgrid.collapse();
             lore.ore.ui.grid.expand();
             lore.ore.ui.nodegrid.collapse();
             

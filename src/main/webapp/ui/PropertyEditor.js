@@ -63,16 +63,12 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                     this.getComponent(0).focus();
                 },
                 editField: function(tfield,rownum){
-                    try {
-                        this.triggerField = tfield;
-                        this.activeRow = rownum;
-                        var val = tfield.getValue();
-                        this.getComponent(0).setValue(val? val : '');
-                        this.show(); 
-                        this.focus();
-                    } catch (e){
-                        lore.debug.ore("Error in editField",e);
-                    }
+                    this.triggerField = tfield;
+                    this.activeRow = rownum;
+                    var val = tfield.getValue();
+                    this.getComponent(0).setValue(val? val : '');
+                    this.show(); 
+                    this.focus();
                 },
                 onShow: function(){
                     var rec = this.propEditor.store.getAt(this.activeRow);          
@@ -595,7 +591,7 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
     propNameRenderFunction: function(val, cell, rec){
         if (rec && rec.data && rec.data.id == "lorestore:isPrivate_0"){
             // display eye icon for private property
-            return "<img title='Private Resource Maps are not visible to other users' src='../../skin/icons/eye.png' alt=''><span style='"
+            return "<img title='Private Resource Maps are not visible to other users' src='../lore/skin/icons/eye.png' alt=''><span style='"
             + (lore.ore.controller.readOnly ? "color:grey;" : "") + "vertical-align:3px'> Private</span>";
         }
         if (rec && rec.data && rec.data.id == "lorestore:isLocked_0"){
@@ -623,8 +619,8 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
     renderFunction: function(val, cell, rec){
         if (rec.get("type") == "boolean"){
             // display a checkbox for boolean values
-            var checkedImg = '../../content/lib/ext3.2/resources/images/default/menu/checked.gif';
-            var uncheckedImg = '../../content/lib/ext3.2/resources/images/default/menu/unchecked.gif';
+            var checkedImg = '../lore/lib/ext3.2/resources/images/default/menu/checked.gif';
+            var uncheckedImg = '../lore/lib/ext3.2/resources/images/default/menu/unchecked.gif';
             var cb = ''
                 + '<div style="height:13px;overflow:visible">'
                 + '<img style="vertical-align:-3px" src="'
@@ -695,40 +691,36 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
         });
         panel.propMenu.panelref = panel.id;
         var addPropHandler = function () {
-            try{
-                var panel = Ext.getCmp(this.parentMenu.panelref);
-                var pstore = panel.getStore();
-                var counter = 0;
-                var prop = pstore.getById(this.text + "_" + counter);
-                
-                while (prop) {
-                    if (prop && !prop.get("value")){
-                        // don't add a second blank property, highlight existing
-                        panel.getSelectionModel().selectRecords([prop]);
-                        return;
-                    }
-                    counter = counter + 1;
-                    prop = pstore.getById(this.propname + "_" + counter);
+            var panel = Ext.getCmp(this.parentMenu.panelref);
+            var pstore = panel.getStore();
+            var counter = 0;
+            var prop = pstore.getById(this.text + "_" + counter);
+            
+            while (prop) {
+                if (prop && !prop.get("value")){
+                    // don't add a second blank property, highlight existing
+                    panel.getSelectionModel().selectRecords([prop]);
+                    return;
                 }
-                var theid = this.propname + "_" + counter;
-                var pData = {id: theid, name: this.propname, value: ""};
-                var ptype = (this.propname == "dcterms:abstract" || this.propname == "dc:description")? "string" : "plainstring";
-                if (this.propname == "dcterms:created" || this.propname == "dcterms:modified"){
-                    ptype = "date";
-                } else if (this.propname == "lorestore:isPrivate"){
-                    ptype = "boolean";
-                    pData.value = true;
-                }
-                pData.type = ptype;
-                pstore.loadData([pData],true);
-            } catch (ex){
-                lore.debug.ore("Error adding prop " + this.propname,ex);
+                counter = counter + 1;
+                prop = pstore.getById(this.propname + "_" + counter);
             }
+            var theid = this.propname + "_" + counter;
+            var pData = {id: theid, name: this.propname, value: ""};
+            var ptype = (this.propname == "dcterms:abstract" || this.propname == "dc:description")? "string" : "plainstring";
+            if (this.propname == "dcterms:created" || this.propname == "dcterms:modified"){
+                ptype = "date";
+            } else if (this.propname == "lorestore:isPrivate"){
+                ptype = "boolean";
+                pData.value = true;
+            }
+            pData.type = ptype;
+            pstore.loadData([pData],true);
         };
         if (panel.id == "remgrid"){
             panel.propMenu.add({
                 id: "remgrid-add-lorestore:isPrivate",
-                icon: "../../skin/icons/eye.png",
+                icon: "../lore/skin/icons/eye.png",
                 text: "Private",
                 propname: "lorestore:isPrivate",
                 handler: addPropHandler

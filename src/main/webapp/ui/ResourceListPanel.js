@@ -219,20 +219,16 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
                  }
               });
         }
-        try{
-            p.getSelectionModel().clearSelections();
-            var sfig = lore.ore.ui.graphicalEditor.getSelectedFigure();
-            if (sfig) {
-                p.selectResource(sfig.url);
-            }
-            p.store.sort('index','ASC');
-            p.getView().refresh();
-            // focus on the grid view to enable key navigation/deletion to work
-            if (p.getView().focusEl){
-                p.getView().focusEl.focus();
-            }
-        } catch (e){
-            lore.debug.ore("Error in ResourceListPanel: updateContent",e);
+        p.getSelectionModel().clearSelections();
+        var sfig = lore.ore.ui.graphicalEditor.getSelectedFigure();
+        if (sfig) {
+            p.selectResource(sfig.url);
+        }
+        p.store.sort('index','ASC');
+        p.getView().refresh();
+        // focus on the grid view to enable key navigation/deletion to work
+        if (p.getView().focusEl){
+            p.getView().focusEl.focus();
         }
     },
     showContextMenu: function(grid, rowIndex, e){
@@ -372,18 +368,20 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
     },
     selectResource: function(uri){
         var sm = this.getSelectionModel();
-        if (!uri){
-        	if (sm.grid) {
-        		sm.clearSelections();
-        	}
-        } else {
-            var idx = this.store.findExact('uri',uri);
-            var rec = this.store.getAt(idx);
-            var selrec = sm.getSelected();
-            if (rec && (selrec != rec)){
-                sm.selectRow(idx);
-            } 
-        }
+        if (sm.grid) {
+	        if (!uri){
+	        	//if (sm.grid) {
+	        		sm.clearSelections();
+	        	//}
+	        } else {
+	            var idx = this.store.findExact('uri',uri);
+	            var rec = this.store.getAt(idx);
+	            var selrec = sm.getSelected();
+	            if (rec && (selrec != rec)){
+	                sm.selectRow(idx);
+	            } 
+	        }
+    	}
     }
 });
 Ext.reg('resourcepanel',lore.ore.ui.ResourceListPanel);

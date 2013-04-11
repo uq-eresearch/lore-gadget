@@ -55,8 +55,9 @@
         <script type="text/javascript" src="ui/SlidePanel.js"></script>
         <script type="text/javascript" src="ui/SlideShowPanel.js"></script> 
         <script type="text/javascript" src="ui/ExplorePanel.js"></script>
-        <script type="text/javascript" src="ui/Viewport.js"></script>
         <script type="text/javascript" src="ui/SearchPanel.js"></script>
+        <script type="text/javascript" src="ui/Viewport.js"></script>
+        <script type="text/javascript" src="ui/Gadget.js"></script>
 
         <script type="text/javascript" src="lib/draw2d.js"></script>
         <script type="text/javascript" src="ui/graph/draw2d.commands.js"></script>
@@ -70,10 +71,11 @@
         <script type="text/javascript" src="ui/graph/COGraph.js"></script>
         <script type="text/javascript" src="ui/graph/Layout.js"></script>
         <script type="text/javascript" src="ui/graph/FanConnectionRouter.js"></script>
-        
+                
         <link rel="stylesheet" type="text/css" href="lib/ext3.2/resources/css/ext-all.css"/>
         <link rel="stylesheet" type="text/css" href="loreui.css"/>
         <link rel="stylesheet" type="text/css" href="lore_ore.css"/>
+        <link rel="stylesheet" type="text/css" href="lib/ext/ux/carousel.css"/>  
         
         <div id="tabs1">
     	    <div id="tabs2">

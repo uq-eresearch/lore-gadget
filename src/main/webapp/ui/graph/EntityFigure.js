@@ -549,7 +549,7 @@ Ext.extend(lore.ore.ui.graph.EntityFigure, lore.draw2d.Node, {
     populateContextMenu : function(menu){
         menu.add({
                 text: "Delete resource from Resource Map",
-                icon: "../../skin/icons/delete.png",
+                icon: "../lore/skin/icons/delete.png",
                 scope: this,
                 handler: function(evt){
                     this.workflow.getCommandStack()
@@ -560,7 +560,7 @@ Ext.extend(lore.ore.ui.graph.EntityFigure, lore.draw2d.Node, {
           menu.add("-");
           menu.add({
                 text: "Show in Resource List",
-                icon: "../../skin/icons/ore/table_edit.png",
+                icon: "../lore/skin/icons/ore/table_edit.png",
                 scope: this,
                 handler: function(evt){
                     Ext.getCmp("loreviews").activate("remlistview");
@@ -569,7 +569,7 @@ Ext.extend(lore.ore.ui.graph.EntityFigure, lore.draw2d.Node, {
           });
           menu.add({
                 text: "Show in Details view",
-                icon: "../../skin/icons/ore/application_view_detail.png",
+                icon: "../lore/skin/icons/ore/application_view_detail.png",
                 scope: this,
                 handler: function(evt){
                     Ext.getCmp("loreviews").activate("remdetailsview");
@@ -578,7 +578,7 @@ Ext.extend(lore.ore.ui.graph.EntityFigure, lore.draw2d.Node, {
           });
           menu.add({
                 text: "Show in Slideshow view",
-                icon: "../../skin/icons/ore/picture_empty.png",
+                icon: "../lore/skin/icons/ore/picture_empty.png",
                 scope: this,
                 handler: function(evt){     
                     Ext.getCmp("newss").showResource(this.url);
@@ -586,7 +586,7 @@ Ext.extend(lore.ore.ui.graph.EntityFigure, lore.draw2d.Node, {
            });
            menu.add({
                 text: "Show in Explore view",
-                icon: "../../skin/icons/ore/network.png",
+                icon: "../lore/skin/icons/ore/network.png",
                 scope: this,
                 handler: function(evt){
                     this.contextmenu.hide();
@@ -612,24 +612,19 @@ Ext.extend(lore.ore.ui.graph.EntityFigure, lore.draw2d.Node, {
                     },
                     colors: [this.NOHIGHLIGHT, "FFFF99","CCFFCC","DBEBFF","EFD7FF","FFE5B4","FFDBFB"],
                     handler: function(cp,color){
-                        try{
-                            lore.debug.ore("setting hc from " + this.highlightColor + " to " + color)
-                            var propData = {
-                                id: lore.constants.NAMESPACES["layout"] + "highlightColor", 
-                                ns: lore.constants.NAMESPACES["layout"],
-                                name: "highlightColor", 
-                                value: color, 
-                                prefix: "layout"
-                            };
-                            if (this.highlightColor != color){
-                                this.model.get('properties').setProperty(propData,0);
-                                lore.ore.controller.setDirty();
-                                this.setHighlightColor(color);
-                            }
-                            this.contextmenu.hide();
-                        } catch (ex){
-                            lore.debug.ore("Error setting highlight color",ex);
+                        var propData = {
+                            id: lore.constants.NAMESPACES["layout"] + "highlightColor", 
+                            ns: lore.constants.NAMESPACES["layout"],
+                            name: "highlightColor", 
+                            value: color, 
+                            prefix: "layout"
+                        };
+                        if (this.highlightColor != color){
+                            this.model.get('properties').setProperty(propData,0);
+                            lore.ore.controller.setDirty();
+                            this.setHighlightColor(color);
                         }
+                        this.contextmenu.hide();
                     },
                     scope: this
                     

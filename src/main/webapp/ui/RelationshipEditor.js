@@ -20,15 +20,11 @@ lore.ore.ui.RelationshipEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                 layout: 'fit',
                 animateTarget: 'properties',
                 editField: function(tfield,row){
-                    try {
-                        this.triggerField = tfield;
-                        this.activeRow = row;
-                        var val = tfield.getValue();
-                        this.show(); 
-                        this.focus();
-                    } catch (e){
-                        lore.debug.ore("Error in editField",e);
-                    }
+                    this.triggerField = tfield;
+                    this.activeRow = row;
+                    var val = tfield.getValue();
+                    this.show(); 
+                    this.focus();
                 },
                 items: [],
                 bbar: [

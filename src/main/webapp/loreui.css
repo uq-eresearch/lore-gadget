@@ -35,15 +35,15 @@
 /* status bar/pop-up styles */
 .info-icon {
 	padding-left: 25px !important;
-	background: transparent url(../skin/icons/information.png) no-repeat 3px 3px;
+	background: transparent url(../lore/skin/icons/information.png) no-repeat 3px 3px;
 }
 .warning-icon {
 	padding-left: 25px !important;
-	background: transparent url(../skin/icons/warning.png) no-repeat 3px 3px;
+	background: transparent url(../lore/skin/icons/warning.png) no-repeat 3px 3px;
 }
 .error-icon {
 	padding-left: 25px !important;
-	background: transparent url(../skin/icons/error.png) no-repeat 3px 3px;
+	background: transparent url(../lore/skin/icons/error.png) no-repeat 3px 3px;
 }
 .loading-icon {
     padding-left: 25px !important;

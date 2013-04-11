@@ -148,7 +148,7 @@ lore.util = {
         if (locbar) {
             winOpts += ',location=1';
         }
-        var newwindow=win.openDialog(url,'view_resource',winOpts);
+        var newwindow=win.open(url,'view_resource',winOpts);
         newwindow.focus();
         
     },

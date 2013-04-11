@@ -149,30 +149,22 @@ lore.draw2d.Connection = Ext.extend(lore.draw2d.Line, {
           }
     },
     updateModel: function(){
-        try{
-          if (this.model && this.targetPort && this.edgetype){
-              var targetVal = this.targetPort.getParent().url;
-              var props = this.model.get('properties');
-              var prop = this.edgens + this.edgetype;
-              var propIndex = props.findProperty(prop, targetVal);
-              if (propIndex == -1){
-                var propData = {
-                  id: this.edgens + this.edgetype, 
-                  ns: this.edgens, 
-                  name: this.edgetype, 
-                  value: targetVal,
-                  prefix: lore.constants.nsprefix(this.edgens)
-                };
-                props.setProperty(propData);
-              }
-          } else {
-            if (!this.model){
-              lore.debug.ore("Warning : no model for connection",this);
-            }
+      if (this.model && this.targetPort && this.edgetype){
+          var targetVal = this.targetPort.getParent().url;
+          var props = this.model.get('properties');
+          var prop = this.edgens + this.edgetype;
+          var propIndex = props.findProperty(prop, targetVal);
+          if (propIndex == -1){
+            var propData = {
+              id: this.edgens + this.edgetype, 
+              ns: this.edgens, 
+              name: this.edgetype, 
+              value: targetVal,
+              prefix: lore.constants.nsprefix(this.edgens)
+            };
+            props.setProperty(propData);
           }
-        } catch (e){
-          lore.debug.ore("Error updating model from connection",e);
-        }
+      }
     },
     setTargetAnchor: function(anchor) {
       this.targetAnchor = anchor;

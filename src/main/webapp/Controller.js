@@ -1244,5 +1244,345 @@ Ext.apply(lore.ore.Controller.prototype, {
             lore.ore.ui.vp.info("Resource Map is read only");
         }
         return this.readOnly;
+    },
+    safeGetFirstChildValue : function(node) {
+		return ((node.length > 0) && (node[0]) && node[0].firstChild) ?
+                 node[0].firstChild.nodeValue : '';
+    },
+    parseCOFromXML : function(result){
+    	var props = {};
+        var bindings, node, attr, nodeVal;
+        props.title = "Untitled";
+        props.creator = "Anonymous";
+          
+        bindings = result.getElementsByTagName('binding');
+        for (var j = 0; j < bindings.length; j++){  
+        	attr = bindings[j].getAttribute('name');
+            if (attr =='g'){ //graph uri
+            	node = bindings[j].getElementsByTagName('uri'); 
+                props.uri = lore.ore.controller.safeGetFirstChildValue(node);
+            } else if (attr == 'v'){
+                node = bindings[j].getElementsByTagName('literal');
+                nodeVal = lore.ore.controller.safeGetFirstChildValue(node);
+                if (!nodeVal){
+                	node = bindings[j].getElementsByTagName('uri');
+                }
+                props.match = lore.ore.controller.safeGetFirstChildValue(node);
+            } else {
+                node = bindings[j].getElementsByTagName('literal');
+                nodeVal = lore.ore.controller.safeGetFirstChildValue(node);
+                if (attr == 't' && nodeVal){ //title
+                	props.title = nodeVal;
+                } else if (attr == 'a' && nodeVal){// dc:creator
+                    props.creator = nodeVal;
+                } else if (attr == 'priv' && nodeVal) { // isPrivate
+                    props.isPrivate = nodeVal;
+                } else if (attr == 'm' && nodeVal){ // dcterms:modified
+                  	props.modified = nodeVal;
+                    var modDate = Date.parseDate(props.modified,'c') || Date.parseDate(props.modified,'Y-m-d');
+                    if (modDate){
+                    	props.modified = modDate;
+                    }
+                } 
+            }
+        }
+        return props;
+    },
+    getCompoundObjects: function(matchuri, matchpred, matchval, store){     	
+    	if (matchuri == null && matchpred == null && matchval == null) {
+    		return;
+    	}
+        var ra = this;
+        try {
+        	var escapedURL = "";
+        	var altURL = "";
+        	if (matchuri){
+        		escapedURL = encodeURIComponent(matchuri.replace(/}/g,'%257D').replace(/{/g,'%257B'));
+        	}
+           
+        	var predicate = "?p";
+	   	   	if (matchpred != null || matchpred) {
+	   	   		matchpred = String(matchpred);
+	   	   		if (matchpred.length != 0) {
+	   	   			predicate = "<" + matchpred + ">";
+	   	   		}
+	   	   	}
+           
+	   	   	var queryURL = "http://localhost:3030/ds/query?query=";
+	   	   	queryURL += encodeURIComponent("SELECT DISTINCT ?g ?a ?m ?t ?priv ");
+	   	   	queryURL += encodeURIComponent("WHERE { GRAPH ?g {");
+	   	   	queryURL += encodeURIComponent("?g <http://www.openarchives.org/ore/terms/describes> ?r.");
+	   	   	if (matchuri) {
+	   	   		queryURL += encodeURIComponent("?r <http://www.openarchives.org/ore/terms/aggregates> <" + matchuri + ">.");
+	   	   	}
+	   	   	queryURL += encodeURIComponent("?s " + predicate + " ?o .");
+	   	   	queryURL += encodeURIComponent("OPTIONAL {?g <http://purl.org/dc/elements/1.1/creator> ?a}.");
+	   	   	queryURL += encodeURIComponent("OPTIONAL {?g <http://purl.org/dc/terms/modified> ?m}.");
+	   	   	queryURL += encodeURIComponent("OPTIONAL {?g <http://purl.org/dc/elements/1.1/title> ?t}.");
+	   	   	queryURL += encodeURIComponent("OPTIONAL {?g <http://auselit.metadata.net/lorestore/isPrivate> ?priv}.");
+	   	   	queryURL += encodeURIComponent("OPTIONAL {?g <http://auselit.metadata.net/lorestore/isPrivate> ?user}.");
+		   
+		   	if (matchval != null) {
+			    matchval = String(matchval);
+				if (matchval[0] == "\"" && matchval[matchval.length - 1] == "\"") {
+					var temp = matchval.substring(1, matchval.length - 1);
+					queryURL += encodeURIComponent("FILTER regex(str(?o), \"" + temp + "\", \"i\").");
+				} else if (matchval.indexOf(" ") != -1) {
+					var terms = matchval.split(" ");
+					for (var i = 0; i < terms.length; i++) {
+						queryURL += encodeURIComponent("FILTER regex(str(?o), \"" + terms[i] + "\", \"i\"). ");
+					}
+				} else {
+					queryURL += encodeURIComponent("FILTER regex(str(?o), \"" + matchval + "\", \"i\").");
+				}
+		   	}
+		   
+		   	queryURL += encodeURIComponent("}}");
+		   	queryURL += "&output=xml";   	
+            
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', queryURL);
+            xhr.onreadystatechange = function(aEvt) {
+                if (xhr.readyState == 4) {
+                    if (xhr.responseText && xhr.status != 204 && xhr.status < 400) {
+                        var xmldoc = xhr.responseXML;
+                        var result = {};
+                        if (xmldoc) {
+                            result = xmldoc.getElementsByTagNameNS("http://www.w3.org/2005/sparql-results#", "result");
+                        }
+
+                        store.removeAll();
+                        
+                        if (result.length > 0){
+                            var coList = [];
+                            var processed = {};
+                            for (var i = 0; i < result.length; i++) {
+                                var theobj = lore.ore.controller.parseCOFromXML(result[i]);
+                                var resultIndex = processed[theobj.uri];
+                                var existing = theobj; 
+                                if (resultIndex >= 0){
+                                    existing = coList[resultIndex];
+                                    if (existing && !existing.creator.match(theobj.creator)){
+                                        existing.creator = existing.creator + " &amp; " + theobj.creator;
+                                    }
+                                } else {
+                                   if (matchval) {theobj.searchval = matchval;}
+                                   coList.push(theobj);
+                                   processed[theobj.uri] = coList.length - 1; 
+                                }    
+                            }
+                            
+                            store.lastOptions={params:{start: 0,limit:5}};
+                            store.loadData(coList,true);  
+                        } 
+                    } else if (xhr.status == 404){
+                        alert("E4");
+                    	alert(ex);
+                    }
+                }
+            };
+            xhr.send(null);
+        } catch (e) {
+            alert("E3");
+        	alert(e);
+        }
+    },
+    formatXML : function(xml) {
+        var formatted = '';
+        var reg = /(>)(<)(\/*)/g;
+        xml = xml.replace(reg, '$1\r\n$2$3');
+        var pad = 0;
+        jQuery.each(xml.split('\r\n'), function(index, node) {
+            var indent = 0;
+            if (node.match( /.+<\/\w[^>]*>$/ )) {
+                indent = 0;
+            } else if (node.match( /^<\/\w/ )) {
+                if (pad != 0) {
+                    pad -= 1;
+                }
+            } else if (node.match( /^<\w[^>]*[^\/]>.*$/ )) {
+                indent = 1;
+            } else {
+                indent = 0;
+            }
+
+            var padding = '';
+            for (var i = 0; i < pad; i++) {
+                padding += '  ';
+            }
+
+            formatted += padding + node + '\r\n';
+            pad += indent;
+        });
+
+        return formatted;
+    },
+    loadCompoundObject : function(rdf) {
+    	Ext.get('centerPanel').update('<pre>' + this.formatXML(rdf)
+    			.replace(/&/g, "&amp;")
+    			.replace(/>/g, "&gt;")
+    			.replace(/</g, "&lt;")
+    			.replace(/"/g, "&quot;") + '</pre>');
+    	
+        lore.ore.ui.graphicalEditor.initGraph();
+        
+        var rdfDoc;
+        if (typeof rdf != 'object') {
+            rdfDoc = new DOMParser().parseFromString(rdf, "text/xml");
+        } else {
+            showInHistory = true;
+            rdfDoc = rdf.responseXML;
+        }
+        var databank = jQuery.rdf.databank();
+        for (ns in lore.constants.NAMESPACES) {
+            databank.prefix(ns, lore.constants.NAMESPACES[ns]);
+        }
+        databank.load(rdfDoc);
+        var loadedRDF = jQuery.rdf({
+                    databank : databank
+        });
+        var remQuery = loadedRDF.where('?aggre rdf:type ore:Aggregation')
+                .where('?rem ore:describes ?aggre');
+        var aggreurl, remurl;
+        var res = remQuery.get(0);
+        var isPrivate = false;
+        
+        if (res) {
+            remurl = res.rem.value.toString();
+            aggreurl = res.aggre.value.toString();
+            this.loadedCO = new lore.ore.model.CompoundObject();
+            this.loadedCO.load({
+                        format : 'application/rdf+xml',
+                        content : rdfDoc
+            });
+            isPrivate = this.loadedCO.properties.getProperty(lore.constants.NAMESPACES["lorestore"] + "isPrivate");
+            lore.ore.cache.add(remurl, this.loadedCO);
+            lore.ore.cache.setLoadedCompoundObjectUri(remurl);
+            lore.ore.cache.setLoadedCompoundObjectIsNew(false);
+            lore.ore.cache.setLoadedCompoundObjectUri(remurl);
+            lore.ore.controller.bindViews(lore.ore.cache.getLoadedCompoundObject());
+            
+        } else {
+            lore.ore.ui.vp.warning("No Resource Map found");
+            lore.debug.ore("Error: no remurl found in RDF", loadedRDF);
+            return;
+        }
+
+        var counter = 0;
+        var numResources = 
+        loadedRDF.where('<' + aggreurl + '> ore:aggregates ?url')
+                .optional('?url layout:x ?x')
+                .optional('?url layout:y ?y')
+                .optional('?url layout:width ?w')
+                .optional('?url layout:height ?h')
+                .optional('?url layout:originalHeight ?oh')
+                .optional('?url layout:highlightColor ?hc')
+                .optional('?url layout:orderIndex ?order')
+                .optional('?url layout:abstractPreview ?abstractPreview')
+                .optional('?url layout:isPlaceholder ?placeholder')
+                .optional('?url dc:format ?format')
+                .optional('?url rdf:type ?rdftype')
+                .optional('?url dc:title ?title')
+                .each(function() {
+                    var resourceURL = this.url.value.toString();
+                    var fig;
+                    var opts = {
+                        batch : true,
+                        url : resourceURL
+                    };
+                    if (this.x && this.y) {
+                        for (prop in this) {
+                            if (prop != 'url' && prop != 'format'
+                                    && prop != 'rdftype' && prop != 'title'
+                                    && prop != 'hc') {
+                                opts[prop] = parseInt(this[prop].value);
+                            } else {
+                                opts[prop] = this[prop].value.toString();
+                            }
+                        }
+                        if (opts.x < 0) {
+                            opts.x = 0;
+                        }
+                        if (opts.y < 0) {
+                            opts.y = 0;
+                        }
+                    }
+                    if (counter < lore.ore.controller.MAXSIZE){
+                     fig = lore.ore.ui.graphicalEditor.addFigure(opts);
+                    }
+                    counter++;
+                });
+        var ccounter = 0;
+        loadedRDF.where('?subj ?pred ?obj')
+        .filter(function() {
+            if (this.pred.value.toString()
+                    .match(lore.constants.NAMESPACES["layout"])
+                    || this.pred.value.toString() === (lore.constants.NAMESPACES["dc"] + "format")
+                    || this.subj.value.toString().match(remurl)) {
+                return false;
+            } else {
+                return true;
+            }
+        }).each(function() {
+            
+            var connopts = {
+                subject: this.subj.value.toString(),
+                obj : this.obj.value.toString(),
+                pred: this.pred.value.toString()
+            };
+            
+            if (ccounter <= lore.ore.controller.MAXCONNECTIONS){
+                var fig = lore.ore.ui.graphicalEditor.addConnection(connopts);
+                if (fig) {
+                    ccounter ++;
+                }
+            }
+            
+            
+        });
+        
+        lore.ore.ui.graphicalEditor.coGraph.resizeMask();
+
+        if (counter > lore.ore.controller.MAXSIZE){
+            lore.ore.ui.vp.error("Resource Map is too big for LORE graphical editor! " + (counter - lore.ore.controller.MAXSIZE) + " resources not shown");
+        }
+        if (ccounter >= lore.ore.controller.MAXCONNECTIONS){
+            lore.ore.ui.vp.error("Resource Map has too many connections for graphical editor! Some connections not displayed");
+        }
+        Ext.Msg.hide();
+        
+        lore.ore.cache.cacheNested(loadedRDF, 0);
+        
+        var title = lore.ore.ui.grid.getPropertyValue("dc:title")
+		        || lore.ore.ui.grid.getPropertyValue("dcterms:title");
+		if (!title) {
+		    title = "Untitled";
+		}
+        
+        if (lore.ore.ui.topView
+                && lore.ore.ui.graphicalEditor.lookup[lore.ore.controller.currentURL]) {
+            lore.ore.ui.topView.hideAddIcon(true);
+        } else if (lore.ore.ui.topView) {
+            lore.ore.ui.topView.hideAddIcon(false);
+        }
+        var readOnly = true;
+        Ext.getCmp('currentCOMsg').setText(
+                Ext.util.Format.ellipsis(title, 50)
+                        + (readOnly ? ' (read-only)' : ''), false);
+        Ext.getCmp("currentCOSavedMsg").setText("");
+        lore.ore.controller.isDirty = false;
+        lore.ore.controller.wasClean = true;
+    },
+    loadCompoundObjectFromURL : function(rdfURL){    	
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', "http://localhost:3030/ds/data?graph=" + rdfURL);
+        xhr.onreadystatechange = function(aEvt) {
+            if (xhr.readyState == 4) {
+                if (xhr.responseText && xhr.status != 204 && xhr.status < 400) {
+                	lore.ore.controller.loadCompoundObject(xhr.responseText);
+                }
+            }
+        };
+        xhr.send(null);
     }
 });

@@ -441,7 +441,7 @@ div.coListing:hover {
 	position:relative;
 }
 .x-tab-strip-with-menu .x-tab-left {
-    padding-right:19px;
+    padding-right:19px !important;
 }
 .x-tab-strip .x-tab-strip-with-menu a.x-tab-strip-menu {	
 	background-image:url(./lib/ext3.2/resources/images/gray/panel/tools-sprites-trans.gif);

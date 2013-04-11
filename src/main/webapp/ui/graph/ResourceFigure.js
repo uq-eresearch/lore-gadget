@@ -168,9 +168,7 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
         var theurl = this.url;
         var mimetype = this.getProperty("dc:format_0");
         var rdftype = this.getProperty("rdf:type_0");
-        if (this.hasPreview) {
-            lore.debug.ore("Regenerating node preview " + this.url, this);
-        } else {
+        if (!this.hasPreview) {
             this.hasPreview = true;
         }
         // remove existing content preview and url
@@ -239,7 +237,7 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
                         {tag: "br"}, 
                         {
                             tag: "img",
-                            src: "../../skin/icons/ore/action_go.gif"
+                            src: "../lore/skin/icons/ore/action_go.gif"
                         }, 
                         "&nbsp;Load in LORE"
                     ]
@@ -642,7 +640,7 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
         if (this.iframe){
             menu.add({
                 text: "Reset preview",
-                icon: "../../skin/icons/arrow_refresh.png",
+                icon: "../lore/skin/icons/arrow_refresh.png",
                 scope: this,
                 handler: function(evt){
                     if (this.iframe && !this.abstractPreview) {
@@ -670,7 +668,7 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
         if (!format || !format.match("rdf")) {
             menu.add({
                 text: "Open resource in separate window",
-                icon: "../../skin/icons/page_go.png",
+                icon: "../lore/skin/icons/page_go.png",
                 scope: this,
                 handler: function(evt){
                     lore.util.launchWindow(this.url, true, window);
