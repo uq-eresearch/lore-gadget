@@ -154,7 +154,7 @@ Ext.onReady(function() {
 					    items : [
 							{
 								title: 'Raw RDF',
-								html: '<p id="centerPanel"></p>',
+								html: '<p id="centerPanel" style="white-space: pre; overflow: scroll; height: 100%"></p>',
 								iconCls: "code-icon"
 							},{
 	                            title : "Graphical Editor",
