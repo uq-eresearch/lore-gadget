@@ -8,7 +8,7 @@ lore.ore.ui.SlideShowPanel = Ext.extend(Ext.Panel,{
     activeItem: 0,
     playing: false,
     interval: 3,
-    bodyStyle: 'padding:3px',
+    bodyStyle: 'padding:3px; height: 100%;',
     defaults: {
         border:false
     },   
@@ -175,7 +175,7 @@ lore.ore.ui.SlideShowPanel = Ext.extend(Ext.Panel,{
         Ext.MessageBox.show({
                msg: 'Generating Slideshow',
                width:250,
-               defaultTextHeight: 0,
+               //defaultTextHeight: 0,
                closable: false,
                cls: 'co-load-msg'
         });

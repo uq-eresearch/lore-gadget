@@ -299,7 +299,7 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
             });
             this.contextmenu.add({
                 text: "Show in Slideshow view",
-                icon: "../../skin/icons/ore/picture_empty.png",
+                icon: "../lore/skin/icons/ore/picture_empty.png",
                 scope: this,
                 handler: function(evt){         
                     Ext.getCmp("newss").showResource(this.tmpurl);

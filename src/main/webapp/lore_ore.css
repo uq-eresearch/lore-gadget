@@ -215,6 +215,9 @@
 .explore-icon {
 	background-image: url(./skin/icons/ore/network.png) !important; 
 }
+.explorePanel {
+	height: 100% !important; 
+}
 .exploreHistory {
     vertical-align:middle;
 	line-height: 2em;

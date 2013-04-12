@@ -106,7 +106,7 @@ lore.ore.ui.SlidePanel = Ext.extend(Ext.Panel,{
                             // Goto slide link (only if resource is in same Resource Map)
                             relhtml += "&nbsp;<a href='#' title='Go to slide' onclick='Ext.getCmp(\"" 
                                 + this.ssid + "\").setActiveItem(\"" + theProp.value + "_" + container.uri+"\");'>"
-                                + "<img src='../../skin/icons/ore/picture_empty.png'></a>";
+                                + "<img src='../lore/skin/icons/ore/picture_empty.png'></a>";
                         }
                         relhtml += "</p>";
                     } else {

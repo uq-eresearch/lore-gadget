@@ -813,31 +813,24 @@ Ext.apply(lore.ore.Controller.prototype, {
                 lore.ore.ui.vp.info("Unable to save Resource Map data");
             }
         };
-        try {
-            format = format || "rdf"; // default value
-            var currentCO = lore.ore.cache.getLoadedCompoundObject();
-            if (format == "wordml"){
-                var wExp = new lore.exporter.WordExporter();
-                var docxData = currentCO.toWord();
-                lore.debug.ore("docx",docxData);
-                wExp.createWordFile(docxData.docxml, docxData.rels);
-            } else {
-                lore.util.writeFileWithSaveAs("Export Resource Map as", 
-                    fileExtensions[format],
-                    // savecb callback will actually write the file
-                    function(savecb){ 
-                            // get contents via serialize
-                            saveContents(savecb, currentCO.serialize(format));
-                    },
-                    window
-                );
-            }        
-                                                
-        } catch (e) {
-            lore.debug.ore("Error saving Resource Maps data",e );
-            lore.ore.ui.vp.error("Error saving Resource Map: " + e);
-        }
-    
+        format = format || "rdf"; // default value
+        var currentCO = lore.ore.cache.getLoadedCompoundObject();
+        if (format == "wordml"){
+            var wExp = new lore.exporter.WordExporter();
+            var docxData = currentCO.toWord();
+            lore.debug.ore("docx",docxData);
+            wExp.createWordFile(docxData.docxml, docxData.rels);
+        } else {
+            lore.util.writeFileWithSaveAs("Export Resource Map as", 
+                fileExtensions[format],
+                // savecb callback will actually write the file
+                function(savecb){ 
+                        // get contents via serialize
+                        saveContents(savecb, currentCO.serialize(format));
+                },
+                window
+            );
+        }        
     },
     /** keep selection in sync between graphical editor and resource list */
     updateSelection: function(obj, view){

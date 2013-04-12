@@ -6,6 +6,7 @@ Ext.onReady(function() {
         currentURL: "http://austlit.edu.au"
     });
     lore.ore.ui.vp = new lore.ore.ui.Viewport();
+    lore.ore.reposAdapter = new lore.ore.repos.SPARQLAdapter("http://localhost:3030/ds");
     
 	var searchStore = new Ext.ux.data.PagingJsonStore({
         idProperty : "uri",
