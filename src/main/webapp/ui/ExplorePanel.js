@@ -587,8 +587,6 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
     },
     /** generate a PNG image capturing the visualisation from this view */
     getAsImage : function() {
-     try {
-       
         var epanel = this.getComponent(0);
         var imageW = epanel.getInnerWidth() + 50;
         var imageH = epanel.getInnerHeight() + 50;
@@ -613,7 +611,7 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
         canvas.setAttribute("width", imageW + "px");
         canvas.setAttribute("height", imageH + "px");
         context.clearRect(0,0, imageW, imageH);
-
+        
         // Draw the window, cropping to display just the visualisation
         context.drawWindow(window, offsetX, offsetY, imageW, imageH, "rgb(255,255,255)");
 
@@ -624,11 +622,7 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
         // translate jit canvas back to original position
         this.fd.canvas.translate(fdcx, fdcy);
         vp.info("Image ready");
-        return imgData;
-     } catch (e) {
-        lore.debug.ore("Error in ExplorePanel.getAsImage",e);
-     }
-        
+        return imgData;        
     },
     /** Temporary function to regenerate content each time the panel is activated 
      * @param {} p The panel

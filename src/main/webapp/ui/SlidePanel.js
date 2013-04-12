@@ -351,7 +351,8 @@ lore.ore.ui.SlidePanel = Ext.extend(Ext.Panel,{
     },
     /** Reset the iframe to show resource URL */
     resetPreview: function(){ 
-      if (this.previewEl && this.previewEl.tagName == 'iframe'){
+      if (this.previewEl && this.previewEl.tagName.toUpperCase
+    		  && this.previewEl.tagName.toUpperCase() == 'IFRAME'){
         this.previewEl.contentWindow.location.href=this.previewEl.getAttribute("src");
       }
     },
