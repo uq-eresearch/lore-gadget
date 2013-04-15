@@ -547,7 +547,7 @@ Ext.extend(lore.ore.ui.graph.EntityFigure, lore.draw2d.Node, {
      * Generate entries for context menu
      */
     populateContextMenu : function(menu){
-        menu.add({
+          /*menu.add({
                 text: "Delete resource from Resource Map",
                 icon: "../lore/skin/icons/delete.png",
                 scope: this,
@@ -556,7 +556,7 @@ Ext.extend(lore.ore.ui.graph.EntityFigure, lore.draw2d.Node, {
                         .execute(this.createCommand(
                                 new lore.draw2d.EditPolicy(lore.draw2d.EditPolicy.DELETE)));
                 }
-          });
+          });*/
           menu.add("-");
           menu.add({
                 text: "Show in Resource List",

@@ -7,70 +7,14 @@ Ext.onReady(function() {
     });
     lore.ore.ui.vp = new lore.ore.ui.Viewport();
     lore.ore.reposAdapter = new lore.ore.repos.SPARQLAdapter("http://localhost:3030/ds");
-    
-	var searchStore = new Ext.ux.data.PagingJsonStore({
-        idProperty : "uri",
-        sortInfo: {
-          field: "modified",
-          direction: "desc"
-        },
-        storeId: "search",
-        'data': [],
-        lastOptions : {
-            params : {
-                start : 0,
-                limit : 5
-            }
-        },
-        fields : [{
-            "name" : "uri"
-        }, {
-            "name" : "title"
-        }, {
-            "name" : "creator"
-        }, {
-            "name" : "modified",
-            "type" : "date"
-        }, {
-            "name" : "accessed",
-            "type" : "date"
-        }, {
-            "name" : "match"
-        }, {
-            "name" : "isPrivate"
-        }]
-    });
-	
-	lore.ore.controller.getCompoundObjects(null, null, null, searchStore);
-
-	var tpl = new Ext.XTemplate(               
-        '<tpl for=".">',
-        '<div class="coListing" onclick="lore.ore.controller.loadCompoundObjectFromURL(\'{uri}\')">',
-            '<table><tr valign="top"><td>{[this.genNumber(values.uri)]}</td><td>',
-            '<div style="float:left;padding:2px;">',
-            '<img src="http://localhost:8080/lore/oaioreicon-sm.png"/>',
-            '</div>',
-            '<div>{title}</div>',
-            '<div class="detailText">{creator}',
-                '<tpl if="typeof modified != \'undefined\' && modified != null">, last modified {[fm.date(values.modified,\'j M Y, g:ia\')]}</tpl>',
-                '<tpl if="typeof accessed != \'undefined\' && accessed != null">Last accessed {[fm.date(values.accessed,\'j M Y, g:ia\')]}</tpl>',
-            '</div>',
-            '</td></tr></table>',
-        '</div>',
-        '</tpl>',
-        {
-            dv: this,
-            genNumber: function(uri){
-                var idx = searchStore.find('uri',uri);
-                return searchStore.lastOptions.params.start + idx + 1;
-            }
-        }
-    );
+    lore.ore.coListManager = new lore.ore.model.CompoundObjectListManager();
+    	
+	lore.ore.reposAdapter.getCompoundObjects(null, null, null, true);
 	
     var action1 = new Ext.Action({
         text: '<b>Search</b>',
         handler: function(){
-        	lore.ore.controller.getCompoundObjects(null, null, Ext.getCmp("kwsearchval").getValue(), searchStore);
+        	lore.ore.reposAdapter.getCompoundObjects(null, null, Ext.getCmp("kwsearchval").getValue(), true);
         }
     });	
     
@@ -80,7 +24,7 @@ Ext.onReady(function() {
         	var searchuri = Ext.getCmp("advsearchform").getForm().findField("searchuri").getValue();
         	var searchpred = Ext.getCmp("advsearchform").getForm().findField("searchpred").getValue();
         	var searchval = Ext.getCmp("advsearchform").getForm().findField("searchval").getValue();
-        	lore.ore.controller.getCompoundObjects(searchuri, searchpred, searchval, searchStore);
+        	lore.ore.reposAdapter.getCompoundObjects(searchuri, searchpred, searchval, true);
         }
     });
     
@@ -336,27 +280,16 @@ Ext.onReady(function() {
 	    							    autoScroll: true, 
 	    							    "tbar": {
 	    							        "xtype": "pagingToolbar",
-	    							        "store": searchStore,
+	    							        "store": "search",
 	    							        "id": "spager"		                    
 	    							    }
 	    								,
 	    							    items: [
-	    									new Ext.DataView({
-	    									    store: searchStore,
-	    									    tpl: tpl,
-	    	    							    border : false,
-	    									    autoHeight:true,
-	    									    itemSelector:'div.coListing',
-	    									    emptyText: 'No images to display',
-	    									    plugins: [],
-	    									    prepareData: function(data){
-	    									        return data;
-	    									    },
-	    							            loadingText: "Loading Resource Maps...",
-	    							            singleSelect: true,
-	    							            style: "overflow-y:auto;overflow-x:hidden",
-	    									    listeners: {}
-	    									})
+	    									{
+							                    "xtype": "codataview",
+							                    "store": "search",
+							                    "id": "cosview"
+							                }
 	    							    ]
 	    							}
 	                            ]

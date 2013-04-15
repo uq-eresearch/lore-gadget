@@ -713,7 +713,7 @@ Ext.extend(lore.ore.ui.graph.COGraph, lore.draw2d.Workflow, {
                     lore.ore.controller.launchInTabs();
                 }
             });
-            this.contextmenu.add("-");
+            /*this.contextmenu.add("-");
             this.contextmenu.add({
                 text: "Add current URL",
                 icon: "../lore/skin/icons/add.png",
@@ -754,7 +754,7 @@ Ext.extend(lore.ore.ui.graph.COGraph, lore.draw2d.Workflow, {
                 handler: function(evt){                 
                     lore.ore.controller.deleteCompoundObjectFromRepository();
                 }
-             });
+             });*/
             this.contextmenu.add("-");
             this.contextmenu.add({
                 text: "Open LORE preferences",
