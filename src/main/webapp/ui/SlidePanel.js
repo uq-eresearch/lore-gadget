@@ -305,6 +305,7 @@ lore.ore.ui.SlidePanel = Ext.extend(Ext.Panel,{
                     previewEl.name = resourceprops.uri + "-ss";
                     previewEl.id = resourceprops.uri + "-ss";
                     previewEl.style.zIndex = "-9001";
+                    previewEl.style.border = "0";
                 } 
             }   
             slidehtml += "<p class='slideshowFooter'>";

@@ -102,6 +102,7 @@ Ext.onReady(function() {
 					    defaults:{autoHeight: true},
 					    applyTo: 'tabs3',
 					    border : false,
+					    bwrapStyle : "position: absolute; top: 26px; bottom: 0px; width: 100%; height: auto;",
 					    itemTpl: new Ext.XTemplate(
 		                    '<li class="{cls}" id="{id}"><a class="x-tab-strip-close"></a>',
 		                    '<tpl if="menuHandler">',

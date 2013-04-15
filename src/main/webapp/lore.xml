@@ -79,10 +79,15 @@
         <link rel="stylesheet" type="text/css" href="lore_ore.css"/>
         <link rel="stylesheet" type="text/css" href="lib/ext/ux/carousel.css"/>  
         
+        <link rel="stylesheet" type="text/css" href="lib/ext3.2/resources/css/xtheme-gray.css"/>
+        <link rel="stylesheet" type="text/css" href="XMLPrettyPrint.css"/>
+        <link rel="stylesheet" type="text/css" href="lib/ext/ux/superboxselect.css"/>
+        <link rel="stylesheet" type="text/css" href="lib/ext/ux/Ext.ux.ScrollMenu.css"/>
+        
         <div id="tabs1">
     	    <div id="tabs2">
 		    </div>
-    	    <div id="tabs3">
+    	    <div id="tabs3" style="height:100%">
 		    </div>
 	    </div>
   ]]></Content>
