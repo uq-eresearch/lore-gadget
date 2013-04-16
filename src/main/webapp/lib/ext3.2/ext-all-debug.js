@@ -12397,13 +12397,7 @@ Ext.util.JSON = new (function(){
          * by the Mozilla security guidelines.
          */
         doDecode = function(json){
-            if (typeof Components != "undefined"){
-                var ff3NativeJSON = Components.classes["@mozilla.org/dom/json;1"]
-                 .createInstance(Components.interfaces.nsIJSON);
-                return ff3NativeJSON.decode(json);
-            } else {
-                return jQuery.parseJSON(json);
-            }
+            return jQuery.parseJSON(json);
         },
         doEncode = function(o){
             if(!Ext.isDefined(o) || o === null){
