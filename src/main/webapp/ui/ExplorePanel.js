@@ -587,42 +587,46 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
     },
     /** generate a PNG image capturing the visualisation from this view */
     getAsImage : function() {
-        var epanel = this.getComponent(0);
-        var imageW = epanel.getInnerWidth() + 50;
-        var imageH = epanel.getInnerHeight() + 50;
-        // TODO: get height from actual diagram rather than hardcoding image dimensions
-        imageW = 1000;
-        imageH = 1000;
-        // recenter jit canvas in case user has panned
-        var fdc = this.fd.canvas;
-        var fdcx = fdc.translateOffsetX;
-        var fdcy = fdc.translateOffsetY;
-        fdc.translate((0 - fdcx),(0 - fdcy));
-        var canvas = this.previewCanvas;
-        var context = canvas.getContext("2d");
-        var pos = this.getPosition();
-        var offsetX = pos[0] + 1;
-        var offsetY = pos[1] + 31; // don't show history
-        
-        // resize the viewport so that image captures entire diagram
-        var vp = lore.ore.ui.vp;
-        var vpsize = vp.getSize();
-        vp.setSize(imageW + offsetX + 50, imageH + offsetY + 50);
-        canvas.setAttribute("width", imageW + "px");
-        canvas.setAttribute("height", imageH + "px");
-        context.clearRect(0,0, imageW, imageH);
-        
-        // Draw the window, cropping to display just the visualisation
-        context.drawWindow(window, offsetX, offsetY, imageW, imageH, "rgb(255,255,255)");
-
-        var imgData = canvas.toDataURL();
-        // restore viewport original size
-        vp.setSize(vpsize);
-        vp.syncSize();
-        // translate jit canvas back to original position
-        this.fd.canvas.translate(fdcx, fdcy);
-        vp.info("Image ready");
-        return imgData;        
+        try {
+	        var epanel = this.getComponent(0);
+	        var imageW = epanel.getInnerWidth() + 50;
+	        var imageH = epanel.getInnerHeight() + 50;
+	        // TODO: get height from actual diagram rather than hardcoding image dimensions
+	        imageW = 1000;
+	        imageH = 1000;
+	        // recenter jit canvas in case user has panned
+	        var fdc = this.fd.canvas;
+	        var fdcx = fdc.translateOffsetX;
+	        var fdcy = fdc.translateOffsetY;
+	        fdc.translate((0 - fdcx),(0 - fdcy));
+	        var canvas = this.previewCanvas;
+	        var context = canvas.getContext("2d");
+	        var pos = this.getPosition();
+	        var offsetX = pos[0] + 1;
+	        var offsetY = pos[1] + 31; // don't show history
+	        
+	        // resize the viewport so that image captures entire diagram
+	        var vp = lore.ore.ui.vp;
+	        var vpsize = vp.getSize();
+	        vp.setSize(imageW + offsetX + 50, imageH + offsetY + 50);
+	        canvas.setAttribute("width", imageW + "px");
+	        canvas.setAttribute("height", imageH + "px");
+	        context.clearRect(0,0, imageW, imageH);
+	        
+	        // Draw the window, cropping to display just the visualisation
+	        context.drawWindow(window, offsetX, offsetY, imageW, imageH, "rgb(255,255,255)");
+	
+	        var imgData = canvas.toDataURL();
+	        // restore viewport original size
+	        vp.setSize(vpsize);
+	        vp.syncSize();
+	        // translate jit canvas back to original position
+	        this.fd.canvas.translate(fdcx, fdcy);
+	        vp.info("Image ready");
+	        return imgData;        
+        } catch (e) {
+            lore.debug.ore("Error in ExplorePanel.getAsImage",e);
+        }
     },
     /** Temporary function to regenerate content each time the panel is activated 
      * @param {} p The panel
@@ -631,10 +635,14 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
         
         if (lore.ore.cache.getLoadedCompoundObjectIsNew()){
             Ext.getCmp("exploreinfovis").body.hide();
-            this.clearExploreData();
-            this.exploreLoaded = "";
-            Ext.getCmp("exploreHistory").body.update("No connections to explore from repository: current Resource Map is unsaved&nbsp;");
-            return;
+	            try {
+	            this.clearExploreData();
+	            this.exploreLoaded = "";
+	            Ext.getCmp("exploreHistory").body.update("No connections to explore from repository: current Resource Map is unsaved&nbsp;");
+	            return;
+            } catch (ex){
+                lore.debug.ore("Error updating explore view",ex);
+            }
         }
         var currentCO = lore.ore.cache.getLoadedCompoundObject();
         var currentREM = currentCO.uri;
@@ -697,51 +705,55 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
      * @param {String} title Label to display for the Resource Map
      */
     showInExploreView : function (id, title, isCompoundObject, dontraise){
-        this.clearExploreData();
-        this.showLoadingMessage(true);
-        this.loadRem(id, title, isCompoundObject || false, function(json){
-            lore.ore.explorePanel.fd.loadJSON(json);
-            lore.ore.explorePanel.fd.computeIncremental({
-                iter: 40,
-                property: 'end',
-                onComplete: function(){ 
-                  lore.ore.ui.vp.info("Explore data loaded");
-                  var ep = lore.ore.explorePanel;
-                  lore.ore.explorePanel.showLoadingMessage(false);
-                  Ext.getCmp("exploreinfovis").body.show();
-                  Ext.getCmp("exploreHistory").body.show();
-                  ep.fd.animate({
-                    modes: ['linear'],
-                    duration: 1000
-                  });
-                  ep.hideUnconnectedNodes();
-                  // intial adjustment to bring into view
-                  var canv = ep.fd.canvas;
-                  if (canv.translateOffsetX == 0){
-                    var newx = 0 - ((1100 - ep.getWidth()) / 2);
-                    var newy = 0 - ((1100 - ep.getHeight()) / 2);
-                    canv.translate(newx,newy);
-                  }
-                }
-            });
-            
-            var historyData = {
-                    name: Ext.util.Format.ellipsis(title,30),
-                    action : "lore.util.launchTab(\"" + id + "\", window);",
-                    icon : "../lore/skin/icons/page_go.png",
-                    tooltip : "Show in browser"
-            };
-            // if it is a Resource Map use lore icon and open in lore instead of browser link
-            if (isCompoundObject){
-                historyData.action = "lore.ore.controller.loadCompoundObjectFromURL(\"" + id + "\");";
-                historyData.icon = "../lore/skin/oaioreicon-sm.png";
-                historyData.tooltip = "Load in LORE";
-            }   
-            Ext.getCmp("exploreHistory").body.update(lore.ore.explorePanel.historyTemplate.apply(historyData));
-        });  
-        if (!dontraise){
-            Ext.getCmp("loreviews").activate(this.id);
-        }
+    	try {
+	        this.clearExploreData();
+	        this.showLoadingMessage(true);
+	        this.loadRem(id, title, isCompoundObject || false, function(json){
+	            lore.ore.explorePanel.fd.loadJSON(json);
+	            lore.ore.explorePanel.fd.computeIncremental({
+	                iter: 40,
+	                property: 'end',
+	                onComplete: function(){ 
+	                  lore.ore.ui.vp.info("Explore data loaded");
+	                  var ep = lore.ore.explorePanel;
+	                  lore.ore.explorePanel.showLoadingMessage(false);
+	                  Ext.getCmp("exploreinfovis").body.show();
+	                  Ext.getCmp("exploreHistory").body.show();
+	                  ep.fd.animate({
+	                    modes: ['linear'],
+	                    duration: 1000
+	                  });
+	                  ep.hideUnconnectedNodes();
+	                  // intial adjustment to bring into view
+	                  var canv = ep.fd.canvas;
+	                  if (canv.translateOffsetX == 0){
+	                    var newx = 0 - ((1100 - ep.getWidth()) / 2);
+	                    var newy = 0 - ((1100 - ep.getHeight()) / 2);
+	                    canv.translate(newx,newy);
+	                  }
+	                }
+	            });
+	            
+	            var historyData = {
+	                    name: Ext.util.Format.ellipsis(title,30),
+	                    action : "lore.util.launchTab(\"" + id + "\", window);",
+	                    icon : "../lore/skin/icons/page_go.png",
+	                    tooltip : "Show in browser"
+	            };
+	            // if it is a Resource Map use lore icon and open in lore instead of browser link
+	            if (isCompoundObject){
+	                historyData.action = "lore.ore.controller.loadCompoundObjectFromURL(\"" + id + "\");";
+	                historyData.icon = "../lore/skin/oaioreicon-sm.png";
+	                historyData.tooltip = "Load in LORE";
+	            }   
+	            Ext.getCmp("exploreHistory").body.update(lore.ore.explorePanel.historyTemplate.apply(historyData));
+	        });  
+	        if (!dontraise){
+	            Ext.getCmp("loreviews").activate(this.id);
+	        }
+	    } catch (e){
+	        lore.debug.ore("Error in show in explore view",e);
+	    }
     }
 });
 Ext.reg('explorepanel',lore.ore.ui.ExplorePanel);

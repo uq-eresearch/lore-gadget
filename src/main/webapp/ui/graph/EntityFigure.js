@@ -612,19 +612,24 @@ Ext.extend(lore.ore.ui.graph.EntityFigure, lore.draw2d.Node, {
                     },
                     colors: [this.NOHIGHLIGHT, "FFFF99","CCFFCC","DBEBFF","EFD7FF","FFE5B4","FFDBFB"],
                     handler: function(cp,color){
-                        var propData = {
-                            id: lore.constants.NAMESPACES["layout"] + "highlightColor", 
-                            ns: lore.constants.NAMESPACES["layout"],
-                            name: "highlightColor", 
-                            value: color, 
-                            prefix: "layout"
-                        };
-                        if (this.highlightColor != color){
-                            this.model.get('properties').setProperty(propData,0);
-                            lore.ore.controller.setDirty();
-                            this.setHighlightColor(color);
+                    	try{
+                            lore.debug.ore("setting hc from " + this.highlightColor + " to " + color)
+	                        var propData = {
+	                            id: lore.constants.NAMESPACES["layout"] + "highlightColor", 
+	                            ns: lore.constants.NAMESPACES["layout"],
+	                            name: "highlightColor", 
+	                            value: color, 
+	                            prefix: "layout"
+	                        };
+	                        if (this.highlightColor != color){
+	                            this.model.get('properties').setProperty(propData,0);
+	                            lore.ore.controller.setDirty();
+	                            this.setHighlightColor(color);
+	                        }
+	                        this.contextmenu.hide();
+                        } catch (ex){
+                            lore.debug.ore("Error setting highlight color",ex);
                         }
-                        this.contextmenu.hide();
                     },
                     scope: this
                     

@@ -501,34 +501,38 @@ Ext.extend(lore.ore.ui.graph.COGraph, lore.draw2d.Workflow, {
       }
     },
     setCurrentSelection: function(sel,multi){
-      var oldSingleSelection = this.currentSelection;
-      var oldMultiSelection = this.multiSelection;
-      if (multi){
-          this.multiSelection = sel;
-          lore.draw2d.Workflow.prototype.setCurrentSelection.call(this,null);
-      } else {
-           lore.draw2d.Workflow.prototype.setCurrentSelection.call(this,sel);
-           if (sel) {
-                this.multiSelection = [sel];
-           } else {
-                this.multiSelection = [];
-           }
-      }
-      // remove highlighting from previous selection
-      for (var i = 0; i < oldMultiSelection.length; i++) {
-          var fig = oldMultiSelection[i];
-          if (fig instanceof lore.ore.ui.graph.EntityFigure){
-           oldMultiSelection[i].setSelected(false);
-          }
-      }
-      
-      // Always show line resize handles and highlighting when connection is selected
-      if (sel && sel instanceof lore.draw2d.Line) {
-        this.showLineResizeHandles(sel);
-      } else if (sel instanceof lore.ore.ui.graph.EntityFigure) {
-        this.showResizeHandles(sel);
-        sel.setSelected(true); 
-      }
+        try{
+        	var oldSingleSelection = this.currentSelection;
+        	var oldMultiSelection = this.multiSelection;
+        	if (multi){
+        		this.multiSelection = sel;
+        		lore.draw2d.Workflow.prototype.setCurrentSelection.call(this,null);
+        	} else {
+        		lore.draw2d.Workflow.prototype.setCurrentSelection.call(this,sel);
+        		if (sel) {
+        			this.multiSelection = [sel];
+        		} else {
+	                this.multiSelection = [];
+        		}
+        	}
+        	// remove highlighting from previous selection
+        	for (var i = 0; i < oldMultiSelection.length; i++) {
+        		var fig = oldMultiSelection[i];
+        		if (fig instanceof lore.ore.ui.graph.EntityFigure){
+        			oldMultiSelection[i].setSelected(false);
+        		}
+        	}
+	      
+        	// Always show line resize handles and highlighting when connection is selected
+        	if (sel && sel instanceof lore.draw2d.Line) {
+        		this.showLineResizeHandles(sel);
+        	} else if (sel instanceof lore.ore.ui.graph.EntityFigure) {
+        		this.showResizeHandles(sel);
+        		sel.setSelected(true); 
+        	}
+        } catch (e){
+            lore.debug.ore("Error showing resize handles",e);
+        }
     },
     /** select figures within a rectangular selecton */
     multiSelectFigures: function(x, y, x2, y2){
@@ -569,18 +573,17 @@ Ext.extend(lore.ore.ui.graph.COGraph, lore.draw2d.Workflow, {
         context.clearRect(0,0, imageW, imageH);
         
         // Draw the window, cropping to display just the drawing area
-        context.drawWindow(window, offsetX, offsetY, imageW, imageH, "rgb(255,255,255)");
+        context.drawImage(window, offsetX, offsetY, imageW, imageH, "rgb(255,255,255)");
         var imgData = canvas.toDataURL();
         
         // restore viewport original size
         vp.setSize(vpsize);
         vp.syncSize();
 
-        return imgData;
+        return imgData;     
      } catch (e) {
         lore.debug.ore("Error in getAsImage",e);
-     }
-        
+     }   
     },
    
     addResourceFigure: function(fig, x, y) {
@@ -629,16 +632,17 @@ Ext.extend(lore.ore.ui.graph.COGraph, lore.draw2d.Workflow, {
                 scope: this,
                 handler: function(b,e){  
                     try{
-                    b.parentMenu.hide();
-                    var imgData = this.getAsImage();
-                    if (imgData) {
-                        lore.util.writeURIWithSaveAs("diagram", "png", window, imgData);
-                    } else {
-                        lore.ore.ui.vp.error("Unable to generate diagram image");
-                    }
-                    } catch(e){
-                        lore.debug.ore("Error: unable to generate diagram image",e);
-                    }
+	                    b.parentMenu.hide();
+	                    var imgData = this.getAsImage();
+	                    console.log(imgData);
+	                    if (imgData) {
+	                        lore.util.writeURIWithSaveAs("diagram", "png", window, imgData);
+	                    } else {
+	                        lore.ore.ui.vp.error("Unable to generate diagram image");
+	                    }
+	                } catch(e){
+	                    lore.debug.ore("Error: unable to generate diagram image",e);
+	                }
                 }
             });
             this.contextmenu.add({
@@ -683,7 +687,11 @@ Ext.extend(lore.ore.ui.graph.COGraph, lore.draw2d.Workflow, {
                 scope: this,
                 handler: function(b){ 
                     if (this.scale >= 0.3) {this.scale = this.scale - 0.2};
-                    Ext.get("drawingarea").applyStyles("-moz-transform:scale(" + this.scale + "); -moz-transform-origin: 0 0");         
+                    Ext.get("drawingarea").applyStyles(
+                    		"-ms-transform:scale(" + this.scale + "); -ms-transform-origin: 0 0;" +
+                    		"-webkit-transform:scale(" + this.scale + "); -webkit-transform-origin: 0 0;" +
+                    		"-moz-transform:scale(" + this.scale + "); -moz-transform-origin: 0 0;"
+                    );         
                 }
             });
             this.contextmenu.add({
@@ -692,7 +700,11 @@ Ext.extend(lore.ore.ui.graph.COGraph, lore.draw2d.Workflow, {
                 scope: this,
                 handler: function(b){ 
                     if (this.scale <  2.0) {this.scale = this.scale + 0.2};
-                    Ext.get("drawingarea").applyStyles("-moz-transform:scale(" + this.scale + ");-moz-transform-origin: 0 0;");
+                    Ext.get("drawingarea").applyStyles(
+                    		"-ms-transform:scale(" + this.scale + "); -ms-transform-origin: 0 0;" +
+                    		"-webkit-transform:scale(" + this.scale + "); -webkit-transform-origin: 0 0;" +
+                    		"-moz-transform:scale(" + this.scale + ");-moz-transform-origin: 0 0;"
+                    );
                 }
             });
              this.contextmenu.add({
@@ -701,7 +713,11 @@ Ext.extend(lore.ore.ui.graph.COGraph, lore.draw2d.Workflow, {
                 scope: this,
                 handler: function(b){ 
                     this.scale = 1.0;
-                    Ext.get("drawingarea").applyStyles("-moz-transform:scale(" + this.scale + ")");
+                    Ext.get("drawingarea").applyStyles(
+                    		"-ms-transform:scale(" + this.scale + "); -ms-transform-origin: 0 0;" +
+                    		"-webkit-transform:scale(" + this.scale + "); -webkit-transform-origin: 0 0;" +
+                    		"-moz-transform:scale(" + this.scale + ");-moz-transform-origin: 0 0;"
+                    );
                 }
             });
             this.contextmenu.add("-");
@@ -754,7 +770,7 @@ Ext.extend(lore.ore.ui.graph.COGraph, lore.draw2d.Workflow, {
                 handler: function(evt){                 
                     lore.ore.controller.deleteCompoundObjectFromRepository();
                 }
-             });*/
+             });
             this.contextmenu.add("-");
             this.contextmenu.add({
                 text: "Open LORE preferences",
@@ -763,7 +779,7 @@ Ext.extend(lore.ore.ui.graph.COGraph, lore.draw2d.Workflow, {
                 handler: function(evt){                 
                     window.open("../lore/content/options.xul", "", "chrome,centerscreen,modal,toolbar");
                 }
-             });
+             });*/
             
         }
         var absx = this.getAbsoluteX() +  x - this.getScrollLeft();

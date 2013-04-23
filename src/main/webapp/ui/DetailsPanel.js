@@ -44,6 +44,7 @@ lore.ore.ui.DetailsPanel = Ext.extend(Ext.Panel,{
              
             Ext.Msg.hide();
         } catch(e){
+            lore.debug.ore("Error in updateBinding",e);
             Ext.Msg.hide();
         }
     },

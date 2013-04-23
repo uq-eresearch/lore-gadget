@@ -49,54 +49,58 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
    },
    /** Initialize the graphical editor */
    initGraph: function(){
-    Ext.getCmp("loreviews").activate("drawingarea");
-    this.dummylayoutx = this.NODE_SPACING;
-    this.dummylayouty = this.NODE_SPACING;
-    this.lookup = {};
-    
-    var coGraph = this.coGraph;
-    if (coGraph) {
-        coGraph.getCommandStack().removeCommandStackEventListener(this); 
-        coGraph.removeSelectionListener(this);
-        coGraph.clear();
-    } else {
-        coGraph = new lore.ore.ui.graph.COGraph(this.id);
-        this.coGraph = coGraph;
-        coGraph.setScrollArea(document.getElementById(this.id).parentNode);
-        
-        // create drop target for dropping new nodes onto editor from the Resource Maps dataview
-        var droptarget = new Ext.dd.DropTarget(this.id, {
-                'ddGroup' : 'coDD',
-                'copy' : false
-        });
-        droptarget.notifyDrop = function(dd, e, data) {
-            var ge = lore.ore.ui.graphicalEditor;
-            var coGraph = ge.coGraph;
-            var figopts = {
-                url : data.draggedRecord.data.uri,
-                x : (e.xy[0] - coGraph.getAbsoluteX() + coGraph.getScrollLeft()),
-                y : (e.xy[1] - coGraph.getAbsoluteY() + coGraph.getScrollTop()),
-                props : {
-                    "rdf:type_0" : lore.constants.RESOURCE_MAP,
-                    "dc:title_0" : data.draggedRecord.data.title
-                }
-            };
-            ge.addFigure(figopts);
-            
-            return true;
-        };
-    }
-    coGraph.addSelectionListener(this);
-    coGraph.getCommandStack().addCommandStackEventListener(this);
-    
-    /*// clear the node properties
-    if (lore.ore.ui.nodegrid) {
-        lore.ore.ui.grid.expand();
-        lore.ore.ui.nodegrid.store.removeAll();
-        lore.ore.ui.nodegrid.collapse();
-        lore.ore.ui.relsgrid.store.removeAll();
-        lore.ore.ui.relsgrid.collapse();
-    }*/
+	   try {
+		    Ext.getCmp("loreviews").activate("drawingarea");
+		    this.dummylayoutx = this.NODE_SPACING;
+		    this.dummylayouty = this.NODE_SPACING;
+		    this.lookup = {};
+		    
+		    var coGraph = this.coGraph;
+		    if (coGraph) {
+		        coGraph.getCommandStack().removeCommandStackEventListener(this); 
+		        coGraph.removeSelectionListener(this);
+		        coGraph.clear();
+		    } else {
+		        coGraph = new lore.ore.ui.graph.COGraph(this.id);
+		        this.coGraph = coGraph;
+		        coGraph.setScrollArea(document.getElementById(this.id).parentNode);
+		        
+		        // create drop target for dropping new nodes onto editor from the Resource Maps dataview
+		        var droptarget = new Ext.dd.DropTarget(this.id, {
+		                'ddGroup' : 'coDD',
+		                'copy' : false
+		        });
+		        droptarget.notifyDrop = function(dd, e, data) {
+		            var ge = lore.ore.ui.graphicalEditor;
+		            var coGraph = ge.coGraph;
+		            var figopts = {
+		                url : data.draggedRecord.data.uri,
+		                x : (e.xy[0] - coGraph.getAbsoluteX() + coGraph.getScrollLeft()),
+		                y : (e.xy[1] - coGraph.getAbsoluteY() + coGraph.getScrollTop()),
+		                props : {
+		                    "rdf:type_0" : lore.constants.RESOURCE_MAP,
+		                    "dc:title_0" : data.draggedRecord.data.title
+		                }
+		            };
+		            ge.addFigure(figopts);
+		            
+		            return true;
+		        };
+		    }
+		    coGraph.addSelectionListener(this);
+		    coGraph.getCommandStack().addCommandStackEventListener(this);
+		    
+		    /*// clear the node properties
+		    if (lore.ore.ui.nodegrid) {
+		        lore.ore.ui.grid.expand();
+		        lore.ore.ui.nodegrid.store.removeAll();
+		        lore.ore.ui.nodegrid.collapse();
+		        lore.ore.ui.relsgrid.store.removeAll();
+		        lore.ore.ui.relsgrid.collapse();
+		    }*/
+	    } catch (e) {
+	        lore.debug.ore("Error in GraphicalEditor: initGraph",e);
+	    }
    },
    /**
     * Updates the views when nodes or connections are selected
@@ -381,6 +385,7 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
     * @return {}
     */
    addFigure : function(opts) {
+	   try {
         if (!opts.batch && lore.ore.controller.checkReadOnly()){
             return;
         }
@@ -506,6 +511,9 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
             this.nextXY(opts.x,opts.y);
         }
         return fig;
+      } catch (ex){
+          lore.debug.ore("Error in add Figure",ex);
+      }
     },
     /**
      * Get the figure that represents a resource

@@ -20,11 +20,15 @@ lore.ore.ui.RelationshipEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                 layout: 'fit',
                 animateTarget: 'properties',
                 editField: function(tfield,row){
-                    this.triggerField = tfield;
-                    this.activeRow = row;
-                    var val = tfield.getValue();
-                    this.show(); 
-                    this.focus();
+                    try {
+	                    this.triggerField = tfield;
+	                    this.activeRow = row;
+	                    var val = tfield.getValue();
+	                    this.show(); 
+	                    this.focus();
+                    } catch (e){
+                        lore.debug.ore("Error in editField",e);
+                    }
                 },
                 items: [],
                 bbar: [
@@ -179,11 +183,11 @@ lore.ore.ui.RelationshipEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                         id : 'plus',
                         qtip : 'Add a relationship',
                         handler : this.addRelationshipAction
-                    },*/ {
+                    },*/ /*{
                         id : 'minus',
                         qtip : 'Remove the selected relationship',
                         handler : this.removeRelationshipAction
-                    }, {
+                    },*/ {
                         id : 'help',
                         qtip : 'Display information about the selected relationship',
                         handler : this.helpRelationshipAction
@@ -262,19 +266,23 @@ lore.ore.ui.RelationshipEditor = Ext.extend(Ext.grid.EditorGridPanel,{
      * @param {} panel
      */
     helpRelationshipAction : function (ev,toolEl, panel) {
-        var sel = panel.getSelectionModel().getSelected();
-        if (panel.collapsed){
-            lore.ore.ui.vp.info("Please expand the panel and select a relationship");
-        } else if (sel){
-            var infoMsg = panel.aboutTemplate.apply(sel.data);
-            
-            Ext.Msg.show({
-                    title : lore.util.sanitizeHTML('About \"' + sel.data.relName + '\" relationship',window,true),
-                    buttons : Ext.MessageBox.OK,
-                    msg : infoMsg // TODO: sanitize
-                });
-        } else {
-            lore.ore.ui.vp.info("Please click on a relationship prior to selecting the help button");
+        try{
+	        var sel = panel.getSelectionModel().getSelected();
+	        if (panel.collapsed){
+	            lore.ore.ui.vp.info("Please expand the panel and select a relationship");
+	        } else if (sel){
+	            var infoMsg = panel.aboutTemplate.apply(sel.data);
+	            
+	            Ext.Msg.show({
+	                    title : lore.util.sanitizeHTML('About \"' + sel.data.relName + '\" relationship',window,true),
+	                    buttons : Ext.MessageBox.OK,
+	                    msg : infoMsg // TODO: sanitize
+	                });
+	        } else {
+	            lore.ore.ui.vp.info("Please click on a relationship prior to selecting the help button");
+	        }
+        } catch (e){
+            lore.debug.ore("Error in helpRelationshipAction",e);
         }
     }
  

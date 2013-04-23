@@ -63,12 +63,16 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                     this.getComponent(0).focus();
                 },
                 editField: function(tfield,rownum){
-                    this.triggerField = tfield;
-                    this.activeRow = rownum;
-                    var val = tfield.getValue();
-                    this.getComponent(0).setValue(val? val : '');
-                    this.show(); 
-                    this.focus();
+                    try {
+	                    this.triggerField = tfield;
+	                    this.activeRow = rownum;
+	                    var val = tfield.getValue();
+	                    this.getComponent(0).setValue(val? val : '');
+	                    this.show(); 
+	                    this.focus();
+                    } catch (e){
+                        lore.debug.ore("Error in editField",e);
+                    }
                 },
                 onShow: function(){
                     var rec = this.propEditor.store.getAt(this.activeRow);          
@@ -344,7 +348,7 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                 deferEmptyText: false,
                 emptyText: "No resource selected"
             },
-            tools : [{
+            tools : [/*{
                         id : 'plus',
                         qtip : 'Add a property',
                         handler : this.addPropertyAction
@@ -353,7 +357,7 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                         qtip : 'Remove the selected property',
                         handler : this.removePropertyAction,
                         scope: this
-                    }, {
+                    },*/ {
                         id : 'help',
                         qtip : 'Display information about the selected property',
                         handler : this.helpPropertyAction
@@ -691,31 +695,35 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
         });
         panel.propMenu.panelref = panel.id;
         var addPropHandler = function () {
-            var panel = Ext.getCmp(this.parentMenu.panelref);
-            var pstore = panel.getStore();
-            var counter = 0;
-            var prop = pstore.getById(this.text + "_" + counter);
-            
-            while (prop) {
-                if (prop && !prop.get("value")){
-                    // don't add a second blank property, highlight existing
-                    panel.getSelectionModel().selectRecords([prop]);
-                    return;
-                }
-                counter = counter + 1;
-                prop = pstore.getById(this.propname + "_" + counter);
+            try{
+	            var panel = Ext.getCmp(this.parentMenu.panelref);
+	            var pstore = panel.getStore();
+	            var counter = 0;
+	            var prop = pstore.getById(this.text + "_" + counter);
+	            
+	            while (prop) {
+	                if (prop && !prop.get("value")){
+	                    // don't add a second blank property, highlight existing
+	                    panel.getSelectionModel().selectRecords([prop]);
+	                    return;
+	                }
+	                counter = counter + 1;
+	                prop = pstore.getById(this.propname + "_" + counter);
+	            }
+	            var theid = this.propname + "_" + counter;
+	            var pData = {id: theid, name: this.propname, value: ""};
+	            var ptype = (this.propname == "dcterms:abstract" || this.propname == "dc:description")? "string" : "plainstring";
+	            if (this.propname == "dcterms:created" || this.propname == "dcterms:modified"){
+	                ptype = "date";
+	            } else if (this.propname == "lorestore:isPrivate"){
+	                ptype = "boolean";
+	                pData.value = true;
+	            }
+	            pData.type = ptype;
+	            pstore.loadData([pData],true);
+            } catch (ex){
+                lore.debug.ore("Error adding prop " + this.propname,ex);
             }
-            var theid = this.propname + "_" + counter;
-            var pData = {id: theid, name: this.propname, value: ""};
-            var ptype = (this.propname == "dcterms:abstract" || this.propname == "dc:description")? "string" : "plainstring";
-            if (this.propname == "dcterms:created" || this.propname == "dcterms:modified"){
-                ptype = "date";
-            } else if (this.propname == "lorestore:isPrivate"){
-                ptype = "boolean";
-                pData.value = true;
-            }
-            pData.type = ptype;
-            pstore.loadData([pData],true);
         };
         if (panel.id == "remgrid"){
             panel.propMenu.add({

@@ -37,9 +37,13 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
                 sm: new Ext.grid.RowSelectionModel({
                     singleSelect:true,
                     listeners: {
-                        'rowselect': function(sm,i,rec){              
-                            sm.grid.ddText = rec.data.title + " (" + rec.data.uri + ")";
-                            lore.ore.controller.updateSelection(rec.data.uri, this.grid);
+                        'rowselect': function(sm,i,rec){        
+                            try{                   
+	                            sm.grid.ddText = rec.data.title + " (" + rec.data.uri + ")";
+	                            lore.ore.controller.updateSelection(rec.data.uri, this.grid);
+                            } catch (e){
+                                lore.debug.ore("Error in ResourceListPanel: row select",e);
+                            }
                         }
                     }
                 }),
@@ -219,16 +223,20 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
                  }
               });
         }
-        p.getSelectionModel().clearSelections();
-        var sfig = lore.ore.ui.graphicalEditor.getSelectedFigure();
-        if (sfig) {
-            p.selectResource(sfig.url);
-        }
-        p.store.sort('index','ASC');
-        p.getView().refresh();
-        // focus on the grid view to enable key navigation/deletion to work
-        if (p.getView().focusEl){
-            p.getView().focusEl.focus();
+        try{
+	        p.getSelectionModel().clearSelections();
+	        var sfig = lore.ore.ui.graphicalEditor.getSelectedFigure();
+	        if (sfig) {
+	            p.selectResource(sfig.url);
+	        }
+	        p.store.sort('index','ASC');
+	        p.getView().refresh();
+	        // focus on the grid view to enable key navigation/deletion to work
+	        if (p.getView().focusEl){
+	            p.getView().focusEl.focus();
+	        }
+        } catch (e){
+            lore.debug.ore("Error in ResourceListPanel: updateContent",e);
         }
     },
     showContextMenu: function(grid, rowIndex, e){
@@ -367,21 +375,25 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
         this.selectResource(uri);
     },
     selectResource: function(uri){
-        var sm = this.getSelectionModel();
-        if (sm.grid) {
-	        if (!uri){
-	        	//if (sm.grid) {
-	        		sm.clearSelections();
-	        	//}
-	        } else {
-	            var idx = this.store.findExact('uri',uri);
-	            var rec = this.store.getAt(idx);
-	            var selrec = sm.getSelected();
-	            if (rec && (selrec != rec)){
-	                sm.selectRow(idx);
-	            } 
-	        }
-    	}
+        try{
+	        var sm = this.getSelectionModel();
+	        if (sm.grid) {
+		        if (!uri){
+		        	//if (sm.grid) {
+		        		sm.clearSelections();
+		        	//}
+		        } else {
+		            var idx = this.store.findExact('uri',uri);
+		            var rec = this.store.getAt(idx);
+		            var selrec = sm.getSelected();
+		            if (rec && (selrec != rec)){
+		                sm.selectRow(idx);
+		            } 
+		        }
+	    	}
+        } catch (e){
+            lore.debug.ore("Error in ResourceListPanel: selectResource " + uri,e);
+        }
     }
 });
 Ext.reg('resourcepanel',lore.ore.ui.ResourceListPanel);

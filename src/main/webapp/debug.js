@@ -75,10 +75,17 @@ debug = {
      * @param {} obj
      */
     ore : function (message, obj){
-        if (debug.fbTrace.DBG_LORE_COMPOUND_OBJECTS){
+		console.log(message);
+    	if (obj instanceof Error) {
+        	throw(obj);
+    	} else if (obj) {
+        	console.log(obj);
+    	}
+    	//console.log(obj);
+        /*if (debug.fbTrace.DBG_LORE_COMPOUND_OBJECTS){
             debug.fbTrace.sysout(debug.FB_ORE + message, obj);
         } 
-        debug.mozConsole(debug.ORE, message, obj);
+        debug.mozConsole(debug.ORE, message, obj);*/
     },
     
     /**
@@ -245,3 +252,5 @@ try {
         // suppress errors if getting fbTrace fails - Firebug probably not installed/enabled  
     }
 }
+
+lore.debug = debug;

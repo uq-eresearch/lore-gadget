@@ -7,15 +7,19 @@ lore.ore.ui.initUIComponents = function() {
     // make sure popup windows appear above everything else, particularly when over the graphical editor
     Ext.WindowMgr.zseed = 10000;
 
-    Ext.MessageBox.show({
-       msg: 'Loading LORE...',
-       width:250,
-       defaultTextHeight: 0,
-       closable: false,
-       cls: 'co-load-msg'
-    });
-    lore.ore.ui.vp = new lore.ore.ui.Viewport();
-    lore.ore.ui.vp.show();
+    try {
+	    Ext.MessageBox.show({
+	       msg: 'Loading LORE...',
+	       width:250,
+	       defaultTextHeight: 0,
+	       closable: false,
+	       cls: 'co-load-msg'
+	    });
+	    lore.ore.ui.vp = new lore.ore.ui.Viewport();
+	    lore.ore.ui.vp.show();
+    } catch (e) {
+        lore.debug.ore("Error creating Ext UI components from spec", e);
+    }
 
     // set up glocal variable references to main UI components
     lore.ore.ui.grid = Ext.getCmp("remgrid");

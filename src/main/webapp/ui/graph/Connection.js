@@ -149,6 +149,7 @@ lore.draw2d.Connection = Ext.extend(lore.draw2d.Line, {
           }
     },
     updateModel: function(){
+        try{
       if (this.model && this.targetPort && this.edgetype){
           var targetVal = this.targetPort.getParent().url;
           var props = this.model.get('properties');
@@ -164,6 +165,13 @@ lore.draw2d.Connection = Ext.extend(lore.draw2d.Line, {
             };
             props.setProperty(propData);
           }
+      } else {
+          if (!this.model){
+            lore.debug.ore("Warning : no model for connection",this);
+          }
+        }
+      } catch (e){
+        lore.debug.ore("Error updating model from connection",e);
       }
     },
     setTargetAnchor: function(anchor) {

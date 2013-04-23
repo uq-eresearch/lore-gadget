@@ -168,7 +168,10 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
         var theurl = this.url;
         var mimetype = this.getProperty("dc:format_0");
         var rdftype = this.getProperty("rdf:type_0");
-        if (!this.hasPreview) {
+        var dctype = this.getProperty("dc:type_0");
+        if (this.hasPreview) {
+            lore.debug.ore("Regenerating node preview " + this.url, this);
+        } else {
             this.hasPreview = true;
         }
         // remove existing content preview and url
@@ -221,6 +224,39 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
                 tag: "div",
                 cls: "nodeabstract",
                 children: [(abstext? abstext : "(No abstract)")]
+            });
+        } else if (dctype) {
+        	var src = "";
+    		if (dctype.match("http://purl.org/dc/dcmitype/Moving")){
+    			src = "../lore/skin/icons/ore/film_large.png";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/StillImage")){
+    			src = "../lore/skin/icons/ore/image_large.png";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/Image")){
+    			src = "../lore/skin/icons/ore/image_large.png";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/Sound")){
+    			src = "../lore/skin/icons/ore/page_sound_large.gif";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/PhysicalObject")){
+    			src = "../lore/skin/icons/ore/chair_large.png";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/Text")){
+    			src = "../lore/skin/icons/ore/page_white_text_large.png";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/Software")){
+    			src = "../lore/skin/icons/ore/application_large.png";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/Service")){
+    			src = "../lore/skin/icons/ore/server-network_large.png";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/InteractiveResource")){
+    			src = "../lore/skin/icons/ore/map_cursor_large.png";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/Event")){
+    			src = "../lore/skin/icons/ore/alarm-clock-select_large.png";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/Collection")){
+    			src = "../lore/skin/icons/ore/page_white_stack_large.png";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/Dataset")){
+    			src = "../lore/skin/icons/ore/database_table_large.png";
+			}
+        	previewArea.createChild({
+                tag: "img",
+                id: theurl + "-data",
+                src: src,
+                style: "z-index:-9001;"
             });
         } else if (isCO) {
             previewArea.createChild({
@@ -348,8 +384,12 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
                             .match("ex=ShowAgent"))) {
                 displayUrl = theurl + "&printPreview=y";
             }
-	        if (!this.isCollapsed()) {
-	            this.createPreview(displayUrl);
+            try {
+		        if (!this.isCollapsed()) {
+		            this.createPreview(displayUrl);
+		        }
+	        } catch (e) {
+	            lore.debug.ore("Error in ResourceFigure: iframe(general)", e);
 	        }
         }
         this.setIcon();
@@ -400,6 +440,7 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
     setIcon : function(overrideType) { 
         var typeTitle = overrideType;
         var rdftype = this.getProperty("rdf:type_0");
+        var dctype = this.getProperty("dc:type_0");
         if (rdftype && (rdftype.match(lore.constants.NAMESPACES["annotype"])
                         || rdftype.match(lore.constants.NAMESPACES["vanno"]) 
                         || rdftype.match(lore.constants.NAMESPACES["annoreply"]))){
@@ -407,6 +448,8 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
             typeTitle = "Annotation";
         } else if (overrideType){
             this.icontype = lore.ore.controller.lookupIcon(overrideType,true);
+        } else if (dctype){
+            this.icontype = lore.ore.controller.lookupIcon(dctype,true);
         } else {
             var mimetype = this.getProperty("dc:format_0")
                 ? this.getProperty("dc:format_0")
@@ -578,7 +621,7 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
             }
         } else if (pid == "dc:type_0"){
            // override icon
-           this.setIcon(pval);
+        	this.setIcon(pval);
         }
         // Update model property
         if (pid != "resource_0" && this.model && pval != oldval){

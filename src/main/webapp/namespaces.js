@@ -17,6 +17,7 @@ try {
             /* Repository access for Resource Maps */
             repos: {}
         },
+        debug : {},
         /* Global functions and properties  */
         global: {}
     };

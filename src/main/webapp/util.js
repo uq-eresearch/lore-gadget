@@ -160,6 +160,7 @@ lore.util = {
      * @param {Object} win The window in which to open the tab
      */
     launchTab : function(url, win) {
+    	//win.open(url);
       var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
                          .getService(Components.interfaces.nsIWindowMediator);
       var browserEnumerator = wm.getEnumerator("navigator:browser");
@@ -294,28 +295,29 @@ lore.util = {
      * @return {}
      */
     writeURIWithSaveAs: function(title, defExtension, win, uri){
+    	//document.location.href = uri;
         var nsIFilePicker = Components.interfaces.nsIFilePicker;
-            var fp = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
-            fp.defaultExtension = defExtension;
-            fp.appendFilters(nsIFilePicker.filterAll); 
-            fp.init(win, title, nsIFilePicker.modeSave);
-            var res = fp.show();
-            if (res == nsIFilePicker.returnOK || res == nsIFilePicker.returnReplace) {
-                
-                var thefile = fp.file;
-                var io = Components.classes["@mozilla.org/network/io-service;1"]  
-                     .getService(Components.interfaces.nsIIOService);  
-                var source = io.newURI(uri, "UTF8", null);  
-                var target = io.newFileURI(thefile) ; 
-                var persist = Components.classes["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"]  
-                          .createInstance(Components.interfaces.nsIWebBrowserPersist);  
-    
-                persist.persistFlags = Components.interfaces.nsIWebBrowserPersist.PERSIST_FLAGS_REPLACE_EXISTING_FILES;  
-                persist.persistFlags |= Components.interfaces.nsIWebBrowserPersist.PERSIST_FLAGS_AUTODETECT_APPLY_CONVERSION;
-                persist.saveURI(source, null, null, null, null, thefile);  
-                return {fname: thefile.persistentDescriptor};
-            }
-            return null;
+        var fp = Components.classes["@mozilla.org/filepicker;1"].createInstance(nsIFilePicker);
+        fp.defaultExtension = defExtension;
+        fp.appendFilters(nsIFilePicker.filterAll); 
+        fp.init(win, title, nsIFilePicker.modeSave);
+        var res = fp.show();
+        if (res == nsIFilePicker.returnOK || res == nsIFilePicker.returnReplace) {
+            
+            var thefile = fp.file;
+            var io = Components.classes["@mozilla.org/network/io-service;1"]  
+                 .getService(Components.interfaces.nsIIOService);  
+            var source = io.newURI(uri, "UTF8", null);  
+            var target = io.newFileURI(thefile) ; 
+            var persist = Components.classes["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"]  
+                      .createInstance(Components.interfaces.nsIWebBrowserPersist);  
+
+            persist.persistFlags = Components.interfaces.nsIWebBrowserPersist.PERSIST_FLAGS_REPLACE_EXISTING_FILES;  
+            persist.persistFlags |= Components.interfaces.nsIWebBrowserPersist.PERSIST_FLAGS_AUTODETECT_APPLY_CONVERSION;
+            persist.saveURI(source, null, null, null, null, thefile);  
+            return {fname: thefile.persistentDescriptor};
+        }
+        return null;
     },
     /**
      * Prompts user to choose a file and loads that file

@@ -172,200 +172,211 @@ Ext.apply(lore.ore.Controller.prototype, {
      * @param {} rdf XML doc or XML HTTP response containing the Resource Map (RDF/XML)
      */
     loadCompoundObject : function(rdf) {
-    	Ext.get('centerPanel').update('<pre>' + lore.ore.controller.formatXML(rdf.responseText)
-    			.replace(/&/g, "&amp;")
-    			.replace(/>/g, "&gt;")
-    			.replace(/</g, "&lt;")
-    			.replace(/"/g, "&quot;") + '</pre>');
-    	
-        var getDatatype = function(propname, propvalue) {
-            var dtype = propvalue.datatype;
-            if (dtype && dtype._string == "http://purl.org/dc/terms/W3CDTF") {
-                dtype = "date";
-            } else if (dtype
-                    && dtype == lore.constants.NAMESPACES["layout"]
-                            + "escapedHTMLFragment") {
-                dtype = "html";
-            } else {
-                dtype = "plainstring";
-                // Allow formatting for some fields
-                if (propname == "dcterms:abstract"
-                        || propname == "dc:description") {
-                    dtype = "string";
-                }
-            }
-            return dtype;
-        };
-        var showInHistory = false;
-
-        // reset the graphical view
-        lore.ore.ui.graphicalEditor.initGraph();
-        var rdfDoc;
-        if (typeof rdf != 'object') {
-            rdfDoc = new DOMParser().parseFromString(rdf, "text/xml");
-        } else {
-            showInHistory = true;
-            rdfDoc = rdf.responseXML;
+        try {
+	    	Ext.get('centerPanel').update('<pre>' + lore.ore.controller.formatXML(rdf.responseText)
+	    			.replace(/&/g, "&amp;")
+	    			.replace(/>/g, "&gt;")
+	    			.replace(/</g, "&lt;")
+	    			.replace(/"/g, "&quot;") + '</pre>');
+	    	
+	        var getDatatype = function(propname, propvalue) {
+	            var dtype = propvalue.datatype;
+	            if (dtype && dtype._string == "http://purl.org/dc/terms/W3CDTF") {
+	                dtype = "date";
+	            } else if (dtype
+	                    && dtype == lore.constants.NAMESPACES["layout"]
+	                            + "escapedHTMLFragment") {
+	                dtype = "html";
+	            } else {
+	                dtype = "plainstring";
+	                // Allow formatting for some fields
+	                if (propname == "dcterms:abstract"
+	                        || propname == "dc:description") {
+	                    dtype = "string";
+	                }
+	            }
+	            return dtype;
+	        };
+	        var showInHistory = false;
+	
+	        // reset the graphical view
+	        lore.ore.ui.graphicalEditor.initGraph();
+	        var rdfDoc;
+	        if (typeof rdf != 'object') {
+	            rdfDoc = new DOMParser().parseFromString(rdf, "text/xml");
+	        } else {
+	            showInHistory = true;
+	            rdfDoc = rdf.responseXML;
+	        }
+	        // lore.debug.timeElapsed("creating databank");
+	        var databank = jQuery.rdf.databank();
+	        for (ns in lore.constants.NAMESPACES) {
+	            databank.prefix(ns, lore.constants.NAMESPACES[ns]);
+	        }
+	        databank.load(rdfDoc);
+	        var loadedRDF = jQuery.rdf({
+	                    databank : databank
+	        });
+	        // Display the properties for the Resource Map
+	        var remQuery = loadedRDF.where('?aggre rdf:type ore:Aggregation')
+	                .where('?rem ore:describes ?aggre');
+	        var aggreurl, remurl;
+	        var res = remQuery.get(0);
+	        var isPrivate = false;
+	        
+	        if (res) {
+	            remurl = res.rem.value.toString();
+	            aggreurl = res.aggre.value.toString();
+	            this.loadedCO = new lore.ore.model.CompoundObject();
+	            this.loadedCO.load({
+	                        format : 'application/rdf+xml',
+	                        content : rdfDoc
+	            });
+	            if (this.loadedCO.properties.getProperty(lore.constants.NAMESPACES["lorestore"] + "isLocked")){
+	                lore.ore.controller.setLockCompoundObject(true);
+	            } else {
+	                lore.ore.controller.setLockCompoundObject(false);
+	            }
+	            isPrivate = this.loadedCO.properties.getProperty(lore.constants.NAMESPACES["lorestore"] + "isPrivate");
+	            lore.ore.cache.add(remurl, this.loadedCO);
+	            lore.ore.cache.setLoadedCompoundObjectUri(remurl);
+	            lore.ore.cache.setLoadedCompoundObjectIsNew(false);
+	            lore.ore.cache.setLoadedCompoundObjectUri(remurl);
+	            lore.ore.controller.bindViews(lore.ore.cache.getLoadedCompoundObject());
+	            
+	        } else {
+	            lore.ore.ui.vp.warning("No Resource Map found");
+	            lore.debug.ore("Error: no remurl found in RDF", loadedRDF);
+	            return;
+	        }
+	
+	        // lore.debug.timeElapsed("create figure for each resource ");
+	        // create a node figure for each aggregated resource, restoring the layout
+	        var counter = 0;
+	        var numResources = 
+	        loadedRDF.where('<' + aggreurl + '> ore:aggregates ?url')
+	                .optional('?url layout:x ?x')
+	                .optional('?url layout:y ?y')
+	                .optional('?url layout:width ?w')
+	                .optional('?url layout:height ?h')
+	                .optional('?url layout:originalHeight ?oh')
+	                .optional('?url layout:highlightColor ?hc')
+	                .optional('?url layout:orderIndex ?order')
+	                .optional('?url layout:abstractPreview ?abstractPreview')
+	                .optional('?url layout:isPlaceholder ?placeholder')
+	                .optional('?url dc:format ?format')
+	                .optional('?url rdf:type ?rdftype')
+	                .optional('?url dc:title ?title')
+	                .each(function() {
+	                    var resourceURL = this.url.value.toString();
+	                    var fig;
+	                    var opts = {
+	                        batch : true,
+	                        url : resourceURL
+	                    };
+	                    if (this.x && this.y) {
+	                        for (prop in this) {
+	                            if (prop != 'url' && prop != 'format'
+	                                    && prop != 'rdftype' && prop != 'title'
+	                                    && prop != 'hc') {
+	                                opts[prop] = parseInt(this[prop].value);
+	                            } else {
+	                                opts[prop] = this[prop].value.toString();
+	                            }
+	                        }
+	                        if (opts.x < 0) {
+	                            opts.x = 0;
+	                        }
+	                        if (opts.y < 0) {
+	                            opts.y = 0;
+	                        }
+	                    }
+	                    if (counter < lore.ore.controller.MAXSIZE){
+	                     fig = lore.ore.ui.graphicalEditor.addFigure(opts);
+	                    }
+	                    counter++;
+	                });
+	        var ccounter = 0;
+	        // iterate over all predicates to create node connection figures
+	        loadedRDF.where('?subj ?pred ?obj')
+	        .filter(function() {
+	            // filter out the layout properties and predicates about the
+	            // resource map as well as literals
+	            if (this.pred.value.toString()
+	                    .match(lore.constants.NAMESPACES["layout"])
+	                    || this.pred.value.toString() === (lore.constants.NAMESPACES["dc"] + "format")
+	                    || this.subj.value.toString().match(remurl)) {
+	                return false;
+	            } else {
+	                return true;
+	            }
+	        }).each(function() {
+	            
+	            var connopts = {
+	                subject: this.subj.value.toString(),
+	                obj : this.obj.value.toString(),
+	                pred: this.pred.value.toString()
+	            };
+	            
+	            if (ccounter <= lore.ore.controller.MAXCONNECTIONS){
+	                var fig = lore.ore.ui.graphicalEditor.addConnection(connopts);
+	                if (fig) {
+	                    ccounter ++;
+	                }
+	            }
+	            
+	            
+	        });
+	        
+	        // Temporary workaround to set drawing area size on load
+	        // problem still exists if a node is added that extends the boundaries
+	        lore.ore.ui.graphicalEditor.coGraph.resizeMask();
+	
+	        lore.ore.ui.vp.info("Loading Resource Map");
+	        if (counter > lore.ore.controller.MAXSIZE){
+	            lore.ore.ui.vp.error("Resource Map is too big for LORE graphical editor! " + (counter - lore.ore.controller.MAXSIZE) + " resources not shown");
+	        }
+	        if (ccounter >= lore.ore.controller.MAXCONNECTIONS){
+	            lore.ore.ui.vp.error("Resource Map has too many connections for graphical editor! Some connections not displayed");
+	        }
+	        Ext.Msg.hide();
+	        
+	        // preload nested Resource Maps to cache
+	        lore.ore.cache.cacheNested(loadedRDF, 0);
+	        
+	        // lore.ore.populateResourceDetailsCombo();
+	        // lore.debug.timeElapsed("show in history");
+	        if (showInHistory) {
+	            var title = lore.ore.ui.grid.getPropertyValue("dc:title")
+	                    || lore.ore.ui.grid.getPropertyValue("dcterms:title");
+	            if (!title) {
+	                title = "Untitled";
+	            }
+	        }
+	        if (lore.ore.ui.topView
+	                && lore.ore.ui.graphicalEditor.lookup[lore.ore.controller.currentURL]) {
+	            lore.ore.ui.topView.hideAddIcon(true);
+	        } else if (lore.ore.ui.topView) {
+	            lore.ore.ui.topView.hideAddIcon(false);
+	        }
+	        // lore.debug.timeElapsed("done");
+	        var readOnly = !remurl.match(lore.ore.reposAdapter.idPrefix);
+	        Ext.getCmp('currentCOMsg').setText(
+	                Ext.util.Format.ellipsis(title, 50)
+	                        + (readOnly ? ' (read-only)' : ''), false);
+	        Ext.getCmp("currentCOSavedMsg").setText("");
+	        lore.ore.controller.isDirty = false;
+	        lore.ore.controller.wasClean = true;
+            lore.debug.ore("Loaded Resource Map");
+        } catch (e) {
+            lore.ore.ui.vp.error("Error loading Resource Map");
+            lore.debug.ore("Error loading RDF from string", e);
+            lore.debug.ore("the RDF string was", rdf);
+            lore.debug.ore("the serialized databank is", databank.dump({
+                                format : 'application/rdf+xml',
+                                serialize : true
+            }));
         }
-        // lore.debug.timeElapsed("creating databank");
-        var databank = jQuery.rdf.databank();
-        for (ns in lore.constants.NAMESPACES) {
-            databank.prefix(ns, lore.constants.NAMESPACES[ns]);
-        }
-        databank.load(rdfDoc);
-        var loadedRDF = jQuery.rdf({
-                    databank : databank
-        });
-        // Display the properties for the Resource Map
-        var remQuery = loadedRDF.where('?aggre rdf:type ore:Aggregation')
-                .where('?rem ore:describes ?aggre');
-        var aggreurl, remurl;
-        var res = remQuery.get(0);
-        var isPrivate = false;
-        
-        if (res) {
-            remurl = res.rem.value.toString();
-            aggreurl = res.aggre.value.toString();
-            this.loadedCO = new lore.ore.model.CompoundObject();
-            this.loadedCO.load({
-                        format : 'application/rdf+xml',
-                        content : rdfDoc
-            });
-            if (this.loadedCO.properties.getProperty(lore.constants.NAMESPACES["lorestore"] + "isLocked")){
-                lore.ore.controller.setLockCompoundObject(true);
-            } else {
-                lore.ore.controller.setLockCompoundObject(false);
-            }
-            isPrivate = this.loadedCO.properties.getProperty(lore.constants.NAMESPACES["lorestore"] + "isPrivate");
-            lore.ore.cache.add(remurl, this.loadedCO);
-            lore.ore.cache.setLoadedCompoundObjectUri(remurl);
-            lore.ore.cache.setLoadedCompoundObjectIsNew(false);
-            lore.ore.cache.setLoadedCompoundObjectUri(remurl);
-            lore.ore.controller.bindViews(lore.ore.cache.getLoadedCompoundObject());
-            
-        } else {
-            lore.ore.ui.vp.warning("No Resource Map found");
-            lore.debug.ore("Error: no remurl found in RDF", loadedRDF);
-            return;
-        }
-
-        // lore.debug.timeElapsed("create figure for each resource ");
-        // create a node figure for each aggregated resource, restoring the layout
-        var counter = 0;
-        var numResources = 
-        loadedRDF.where('<' + aggreurl + '> ore:aggregates ?url')
-                .optional('?url layout:x ?x')
-                .optional('?url layout:y ?y')
-                .optional('?url layout:width ?w')
-                .optional('?url layout:height ?h')
-                .optional('?url layout:originalHeight ?oh')
-                .optional('?url layout:highlightColor ?hc')
-                .optional('?url layout:orderIndex ?order')
-                .optional('?url layout:abstractPreview ?abstractPreview')
-                .optional('?url layout:isPlaceholder ?placeholder')
-                .optional('?url dc:format ?format')
-                .optional('?url rdf:type ?rdftype')
-                .optional('?url dc:title ?title')
-                .each(function() {
-                    var resourceURL = this.url.value.toString();
-                    var fig;
-                    var opts = {
-                        batch : true,
-                        url : resourceURL
-                    };
-                    if (this.x && this.y) {
-                        for (prop in this) {
-                            if (prop != 'url' && prop != 'format'
-                                    && prop != 'rdftype' && prop != 'title'
-                                    && prop != 'hc') {
-                                opts[prop] = parseInt(this[prop].value);
-                            } else {
-                                opts[prop] = this[prop].value.toString();
-                            }
-                        }
-                        if (opts.x < 0) {
-                            opts.x = 0;
-                        }
-                        if (opts.y < 0) {
-                            opts.y = 0;
-                        }
-                    }
-                    if (counter < lore.ore.controller.MAXSIZE){
-                     fig = lore.ore.ui.graphicalEditor.addFigure(opts);
-                    }
-                    counter++;
-                });
-        var ccounter = 0;
-        // iterate over all predicates to create node connection figures
-        loadedRDF.where('?subj ?pred ?obj')
-        .filter(function() {
-            // filter out the layout properties and predicates about the
-            // resource map as well as literals
-            if (this.pred.value.toString()
-                    .match(lore.constants.NAMESPACES["layout"])
-                    || this.pred.value.toString() === (lore.constants.NAMESPACES["dc"] + "format")
-                    || this.subj.value.toString().match(remurl)) {
-                return false;
-            } else {
-                return true;
-            }
-        }).each(function() {
-            
-            var connopts = {
-                subject: this.subj.value.toString(),
-                obj : this.obj.value.toString(),
-                pred: this.pred.value.toString()
-            };
-            
-            if (ccounter <= lore.ore.controller.MAXCONNECTIONS){
-                var fig = lore.ore.ui.graphicalEditor.addConnection(connopts);
-                if (fig) {
-                    ccounter ++;
-                }
-            }
-            
-            
-        });
-        
-        // Temporary workaround to set drawing area size on load
-        // problem still exists if a node is added that extends the boundaries
-        lore.ore.ui.graphicalEditor.coGraph.resizeMask();
-
-        lore.ore.ui.vp.info("Loading Resource Map");
-        if (counter > lore.ore.controller.MAXSIZE){
-            lore.ore.ui.vp.error("Resource Map is too big for LORE graphical editor! " + (counter - lore.ore.controller.MAXSIZE) + " resources not shown");
-        }
-        if (ccounter >= lore.ore.controller.MAXCONNECTIONS){
-            lore.ore.ui.vp.error("Resource Map has too many connections for graphical editor! Some connections not displayed");
-        }
-        Ext.Msg.hide();
-        
-        // preload nested Resource Maps to cache
-        lore.ore.cache.cacheNested(loadedRDF, 0);
-        
-        // lore.ore.populateResourceDetailsCombo();
-        // lore.debug.timeElapsed("show in history");
-        if (showInHistory) {
-            var title = lore.ore.ui.grid.getPropertyValue("dc:title")
-                    || lore.ore.ui.grid.getPropertyValue("dcterms:title");
-            if (!title) {
-                title = "Untitled";
-            }
-        }
-        if (lore.ore.ui.topView
-                && lore.ore.ui.graphicalEditor.lookup[lore.ore.controller.currentURL]) {
-            lore.ore.ui.topView.hideAddIcon(true);
-        } else if (lore.ore.ui.topView) {
-            lore.ore.ui.topView.hideAddIcon(false);
-        }
-        // lore.debug.timeElapsed("done");
-        var readOnly = !remurl.match(lore.ore.reposAdapter.idPrefix);
-        Ext.getCmp('currentCOMsg').setText(
-                Ext.util.Format.ellipsis(title, 50)
-                        + (readOnly ? ' (read-only)' : ''), false);
-        Ext.getCmp("currentCOSavedMsg").setText("");
-        lore.ore.controller.isDirty = false;
-        lore.ore.controller.wasClean = true;
     },
     /** Lookup a label for a tag */
     lookupTag: function(tagId){
@@ -836,44 +847,53 @@ Ext.apply(lore.ore.Controller.prototype, {
                 lore.ore.ui.vp.info("Unable to save Resource Map data");
             }
         };
-        format = format || "rdf"; // default value
-        var currentCO = lore.ore.cache.getLoadedCompoundObject();
-        if (format == "wordml"){
-            var wExp = new lore.exporter.WordExporter();
-            var docxData = currentCO.toWord();
-            lore.debug.ore("docx",docxData);
-            wExp.createWordFile(docxData.docxml, docxData.rels);
-        } else {
-            lore.util.writeFileWithSaveAs("Export Resource Map as", 
-                fileExtensions[format],
-                // savecb callback will actually write the file
-                function(savecb){ 
-                        // get contents via serialize
-                        saveContents(savecb, currentCO.serialize(format));
-                },
-                window
-            );
-        }        
+        try {
+	        format = format || "rdf"; // default value
+	        var currentCO = lore.ore.cache.getLoadedCompoundObject();
+	        if (format == "wordml"){
+	            var wExp = new lore.exporter.WordExporter();
+	            var docxData = currentCO.toWord();
+	            lore.debug.ore("docx",docxData);
+	            wExp.createWordFile(docxData.docxml, docxData.rels);
+	        } else {
+	            lore.util.writeFileWithSaveAs("Export Resource Map as", 
+	                fileExtensions[format],
+	                // savecb callback will actually write the file
+	                function(savecb){ 
+	                        // get contents via serialize
+	                        saveContents(savecb, currentCO.serialize(format));
+	                },
+	                window
+	            );
+	        }        
+        } catch (e) {
+            lore.debug.ore("Error saving Resource Maps data",e );
+            lore.ore.ui.vp.error("Error saving Resource Map: " + e);
+        }
     },
     /** keep selection in sync between graphical editor and resource list */
     updateSelection: function(obj, view){
-        // when a resource is selected: update both graphical editor and resource list views
-        // when a relationship is selected: update the graphical editor and clear selections in resource list
-        if (view instanceof lore.ore.ui.ResourceListPanel){
-            if (obj){
-                lore.ore.ui.graphicalEditor.selectFigure(obj);
-            } else {
-                // clear graphical editor selection
-                lore.debug.ore("no selection");
-            }
-        } else {
-            var resourceListView = Ext.getCmp("remlistview");
-            if (obj instanceof lore.ore.ui.graph.EntityFigure){
-                resourceListView.selectResource(obj.url);
-            } else {
-                // could be a connection or nothing selected: clear resource list
-                resourceListView.selectResource(null);
-            }
+        try{
+	        // when a resource is selected: update both graphical editor and resource list views
+	        // when a relationship is selected: update the graphical editor and clear selections in resource list
+	        if (view instanceof lore.ore.ui.ResourceListPanel){
+	            if (obj){
+	                lore.ore.ui.graphicalEditor.selectFigure(obj);
+	            } else {
+	                // clear graphical editor selection
+	                lore.debug.ore("no selection");
+	            }
+	        } else {
+	            var resourceListView = Ext.getCmp("remlistview");
+	            if (obj instanceof lore.ore.ui.graph.EntityFigure){
+	                resourceListView.selectResource(obj.url);
+	            } else {
+	                // could be a connection or nothing selected: clear resource list
+	                resourceListView.selectResource(null);
+	            }
+	        }
+        } catch (e){
+            lore.debug.ore("Error in updateSelection",e);
         }
     },
     addPlaceholder: function(){
