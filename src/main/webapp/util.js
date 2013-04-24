@@ -1070,8 +1070,8 @@ lore.util = {
 	                return buf.replace(/[\x80-\xff|\u0080-\uFFFF]*/g, '');
 	            }
 	        }
-        }
-        return "";
+        } 
+        return html;
     },
     /**
      * Add target="_blank" to all links in an html string

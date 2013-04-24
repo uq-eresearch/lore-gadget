@@ -233,6 +233,8 @@ lore.draw2d.Connection = Ext.extend(lore.draw2d.Line, {
             if (!(lore.draw2d.Connection.contextMenu && (
                     lore.draw2d.Connection.loadedOntology == lore.ore.ontologyManager.relOntologyURL))) {
                 lore.draw2d.Connection.contextmenu = new Ext.menu.Menu({
+                	width: '200px',
+                	height: '400px',
                     showSeparator: false
                 });
                 var cm = lore.draw2d.Connection.contextmenu;
@@ -248,17 +250,17 @@ lore.draw2d.Connection = Ext.extend(lore.draw2d.Line, {
                 }));
                 Ext.getCmp('tfilter').on('keyup',function(tf, e){
                     try{        
-                    var filtertext = Ext.getCmp('tfilter').getRawValue();
-                    lore.draw2d.Connection.contextmenu.items.each(function(item, index, len){
-                        if (item.initialConfig.text){
-                             if (item.initialConfig.text.match(filtertext)){
-                                item.show();
-                             } else {
-                                item.hide();
-                             }
-                        }
-                    });
-                    lore.draw2d.Connection.contextmenu.doLayout();
+	                    var filtertext = Ext.getCmp('tfilter').getRawValue();
+	                    lore.draw2d.Connection.contextmenu.items.each(function(item, index, len){
+	                        if (item.initialConfig.text){
+	                             if (item.initialConfig.text.match(filtertext)){
+	                                item.show();
+	                             } else {
+	                                item.hide();
+	                             }
+	                        }
+	                    });
+	                    lore.draw2d.Connection.contextmenu.doLayout();
                     } catch (ex){
                         lore.debug.ore("Error filtering rel menu",ex);
                     }

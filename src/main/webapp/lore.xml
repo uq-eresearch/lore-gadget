@@ -76,7 +76,6 @@
         <script type="text/javascript" src="ui/graph/FanConnectionRouter.js"></script>
                 
         <link rel="stylesheet" type="text/css" href="lib/ext3.2/resources/css/ext-all.css"/>
-        <link rel="stylesheet" type="text/css" href="loreui.css"/>
         <link rel="stylesheet" type="text/css" href="lore_ore.css"/>
         <link rel="stylesheet" type="text/css" href="lib/ext/ux/carousel.css"/>  
         
@@ -84,6 +83,8 @@
         <link rel="stylesheet" type="text/css" href="XMLPrettyPrint.css"/>
         <link rel="stylesheet" type="text/css" href="lib/ext/ux/superboxselect.css"/>
         <link rel="stylesheet" type="text/css" href="lib/ext/ux/Ext.ux.ScrollMenu.css"/>
+        
+        <link rel="stylesheet" type="text/css" href="loreui.css"/>
         
         <div id="tabs1">
     	    <div id="tabs2">

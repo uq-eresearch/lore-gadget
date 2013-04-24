@@ -137,7 +137,7 @@ lore.ore.ui.RelationshipEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                              // TODO: color code different ontologies?
                              metaData.attr = "title='" + record.data.relNS + record.data.relName + "'";
                              return value;
-                           },
+                           }/*,
                             editor: new Ext.form.TriggerField({
                                  parentPanel: this,
                                  editable: false,
@@ -161,7 +161,7 @@ lore.ore.ui.RelationshipEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                                         lore.debug.ore("Error in trigger click",e);
                                     }
                                  } 
-                           })
+                           })*/
                  }, {
                             header : 'To',
                             dataIndex : 'toTitle',
@@ -276,6 +276,7 @@ lore.ore.ui.RelationshipEditor = Ext.extend(Ext.grid.EditorGridPanel,{
 	            Ext.Msg.show({
 	                    title : lore.util.sanitizeHTML('About \"' + sel.data.relName + '\" relationship',window,true),
 	                    buttons : Ext.MessageBox.OK,
+	                    minWidth : '600px',
 	                    msg : infoMsg // TODO: sanitize
 	                });
 	        } else {

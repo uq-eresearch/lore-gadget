@@ -57,6 +57,9 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                 propEditor: this,
                 modal: true,
                 closable: false,
+                width: '600px',
+                autoHeight : true,
+                autoWidth: true,
                 layout: 'fit',
                 animateTarget: 'properties',
                 focus: function() {
@@ -316,7 +319,7 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                             dataIndex : 'value',
                             menuDisabled : true,
                             scope: this,
-                            renderer: this.renderFunction, // in PropertyEditor
+                            renderer: this.renderFunction/*, // in PropertyEditor
                             editor: new Ext.form.TriggerField({
                                  propertyEditor: this, // reference to PropertyEditor object
                                  triggerClass: 'x-form-ellipsis-trigger',
@@ -335,7 +338,7 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                                         lore.debug.ore("Error in trigger click",e);
                                     }
                                  } 
-                           })
+                           })*/
                         }
 
                 ]
@@ -386,7 +389,7 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                 // open the popup editor
                 g.propEditorWindow.editField(tfield,i);
             } else {
-                 alert("Property value is not editable");
+                 //alert("Property value is not editable");
             }
         });
         // Set up listeners
@@ -603,7 +606,7 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
             return "<img src='../../skin/icons/ore/lock.png' alt=''><span style='"
             + (lore.ore.controller.readOnly ? "color:grey;" : "") + "vertical-align:3px'> Locked</span>";
         }
-        if (lore.ore.controller.readOnly || (rec && rec.data && 
+        /*if (lore.ore.controller.readOnly || (rec && rec.data && 
                 (rec.data.id == "dc:format_0" || rec.data.id == "lorestore:user_0"
                     || rec.data.id == "rdf:type_0"
                     || rec.data.id == "rdf:about_0" 
@@ -614,9 +617,9 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                     ))){
             
             return '<span style="color:grey;">' + val + '</span>';
-        } else {
+        } else {*/
             return '<span>' + val + '</span>';
-        }
+        /*}*/
         return val;
     },
     /** Grey out rows that are not editable by the user */
@@ -669,7 +672,7 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
             return '<span title="' + escVal + '">' +  renderString + '</span>';
         }
         
-        if (lore.ore.controller.readOnly || (rec && rec.data && 
+        /*if (lore.ore.controller.readOnly || (rec && rec.data && 
                 (rec.data.id == "dc:format_0" || rec.data.id == "lorestore:user_0"
                     || rec.data.id == "rdf:type_0"
                     || rec.data.id == "rdf:about_0" 
@@ -680,9 +683,9 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                     ))){
             
             return '<span title="' + escVal + '" style="color:grey;">' + val + '</span>';
-        } else {
+        } else {*/
             return '<span title="' + escVal + '">' + val + '</span>';
-        }
+        /*}*/
         } catch (ex){
             lore.debug.ore("Error in renderFunc",ex);
         }
@@ -850,10 +853,10 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                         + "<a style='text-decoration:underline' href='#' onclick='lore.util.launchTab(\"" 
                         + ns + "\");'>" + ns + "</a></p>";
             }
-            
             Ext.Msg.show({
                     title : lore.util.sanitizeHTML('About ' + sel.data.name,window,true),
                     buttons : Ext.MessageBox.OK,
+                    minWidth : '600px',
                     msg : infoMsg // TODO: sanitize
                 });
         } else {
