@@ -60,6 +60,7 @@ Ext.onReady(function() {
 					    applyTo: 'tabs3',
 					    border : false,
 					    bwrapStyle : "position: absolute; top: 26px; bottom: 0px; width: 100%; height: auto;",
+				        deferredRender: false,
 					    itemTpl: new Ext.XTemplate(
 		                    '<li class="{cls}" id="{id}"><a class="x-tab-strip-close"></a>',
 		                    '<tpl if="menuHandler">',
@@ -364,6 +365,7 @@ Ext.onReady(function() {
 			            border : false,
 				        items : [
 							new Ext.Panel({
+								id : 'searchPanel',
 								title: 'Search',
 					            border : false,
                                 items:[
@@ -473,34 +475,34 @@ Ext.onReady(function() {
 	                            ]
                             })
 							,
-					        new Ext.Panel({
-					        	id: 'properties',
-				                title: 'Properties',
-				                layout:'anchor',
-				                height: "500px",
-				                items: [
+							new Ext.Panel({
+						    	id: 'properties',
+						        title: 'Properties',
+						        layout:'anchor',
+						        height: "500px",
+						        items: [
 									{
-	                                    title : 'Resource Map Properties',
-	                                    id : "remgrid",
-	                                    propertyType: "property",
-	                                    xtype : "propertyeditor"
-	                                }
+						                title : 'Resource Map Properties',
+						                id : "remgrid",
+						                propertyType: "property",
+						                xtype : "propertyeditor"
+						            }
 									, 
 									{
-	                                    title : "Resource Properties",
-	                                    id : "nodegrid",
-	                                    propertyType: "property",
-	                                    xtype : "propertyeditor"
-	                                }
-	                                , 
-	                                {
-	                                    title: "Relationships",
-	                                    id: "relsgrid",
-	                                    propertyType: "relationship",
-	                                    xtype: "relationshipeditor"
-	                                }
+						                title : "Resource Properties",
+						                id : "nodegrid",
+						                propertyType: "property",
+						                xtype : "propertyeditor"
+						            }
+						            , 
+						            {
+						                title: "Relationships",
+						                id: "relsgrid",
+						                propertyType: "relationship",
+						                xtype: "relationshipeditor"
+						            }
 								]
-				            })
+						    })
 	                	]
 			        })
 			    ]
@@ -525,5 +527,4 @@ Ext.onReady(function() {
     Ext.getCmp("searchpred").getStore().loadData(searchproplist);
         
     lore.ore.ui.graphicalEditor = Ext.getCmp("drawingarea");
-	
 });
