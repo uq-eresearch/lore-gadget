@@ -385,6 +385,9 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
     * @return {}
     */
    addFigure : function(opts) {
+	   if (!this.model) {
+		   lore.ore.controller.createCompoundObject();
+	   }
 	   try {
         if (!opts.batch && lore.ore.controller.checkReadOnly()){
             return;
@@ -401,16 +404,11 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
             opts.y = this.dummylayouty;
         }
         var title = opts.props["dc:title_0"] || opts.props["dcterms:title_0"];
-        if (!opts.batch && !title){ 
-            // dodgy way of determining if this is a new node
+        /*if (!opts.batch && !title){ 
             try{
-            // Try getting the page title from the browser history: 
-            // getting it from the history avoids any problems with 
-            // waiting for the document to be loaded
-            // FIXME: this should be in history manager
-            var globalHistory = Components.classes["@mozilla.org/browser/global-history;2"].
-                        getService(Components.interfaces.nsIGlobalHistory2);
-            title  = globalHistory.getPageTitle(Components.classes["@mozilla.org/network/io-service;1"].
+	            var globalHistory = Components.classes["@mozilla.org/browser/global-history;2"].
+	                        getService(Components.interfaces.nsIGlobalHistory2);
+	            title  = globalHistory.getPageTitle(Components.classes["@mozilla.org/network/io-service;1"].
                 getService(Components.interfaces.nsIIOService).
                 newURI(theURL, null, null));
                 if (title){
@@ -419,7 +417,7 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
             } catch (e) {
                 lore.debug.ore("Error getting title from history",e);
             }
-        }
+        }*/
         if (theURL && (theURL == lore.ore.cache.getLoadedCompoundObjectUri())){
             lore.ore.ui.vp.warning("Cannot add Resource Map to itself");
         } else if (theURL && !this.lookup[theURL]) {

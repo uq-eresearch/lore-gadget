@@ -137,7 +137,7 @@ lore.ore.ui.RelationshipEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                              // TODO: color code different ontologies?
                              metaData.attr = "title='" + record.data.relNS + record.data.relName + "'";
                              return value;
-                           }/*,
+                           },
                             editor: new Ext.form.TriggerField({
                                  parentPanel: this,
                                  editable: false,
@@ -161,7 +161,7 @@ lore.ore.ui.RelationshipEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                                         lore.debug.ore("Error in trigger click",e);
                                     }
                                  } 
-                           })*/
+                           })
                  }, {
                             header : 'To',
                             dataIndex : 'toTitle',
@@ -183,11 +183,11 @@ lore.ore.ui.RelationshipEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                         id : 'plus',
                         qtip : 'Add a relationship',
                         handler : this.addRelationshipAction
-                    },*/ /*{
+                    },*/{
                         id : 'minus',
                         qtip : 'Remove the selected relationship',
                         handler : this.removeRelationshipAction
-                    },*/ {
+                    },{
                         id : 'help',
                         qtip : 'Display information about the selected relationship',
                         handler : this.helpRelationshipAction
@@ -209,12 +209,12 @@ lore.ore.ui.RelationshipEditor = Ext.extend(Ext.grid.EditorGridPanel,{
             {compiled: true}
         );
         
-        /*this.relEditorWindow.on("show", function(){
+        this.relEditorWindow.on("show", function(){
             // force redraw of text area of popup editor on scroll to get around FF iframe bug see #209
             var taEl = this.getComponent(0).getEl();
             taEl.on("scroll",function(e,t,o){this.repaint();},taEl);
         }, this.relEditorWindow, {single:true});
-        */
+        
         
     },
     /** Handler for plus tool button on relationship grids 

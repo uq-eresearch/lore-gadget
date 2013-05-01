@@ -1,16 +1,29 @@
 Ext.onReady(function() {
 		    
     lore.ore.ontologyManager = new lore.ore.model.OntologyManager();
-    lore.ore.cache = new lore.ore.model.CompoundObjectCache();  
+    
     lore.ore.controller = new lore.ore.Controller({
         currentURL: "http://austlit.edu.au"
     });
+    
+    lore.ore.controller.handlePreferencesChanged({
+        creator: "Anonymous",
+        relonturl: "/lore/ontologies/austlitoaiore.owl",
+        rdfrepos: "http://austlit.edu.au/auselit/ore/",
+        rdfrepostype: "lorestore",
+        annoserver: "http://austlit.edu.au/auselit/annotea",
+        disable: false,
+        ontologies: JSON.parse('[{\"nsprefix\":\"austlit\",\"locurl\":\"/lore/ontologies/AustLit.xml\",\"useanno\":\"true\",\"useco\":\"false\", \"status\":\"default\", \"nsuri\":\"http://austlit.edu.au/owl/austlit.owl#\"},{\"nsuri\":\"http://RDVocab.info/Elements/\",\"nsprefix\":\"rda\",\"locurl\":\"/lore/ontologies/rda.rdf\",\"useanno\":\"false\",\"useco\":\"false\", \"status\":\"custom\"},{\"nsprefix\":\"lore\", \"locurl\":\"../lore/ontologies/austlitoaiore.owl\",\"useanno\":\"false\",\"useco\":\"true\", \"status\":\"default\", \"nsuri\":\"http://austlit.edu.au/owl/austlitore.owl#\"}]'),
+        editor: "grapheditor"
+    });
+    
     lore.ore.ui.vp = new lore.ore.ui.Viewport();
-    lore.ore.reposAdapter = new lore.ore.repos.SPARQLAdapter("http://localhost:3030/ds");
+    lore.ore.reposAdapter = new lore.ore.repos.SPARQLAdapter("http://localhost/op");
     lore.ore.coListManager = new lore.ore.model.CompoundObjectListManager();
+    lore.ore.cache = new lore.ore.model.CompoundObjectCache();  
     	
 	lore.ore.reposAdapter.getCompoundObjects(null, null, null, true);
-	
+		
     var action1 = new Ext.Action({
         text: '<b>Search</b>',
         handler: function(){
@@ -176,6 +189,171 @@ Ext.onReady(function() {
 		        width: 350,
                 split:true,
 		        items: [
+		            new Ext.Toolbar({
+		            	items : [
+							new Ext.Action({
+								handler: function(){
+									lore.ore.controller.addResourceWithPrompt();
+							    },
+							    icon: '../lore/skin/icons/add.png',
+						        tooltip: '<b>Quick Tips</b><br/>Icon only button with tooltip'
+					            //tooltip: 'Add browser URL to LORE Resource Map'
+							}),
+							new Ext.Action({
+								handler: function(){
+									lore.ore.controller.addPlaceholder();
+							    },
+							    icon: '../lore/skin/icons/ore/plus-white.png'
+							}),
+							/*{
+					            menu: new Ext.menu.Menu({
+									id: 'menu1',
+							        style: {
+							            overflow: 'visible'
+							        },
+									items: [
+										new Ext.Action({
+											handler: function(){
+												lore.ore.controller.addResourceWithPrompt();
+										    },
+						                    text: 'Add resource URL'
+						                }), 
+						                new Ext.Action({
+											handler: function(){
+												loreoverlay.addFromTabs();
+										    },
+						                    text: 'Add resources from tabs'
+						                })
+						            ]
+								})
+					        },*/
+							'-',
+							new Ext.Action({
+							    handler: function(){
+							    	lore.ore.controller.saveCompoundObjectToRepository();
+							    },
+							    icon: '../lore/skin/icons/ore/disk.png',
+					            tooltip: 'Save the current Resource Map to the repository'
+							}),
+							new Ext.Action({
+								handler: function(){
+									lore.ore.controller.createCompoundObject();
+							    },
+							    icon: '../lore/skin/icons/ore/database_add.png'
+							}),
+							new Ext.Action({
+								handler: function(){
+									lore.ore.controller.copyCompoundObjectToNew();
+							    },
+							    icon: '../lore/skin/icons/ore/database_go.png'
+							}),
+							new Ext.Action({
+								handler: function(){
+									lore.ore.controller.lockCompoundObjectInRepository();
+							    },
+							    icon: '../lore/skin/icons/ore/lock.png'
+							}),
+							new Ext.Action({
+								handler: function(){
+									lore.ore.controller.deleteCompoundObjectFromRepository();
+							    },
+							    icon: '../lore/skin/icons/ore/database_delete.png'
+							}),
+							'-',
+							{
+							    icon: '../lore/skin/icons/table_refresh.png',
+							    menu: new Ext.menu.Menu({
+									id: 'menu2',
+							        style: {
+							            overflow: 'visible'
+							        },
+									items: [
+										new Ext.Action({
+											handler: function(){
+												lore.ore.controller.exportCompoundObject('wordml');
+										    },
+						                    text: 'Export Summary to Word'
+						                }), 
+						                new Ext.Action({
+											handler: function(){
+												lore.ore.controller.exportCompoundObject('rdf');
+										    },
+						                    text: 'Export to RDF/XML'
+						                }), 
+						                new Ext.Action({
+											handler: function(){
+												lore.ore.controller.exportCompoundObject('trig');
+										    },
+						                    text: 'Export to TriG'
+						                }), 
+						                new Ext.Action({
+											handler: function(){
+												lore.ore.controller.exportCompoundObject('json');
+										    },
+						                    text: 'Export to JSON'
+						                }), 
+						                new Ext.Action({
+											handler: function(){
+												try{
+									                var fObj =  lore.util.loadFileWithOpen("Select Resource Map RDF/XML file", 
+									                {desc:"RDF documents", filter:"*.rdf"}, window);
+									                
+									                if ( fObj) {
+									                    loreoverlay.coView().loadCompoundObject(fObj.data);
+									                }
+									            } catch (e){
+									                lore.debug.ui("Error importing Resource Map from file",e);
+									            }
+										    },
+						                    text: 'Import from RDF/XML file'
+						                }), 
+						                new Ext.Action({
+											handler: function(){
+												lore.ore.controller.loadCompoundObjectPromptForURL();
+										    },
+						                    text: 'Import from RDF/XML URL'
+						                })
+						            ]
+								})
+							},
+							'-',
+							new Ext.Action({
+								handler: function(){
+									document.contentWindow.find("",false, false, true, false, true, true);  
+							    },
+							    icon: '../lore/skin/icons/ore/page_white_magnify.png'
+							}),
+							new Ext.Action({
+								handler: function(){
+						            //var instantApply = getBoolPref("browser.preferences.instantApply");
+									var instantApply = true;
+						            var features = "chrome,titlebar,toolbar,centerscreen,resizable=yes" + (instantApply ? ",dialog=no" : ",modal");
+						            window.open("../lore/options.xul","", features);
+						            
+							    },
+							    icon: '../lore/skin/icons/cog.png'
+							}),
+							new Ext.Action({
+								handler: function(){
+						            try{ 
+						            	var version = this.version;
+						                if (!version){
+						                  version = "0.0.1";
+						                }
+						                var url = "mailto:auselit@gmail.com?subject=Problem%20with%20LORE%20" + version
+						                  + "&Body=Please describe the problem in as much detail as possible, " 
+						                  + "including URLs for the web resources you were working with when the problem occurred:%0A%0A%0A%0A"
+						                  + "Recent activity (this information may assist the developers to diagnose the problem): %0A"
+						                  + lore.debug.getRecentLog();
+						                window.location.href = url;
+						            } catch (e){
+						            	lore.debug.ui("Error in loreoverlay.reportProblem",e);
+						            }
+							    },
+							    icon: '../lore/skin/icons/mail-exclamation.png'
+							})
+		            	]
+		            }),
 			        new Ext.TabPanel({
 				        renderTo: 'tabs1',
 				        activeTab: 0,

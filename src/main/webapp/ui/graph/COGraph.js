@@ -729,7 +729,7 @@ Ext.extend(lore.ore.ui.graph.COGraph, lore.draw2d.Workflow, {
                     lore.ore.controller.launchInTabs();
                 }
             });
-            /*this.contextmenu.add("-");
+            this.contextmenu.add("-");
             this.contextmenu.add({
                 text: "Add current URL",
                 icon: "../lore/skin/icons/add.png",
@@ -779,7 +779,7 @@ Ext.extend(lore.ore.ui.graph.COGraph, lore.draw2d.Workflow, {
                 handler: function(evt){                 
                     window.open("../lore/content/options.xul", "", "chrome,centerscreen,modal,toolbar");
                 }
-             });*/
+             });
             
         }
         var absx = this.getAbsoluteX() +  x - this.getScrollLeft();

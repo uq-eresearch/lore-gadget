@@ -485,11 +485,10 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
                     
                 }
             });
-            
             this.nodemenu = nodemenu;
          }
-         this.titleItem.setText(Ext.util.Format.ellipsis(fdcontroller.clickedNode.name,30));
-         this.nodemenu.showAt([e.pageX,e.pageY]); 
+            this.titleItem.setText(Ext.util.Format.ellipsis(fdcontroller.clickedNode.name,30));
+        	this.nodemenu.showAt([e.pageX,e.pageY]); 
         } catch (e){
             lore.debug.ore("Error in  explore context menu",e);
         }

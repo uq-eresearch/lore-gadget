@@ -591,14 +591,14 @@ Ext.apply(lore.ore.Controller.prototype, {
                         Ext.MessageBox.hide();
                     } else {
                         lore.ore.reposAdapter.deleteCompoundObject(remid,function(deletedrem){
-                                try{
+                            try{
                                 if (lore.ore.cache.getLoadedCompoundObjectUri() == deletedrem){
                                     lore.ore.cache.setLoadedCompoundObjectUri("");
                                     lore.ore.ui.graphicalEditor.coGraph.clear();
                                     lore.ore.controller.createCompoundObject(); 
                                 }
                                 lore.ore.coListManager.remove(deletedrem);
-                                lore.ore.historyManager.deleteFromHistory(deletedrem);
+                                /*lore.ore.historyManager.deleteFromHistory(deletedrem);*/
                                 lore.ore.ui.vp.info("Resource Map deleted");
                                 Ext.MessageBox.hide();
                             } catch (ex){
@@ -611,8 +611,7 @@ Ext.apply(lore.ore.Controller.prototype, {
         });
     },
     lockCompoundObjectInRepository: function(){
-        if (!(lore.ore.reposAdapter instanceof lore.ore.repos.RestAdapter ||
-         	lore.ore.reposAdapter instanceof lore.ore.repos.SPARQLAdapter)){
+        if (!lore.ore.reposAdapter instanceof lore.ore.repos.SPARQLAdapter){
             Ext.Msg.show({
                 title: "Not supported",
                 msg: "Locking of Resource Maps is only supported for lorestore repositories.",
@@ -817,7 +816,7 @@ Ext.apply(lore.ore.Controller.prototype, {
            lore.ore.coListManager.add([coopts]);
         }
         var priv = currentCO.properties.getProperty(lore.constants.NAMESPACES["lorestore"] + "isPrivate");
-        lore.ore.historyManager.addToHistory(remid, title, (priv && priv.value == true ? true : false));  
+        /*lore.ore.historyManager.addToHistory(remid, title, (priv && priv.value == true ? true : false));  */
     },
     persistAllLayout: function(){
         // make sure layout info is up to date in model
@@ -1181,11 +1180,7 @@ Ext.apply(lore.ore.Controller.prototype, {
             if (currentCOMsg) {currentCOMsg.setText(Ext.util.Format.ellipsis(title, 50),false);}
         }
                 
-        if (rdfrepostype == 'lorestore') {
-        	lore.ore.reposAdapter = new lore.ore.repos.RestAdapter(rdfrepos);
-        } else {
-        	lore.ore.reposAdapter = new lore.ore.repos.SPARQLAdapter(rdfrepos);
-        }
+        lore.ore.reposAdapter = new lore.ore.repos.SPARQLAdapter(rdfrepos);
         
         if (isEmpty) {
                 // empty Resource Map, reset it to get a new id

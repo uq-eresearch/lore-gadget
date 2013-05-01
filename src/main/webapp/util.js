@@ -1015,24 +1015,28 @@ lore.util = {
     },
     /** Remove any markup from the provided value */
     stripHTML : function(val, doc){
-        var fragment = Components.classes["@mozilla.org/feed-unescapehtml;1"]  
-                .getService(Components.interfaces.nsIScriptableUnescapeHTML)  
-                .parseFragment(val, false, null, doc.body);
-        var serializedContent = "";
-        if (fragment){
-            var divEl = doc.getElementById('sanitize');
-            if (!divEl){
-                divEl = doc.createElement("div");
-                divEl.setAttribute("id", "sanitize");
-                divEl.style.display = "none";
-            }
-            divEl.appendChild(fragment);
-            // read textContent to strip out markup
-            serializedContent = divEl.textContent;
-            divEl.removeChild(divEl.firstChild);
-        }
-        lore.debug.ui("stripped", serializedContent);
-        return serializedContent;
+    	if (typeof Components != "undefined") {
+	        var fragment = Components.classes["@mozilla.org/feed-unescapehtml;1"]  
+	                .getService(Components.interfaces.nsIScriptableUnescapeHTML)  
+	                .parseFragment(val, false, null, doc.body);
+	        var serializedContent = "";
+	        if (fragment){
+	            var divEl = doc.getElementById('sanitize');
+	            if (!divEl){
+	                divEl = doc.createElement("div");
+	                divEl.setAttribute("id", "sanitize");
+	                divEl.style.display = "none";
+	            }
+	            divEl.appendChild(fragment);
+	            // read textContent to strip out markup
+	            serializedContent = divEl.textContent;
+	            divEl.removeChild(divEl.firstChild);
+	        }
+	        lore.debug.ui("stripped", serializedContent);
+	        return serializedContent;
+    	} else {
+    		return val;
+    	}
     },
     /**
      * Basic HTML Sanitizer using Firefox's parseFragment

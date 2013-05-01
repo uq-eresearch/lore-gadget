@@ -234,7 +234,6 @@ lore.draw2d.Connection = Ext.extend(lore.draw2d.Line, {
                     lore.draw2d.Connection.loadedOntology == lore.ore.ontologyManager.relOntologyURL))) {
                 lore.draw2d.Connection.contextmenu = new Ext.menu.Menu({
                 	width: '200px',
-                	height: '400px',
                     showSeparator: false
                 });
                 var cm = lore.draw2d.Connection.contextmenu;

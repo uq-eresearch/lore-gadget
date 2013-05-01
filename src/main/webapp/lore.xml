@@ -74,6 +74,7 @@
         <script type="text/javascript" src="ui/graph/COGraph.js"></script>
         <script type="text/javascript" src="ui/graph/Layout.js"></script>
         <script type="text/javascript" src="ui/graph/FanConnectionRouter.js"></script>
+        <script type="text/javascript" src="export/WordExporter.js"></script>
                 
         <link rel="stylesheet" type="text/css" href="lib/ext3.2/resources/css/ext-all.css"/>
         <link rel="stylesheet" type="text/css" href="lore_ore.css"/>
