@@ -525,6 +525,7 @@ Ext.onReady(function() {
             + splitprop[1], curie]);
     }
     Ext.getCmp("searchpred").getStore().loadData(searchproplist);
-        
+    
     lore.ore.ui.graphicalEditor = Ext.getCmp("drawingarea");
+    Ext.getBody().dom.setAttribute('oncontextmenu', "return false;");
 });

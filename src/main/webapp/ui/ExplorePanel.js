@@ -33,7 +33,8 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
             ]
         });
         lore.ore.ui.ExplorePanel.superclass.constructor.call(this, config);
-        this.getComponent(0).on("resize",function(c,adjw, adjh, raww, rawh){
+        
+        /*this.getComponent(0).on("resize",function(c,adjw, adjh, raww, rawh){
            try{
               if (this.fd) {  
                     var canv = this.fd.canvas;
@@ -50,7 +51,7 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
            } catch (e){
               lore.debug.ore("Error in ExplorePanel",e);
            }
-        },this);
+        },this);*/
         this.on("activate", this.updateContent);
         
         lore.ore.explorePanel = this;
@@ -439,54 +440,53 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
     /** Handle context menu for nodes in visualisation: allow deletion/expansion of each node */
     onNodeMenu: function(fdcontroller,e){  
         try{    
-        if (!this.nodemenu) {
-            
-            var nodemenu = new Ext.menu.Menu({
-                id : "explore-node-menu",
-                showSeparator: false
-            });
-            this.titleItem = new Ext.menu.Item({text: "Selected node:", canActivate: false});
-            nodemenu.add(this.titleItem);
-            nodemenu.add("-");
-            nodemenu.add({
-                text : "Show connections",
-                icon: "../lore/skin/icons/ore/network.png",
-                scope: fdcontroller,
-                handler : function(evt) {
-                    var node = this.clickedNode;
-                    lore.ore.explorePanel.fd.controller.requestGraph(node); 
-                }
-            });
-            nodemenu.add({
-               text: "Show in browser",
-               icon: "../lore/skin/icons/page_go.png",
-               scope: fdcontroller,
-               handler: function(evt) {
-                    var node = this.clickedNode;
-                    // TODO: disable this option if it's a Resource Map: provide option to open in LORE instead
-                    lore.util.launchTab(Ext.util.Format.htmlDecode(node.id), window);
-               }
-            });
-            nodemenu.add({
-                text : "Hide this resource and connections",
-                icon: "../lore/skin/icons/ore/cross.png",
-                scope: fdcontroller,
-                handler : function(evt) {
-                    var node = this.clickedNode;
-                    node.setData('alpha', 0, 'end');
-                    node.eachAdjacency(function(adj) {
-                        adj.setData('alpha', 0, 'end');
-                    });
-                    lore.ore.explorePanel.fd.fx.animate({
-                        modes: ['node-property:alpha',
-                            'edge-property:alpha'],
-                        duration: 500
-                    });
-                    
-                }
-            });
-            this.nodemenu = nodemenu;
-         }
+	        if (!this.nodemenu) {
+	            var nodemenu = new Ext.menu.Menu({
+	                id : "explore-node-menu",
+	                showSeparator: false
+	            });
+	            this.titleItem = new Ext.menu.Item({text: "Selected node:", canActivate: false});
+	            nodemenu.add(this.titleItem);
+	            nodemenu.add("-");
+	            nodemenu.add({
+	                text : "Show connections",
+	                icon: "../lore/skin/icons/ore/network.png",
+	                scope: fdcontroller,
+	                handler : function(evt) {
+	                    var node = this.clickedNode;
+	                    lore.ore.explorePanel.fd.controller.requestGraph(node); 
+	                }
+	            });
+	            nodemenu.add({
+	               text: "Show in browser",
+	               icon: "../lore/skin/icons/page_go.png",
+	               scope: fdcontroller,
+	               handler: function(evt) {
+	                    var node = this.clickedNode;
+	                    // TODO: disable this option if it's a Resource Map: provide option to open in LORE instead
+	                    lore.util.launchTab(Ext.util.Format.htmlDecode(node.id), window);
+	               }
+	            });
+	            nodemenu.add({
+	                text : "Hide this resource and connections",
+	                icon: "../lore/skin/icons/ore/cross.png",
+	                scope: fdcontroller,
+	                handler : function(evt) {
+	                    var node = this.clickedNode;
+	                    node.setData('alpha', 0, 'end');
+	                    node.eachAdjacency(function(adj) {
+	                        adj.setData('alpha', 0, 'end');
+	                    });
+	                    lore.ore.explorePanel.fd.fx.animate({
+	                        modes: ['node-property:alpha',
+	                            'edge-property:alpha'],
+	                        duration: 500
+	                    });
+	                    
+	                }
+	            });
+	            this.nodemenu = nodemenu;
+	         }
             this.titleItem.setText(Ext.util.Format.ellipsis(fdcontroller.clickedNode.name,30));
         	this.nodemenu.showAt([e.pageX,e.pageY]); 
         } catch (e){
@@ -603,7 +603,7 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
 	        var pos = this.getPosition();
 	        var offsetX = pos[0] + 1;
 	        var offsetY = pos[1] + 31; // don't show history
-	        
+	        	        
 	        // resize the viewport so that image captures entire diagram
 	        var vp = lore.ore.ui.vp;
 	        var vpsize = vp.getSize();

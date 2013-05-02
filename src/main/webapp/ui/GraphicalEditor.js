@@ -159,7 +159,7 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
                 // Resource and relationships grid will be visible
                 lore.ore.ui.nodegrid.expand();
             }
-            else if (figure.edgetype) {
+            else if (figure.edgetype) {            	
                 var tp = figure.targetPort.parentNode;
                 var sp = figure.sourcePort.parentNode;
                 lore.ore.ui.relsgrid.store.loadData([
