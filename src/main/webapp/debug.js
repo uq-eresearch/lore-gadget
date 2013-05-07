@@ -51,10 +51,17 @@ debug = {
      * @param {} obj
      */
     ui : function (message, obj){
-        if (debug.fbTrace.DBG_LORE_UI){
+		console.log(message);
+		if (obj instanceof Error) {
+        	throw(obj);
+    	} else if (obj) {
+        	console.log(obj);
+    	}
+    	
+    	/*if (debug.fbTrace.DBG_LORE_UI){
             debug.fbTrace.sysout(debug.FB_UI + message, obj);
         } 
-        debug.mozConsole(debug.UI, message, obj);
+        debug.mozConsole(debug.UI, message, obj);*/
     },
     
     /**

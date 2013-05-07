@@ -1,5 +1,7 @@
 Ext.onReady(function() {
-		    
+		  
+	Ext.WindowMgr.zseed = 10001;
+	
     lore.ore.ontologyManager = new lore.ore.model.OntologyManager();
     
     lore.ore.controller = new lore.ore.Controller({
@@ -13,7 +15,7 @@ Ext.onReady(function() {
         rdfrepostype: "lorestore",
         annoserver: "http://austlit.edu.au/auselit/annotea",
         disable: false,
-        ontologies: JSON.parse('[{\"nsprefix\":\"austlit\",\"locurl\":\"/lore/ontologies/AustLit.xml\",\"useanno\":\"true\",\"useco\":\"false\", \"status\":\"default\", \"nsuri\":\"http://austlit.edu.au/owl/austlit.owl#\"},{\"nsuri\":\"http://RDVocab.info/Elements/\",\"nsprefix\":\"rda\",\"locurl\":\"/lore/ontologies/rda.rdf\",\"useanno\":\"false\",\"useco\":\"false\", \"status\":\"custom\"},{\"nsprefix\":\"lore\", \"locurl\":\"../lore/ontologies/austlitoaiore.owl\",\"useanno\":\"false\",\"useco\":\"true\", \"status\":\"default\", \"nsuri\":\"http://austlit.edu.au/owl/austlitore.owl#\"}]'),
+        ontologies: JSON.parse('[{\"nsprefix\":\"austlit\",\"locurl\":\"/lore/ontologies/AustLit.xml\",\"useanno\":\"true\",\"useco\":\"false\", \"status\":\"default\", \"nsuri\":\"http://austlit.edu.au/owl/austlit.owl#\"},{\"nsuri\":\"http://RDVocab.info/Elements/\",\"nsprefix\":\"rda\",\"locurl\":\"/lore/ontologies/rda.rdf\",\"useanno\":\"false\",\"useco\":\"false\", \"status\":\"custom\"},{\"nsprefix\":\"lore\", \"locurl\":\"./ontologies/austlitoaiore.owl\",\"useanno\":\"false\",\"useco\":\"true\", \"status\":\"default\", \"nsuri\":\"http://austlit.edu.au/owl/austlitore.owl#\"}]'),
         editor: "grapheditor"
     });
     
@@ -180,7 +182,7 @@ Ext.onReady(function() {
 	                    xtype: 'button',
 	                    hidden: true,
 	                    id: 'lockButton',
-	                    icon: '../skin/icons/ore/lock.png',
+	                    icon: './skin/icons/ore/lock.png',
 	                    tooltip: 'Resource Map is locked',
 	                    scope: lore.ore.controller
 	                }
@@ -196,7 +198,7 @@ Ext.onReady(function() {
 								handler: function(){
 									lore.ore.controller.addResourceWithPrompt();
 							    },
-							    icon: '../lore/skin/icons/add.png',
+							    icon: './skin/icons/add.png',
 						        tooltip: '<b>Quick Tips</b><br/>Icon only button with tooltip'
 					            //tooltip: 'Add browser URL to LORE Resource Map'
 							}),
@@ -204,7 +206,7 @@ Ext.onReady(function() {
 								handler: function(){
 									lore.ore.controller.addPlaceholder();
 							    },
-							    icon: '../lore/skin/icons/ore/plus-white.png'
+							    icon: './skin/icons/ore/plus-white.png'
 							}),
 							/*{
 					            menu: new Ext.menu.Menu({
@@ -233,36 +235,36 @@ Ext.onReady(function() {
 							    handler: function(){
 							    	lore.ore.controller.saveCompoundObjectToRepository();
 							    },
-							    icon: '../lore/skin/icons/ore/disk.png',
+							    icon: './skin/icons/ore/disk.png',
 					            tooltip: 'Save the current Resource Map to the repository'
 							}),
 							new Ext.Action({
 								handler: function(){
 									lore.ore.controller.createCompoundObject();
 							    },
-							    icon: '../lore/skin/icons/ore/database_add.png'
+							    icon: './skin/icons/ore/database_add.png'
 							}),
 							new Ext.Action({
 								handler: function(){
 									lore.ore.controller.copyCompoundObjectToNew();
 							    },
-							    icon: '../lore/skin/icons/ore/database_go.png'
+							    icon: './skin/icons/ore/database_go.png'
 							}),
 							new Ext.Action({
 								handler: function(){
 									lore.ore.controller.lockCompoundObjectInRepository();
 							    },
-							    icon: '../lore/skin/icons/ore/lock.png'
+							    icon: './skin/icons/ore/lock.png'
 							}),
 							new Ext.Action({
 								handler: function(){
 									lore.ore.controller.deleteCompoundObjectFromRepository();
 							    },
-							    icon: '../lore/skin/icons/ore/database_delete.png'
+							    icon: './skin/icons/ore/database_delete.png'
 							}),
 							'-',
 							{
-							    icon: '../lore/skin/icons/table_refresh.png',
+							    icon: './skin/icons/table_refresh.png',
 							    menu: new Ext.menu.Menu({
 									id: 'menu2',
 							        style: {
@@ -320,20 +322,20 @@ Ext.onReady(function() {
 							'-',
 							new Ext.Action({
 								handler: function(){
-									document.contentWindow.find("",false, false, true, false, true, true);  
+									document.getElementById("graphiframe").contentWindow.find("",false, false, true, false, true, true);  
 							    },
-							    icon: '../lore/skin/icons/ore/page_white_magnify.png'
+							    icon: './skin/icons/ore/page_white_magnify.png'
 							}),
-							new Ext.Action({
+							/*new Ext.Action({
 								handler: function(){
 						            //var instantApply = getBoolPref("browser.preferences.instantApply");
 									var instantApply = true;
 						            var features = "chrome,titlebar,toolbar,centerscreen,resizable=yes" + (instantApply ? ",dialog=no" : ",modal");
-						            window.open("../lore/options.xul","", features);
+						            window.open("./options.xul","", features);
 						            
 							    },
-							    icon: '../lore/skin/icons/cog.png'
-							}),
+							    icon: './skin/icons/cog.png'
+							}),*/
 							new Ext.Action({
 								handler: function(){
 						            try{ 
@@ -351,7 +353,7 @@ Ext.onReady(function() {
 						            	lore.debug.ui("Error in loreoverlay.reportProblem",e);
 						            }
 							    },
-							    icon: '../lore/skin/icons/mail-exclamation.png'
+							    icon: './skin/icons/mail-exclamation.png'
 							})
 		            	]
 		            }),

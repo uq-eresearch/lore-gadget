@@ -86,12 +86,13 @@
         <link rel="stylesheet" type="text/css" href="lib/ext/ux/Ext.ux.ScrollMenu.css"/>
         
         <link rel="stylesheet" type="text/css" href="loreui.css"/>
+        <base href="http://localhost:8080/lore/" target="_blank">
         
         <div id="tabs1">
-    	    <div id="tabs2">
-		    </div>
-    	    <div id="tabs3" style="height:100%">
-		    </div>
+	    </div>
+	    <div id="tabs2">
+		</div>
+   	    <div id="tabs3" style="height:100%">
 	    </div>
   ]]></Content>
 </Module>

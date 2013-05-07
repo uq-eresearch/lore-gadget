@@ -60,7 +60,6 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
             "http://www.openarchives.org/ore/terms/aggregates": "#EEEEEE",
             "http://www.openarchives.org/ore/terms/isAggregatedBy": "#808080",
             "http://purl.org/dc/elements/1.1/relation": "#E3E851"
-                   
         },
 
         this.ckTemplate = new Ext.Template("<span style='font-size:smaller;border:0.5px solid black;background-color:{color};'>&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;{rel}",
@@ -255,9 +254,9 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
                     var color = '#' + new lore.draw2d.Color(data[0], data[1], data[2]).hex();
                     var rel = false;
                     if (color != '#000000') {
-                        //if (color == '#DDDDDD') {
-                        //    rel = 'Unspecified relationship'; // should not happen, but default edge color is #DDDDDD
-                        //} else {
+                        if (color == '#DDDDDD') {
+                            rel = 'Unspecified relationship'; // should not happen, but default edge color is #DDDDDD
+                        } else {
                             var cKey = ep.colorKey;
                             for (c in cKey){
                                 if (cKey[c] == color) {
@@ -265,7 +264,7 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
                                     break;
                                 }
                             }
-                        //}
+                        }
                     }
                     if (rel) {
                         tt.showAt(e.pageX, e.pageY);
@@ -327,14 +326,14 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
                 var historyData = {
                     name: Ext.util.Format.ellipsis(node.name.toString(),30),
                     action : "lore.util.launchTab(\"" + node.id + "\", window);",
-                    icon : "../lore/skin/icons/page_go.png",
+                    icon : "./skin/icons/page_go.png",
                     tooltip : "Show in browser"
                 };
                 
                 // stylesheet sets type to circle for Resource Maps
                 if (node.data["$type"] == "circle"){
                     historyData.action = "lore.ore.controller.loadCompoundObjectFromURL(\"" + node.id + "\");";
-                    historyData.icon = "../lore/skin/oaioreicon-sm.png";
+                    historyData.icon = "./skin/oaioreicon-sm.png";
                     historyData.tooltip = "Load in LORE";
                 } else if (node.data["anno"]){ // annotation
                     historyData.action = "lore.util.launchTab(\"" + node.id + "?danno_useStylesheet=\");";
@@ -450,7 +449,7 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
 	            nodemenu.add("-");
 	            nodemenu.add({
 	                text : "Show connections",
-	                icon: "../lore/skin/icons/ore/network.png",
+	                icon: "./skin/icons/ore/network.png",
 	                scope: fdcontroller,
 	                handler : function(evt) {
 	                    var node = this.clickedNode;
@@ -459,7 +458,7 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
 	            });
 	            nodemenu.add({
 	               text: "Show in browser",
-	               icon: "../lore/skin/icons/page_go.png",
+	               icon: "./skin/icons/page_go.png",
 	               scope: fdcontroller,
 	               handler: function(evt) {
 	                    var node = this.clickedNode;
@@ -469,7 +468,7 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
 	            });
 	            nodemenu.add({
 	                text : "Hide this resource and connections",
-	                icon: "../lore/skin/icons/ore/cross.png",
+	                icon: "./skin/icons/ore/cross.png",
 	                scope: fdcontroller,
 	                handler : function(evt) {
 	                    var node = this.clickedNode;
@@ -515,7 +514,7 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
             
             this.contextmenu.add({
                     text : "Save diagram as image",
-                    icon: "../lore/skin/icons/ore/image.png",
+                    icon: "./skin/icons/ore/image.png",
                     scope: this,
                     handler : function(evt) {
                         lore.ore.ui.vp.progress("Preparing explore image");
@@ -535,7 +534,7 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
              });
              this.contextmenu.add({
                 text: "Reset visualisation",
-                icon: "../lore/skin/icons/arrow_refresh.png",
+                icon: "./skin/icons/arrow_refresh.png",
                 scope: this,
                 handler: function(evt){
                     this.showInExploreView(lore.ore.cache.getLoadedCompoundObjectUri(),"Current Resource Map",true);
@@ -543,7 +542,7 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
              });
              this.contextmenu.add({
                 text: "Show color key and options",
-                icon: "../lore/skin/icons/ore/color-swatch.png",
+                icon: "./skin/icons/ore/color-swatch.png",
                 scope: this,
                 handler: function(evt){
                     var relFieldSet = this.colorKeyWin.getComponent(0);
@@ -563,7 +562,7 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
                       
              this.contextmenu.add({
                     text: "Zoom out",
-                    icon: "../lore/skin/icons/ore/magnifier-zoom-out.png",
+                    icon: "./skin/icons/ore/magnifier-zoom-out.png",
                     scope: this,
                     handler: function (){
                         this.fd.canvas.scale(0.7,0.7);                     
@@ -571,7 +570,7 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
              });
              this.contextmenu.add({
                     text: "Zoom in",
-                    icon: "../lore/skin/icons/ore/magnifier-zoom-in.png",
+                    icon: "./skin/icons/ore/magnifier-zoom-in.png",
                     scope: this,
                     handler: function (){
                         this.fd.canvas.scale(1.3,1.3);                     
@@ -736,13 +735,13 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
 	            var historyData = {
 	                    name: Ext.util.Format.ellipsis(title,30),
 	                    action : "lore.util.launchTab(\"" + id + "\", window);",
-	                    icon : "../lore/skin/icons/page_go.png",
+	                    icon : "./skin/icons/page_go.png",
 	                    tooltip : "Show in browser"
 	            };
 	            // if it is a Resource Map use lore icon and open in lore instead of browser link
 	            if (isCompoundObject){
 	                historyData.action = "lore.ore.controller.loadCompoundObjectFromURL(\"" + id + "\");";
-	                historyData.icon = "../lore/skin/oaioreicon-sm.png";
+	                historyData.icon = "./skin/oaioreicon-sm.png";
 	                historyData.tooltip = "Load in LORE";
 	            }   
 	            Ext.getCmp("exploreHistory").body.update(lore.ore.explorePanel.historyTemplate.apply(historyData));

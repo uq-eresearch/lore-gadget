@@ -54,7 +54,7 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
         
         this.metadataarea = document.createElement("div");
         this.metadataarea.className = "co-uri";
-        this.uriexpander = "<img class=\"hideuri\" style=\"margin-left:-7px\" onclick=\"if(this.className){this.className = '';this.parentNode.parentNode.className='';} else {this.className = 'hideuri';this.parentNode.parentNode.className='hideuribox';}\" src=\"../lore/skin/icons/ore/bullet_arrow_down.png\">";
+        this.uriexpander = "<img class=\"hideuri\" style=\"margin-left:-7px\" onclick=\"if(this.className){this.className = '';this.parentNode.parentNode.className='';} else {this.className = 'hideuri';this.parentNode.parentNode.className='hideuribox';}\" src=\"./skin/icons/ore/bullet_arrow_down.png\">";
         var ifa = document.createElement("div");
         this.iframearea = ifa;
         this.iframearea.style.border = "none";
@@ -74,7 +74,7 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
         toggleIcon.className = "toggleIcon x-tool x-unselectable";
         Ext.get(toggleIcon).createChild({
                 tag: "img",
-                src: "../lore/skin/blank.png"
+                src: "./skin/blank.png"
         });
         this.toggleIcon = toggleIcon;
         item.appendChild(toggleIcon);
@@ -225,39 +225,6 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
                 cls: "nodeabstract",
                 children: [(abstext? abstext : "(No abstract)")]
             });
-        } else if (dctype) {
-        	var src = "";
-    		if (dctype.match("http://purl.org/dc/dcmitype/Moving")){
-    			src = "../lore/skin/icons/ore/film_large.png";
-			} else if (dctype.match("http://purl.org/dc/dcmitype/StillImage")){
-    			src = "../lore/skin/icons/ore/image_large.png";
-			} else if (dctype.match("http://purl.org/dc/dcmitype/Image")){
-    			src = "../lore/skin/icons/ore/image_large.png";
-			} else if (dctype.match("http://purl.org/dc/dcmitype/Sound")){
-    			src = "../lore/skin/icons/ore/page_sound_large.gif";
-			} else if (dctype.match("http://purl.org/dc/dcmitype/PhysicalObject")){
-    			src = "../lore/skin/icons/ore/chair_large.png";
-			} else if (dctype.match("http://purl.org/dc/dcmitype/Text")){
-    			src = "../lore/skin/icons/ore/page_white_text_large.png";
-			} else if (dctype.match("http://purl.org/dc/dcmitype/Software")){
-    			src = "../lore/skin/icons/ore/application_large.png";
-			} else if (dctype.match("http://purl.org/dc/dcmitype/Service")){
-    			src = "../lore/skin/icons/ore/server-network_large.png";
-			} else if (dctype.match("http://purl.org/dc/dcmitype/InteractiveResource")){
-    			src = "../lore/skin/icons/ore/map_cursor_large.png";
-			} else if (dctype.match("http://purl.org/dc/dcmitype/Event")){
-    			src = "../lore/skin/icons/ore/alarm-clock-select_large.png";
-			} else if (dctype.match("http://purl.org/dc/dcmitype/Collection")){
-    			src = "../lore/skin/icons/ore/page_white_stack_large.png";
-			} else if (dctype.match("http://purl.org/dc/dcmitype/Dataset")){
-    			src = "../lore/skin/icons/ore/database_table_large.png";
-			}
-        	previewArea.createChild({
-                tag: "img",
-                id: theurl + "-data",
-                src: src,
-                style: "z-index:-9001;"
-            });
         } else if (isCO) {
             previewArea.createChild({
                 tag : "div",
@@ -273,7 +240,7 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
                         {tag: "br"}, 
                         {
                             tag: "img",
-                            src: "../lore/skin/icons/ore/action_go.gif"
+                            src: "./skin/icons/ore/action_go.gif"
                         }, 
                         "&nbsp;Load in LORE"
                     ]
@@ -376,6 +343,39 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
                 lore.util.launchTab(this.getAttribute("src"), window);
                 e.stopPropagation();
                 return false
+            });
+        } else if (dctype) {
+        	var src = "";
+    		if (dctype.match("http://purl.org/dc/dcmitype/Moving")){
+    			src = "./skin/icons/ore/film_large.png";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/StillImage")){
+    			src = "./skin/icons/ore/image_large.png";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/Image")){
+    			src = "./skin/icons/ore/image_large.png";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/Sound")){
+    			src = "./skin/icons/ore/page_sound_large.gif";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/PhysicalObject")){
+    			src = "./skin/icons/ore/chair_large.png";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/Text")){
+    			src = "./skin/icons/ore/page_white_text_large.png";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/Software")){
+    			src = "./skin/icons/ore/application_large.png";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/Service")){
+    			src = "./skin/icons/ore/server-network_large.png";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/InteractiveResource")){
+    			src = "./skin/icons/ore/map_cursor_large.png";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/Event")){
+    			src = "./skin/icons/ore/alarm-clock-select_large.png";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/Collection")){
+    			src = "./skin/icons/ore/page_white_stack_large.png";
+			} else if (dctype.match("http://purl.org/dc/dcmitype/Dataset")){
+    			src = "./skin/icons/ore/database_table_large.png";
+			}
+        	previewArea.createChild({
+                tag: "img",
+                id: theurl + "-data",
+                src: src,
+                style: "position: absolute; left: 50%; margin-left: -40px;"
             });
         } else { // All other resources displayed in secure iframe
             var displayUrl = theurl;
@@ -683,7 +683,7 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
         if (this.iframe){
             menu.add({
                 text: "Reset preview",
-                icon: "../lore/skin/icons/arrow_refresh.png",
+                icon: "./skin/icons/arrow_refresh.png",
                 scope: this,
                 handler: function(evt){
                     if (this.iframe && !this.abstractPreview) {
@@ -711,7 +711,7 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
         if (!format || !format.match("rdf")) {
             menu.add({
                 text: "Open resource in separate window",
-                icon: "../lore/skin/icons/page_go.png",
+                icon: "./skin/icons/page_go.png",
                 scope: this,
                 handler: function(evt){
                     lore.util.launchWindow(this.url, true, window);

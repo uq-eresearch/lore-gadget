@@ -12,7 +12,7 @@
 	width: 200px;
 }		
 .welcome-icon {
-    background-image: url(../lore/skin/icons/information.png) !important;
+    background-image: url(./skin/icons/information.png) !important;
 }
 /* Tree styles */
 /* suppress icons for top level tree nodes */
@@ -35,15 +35,15 @@
 /* status bar/pop-up styles */
 .info-icon {
 	padding-left: 25px !important;
-	background: transparent url(../lore/skin/icons/information.png) no-repeat 3px 3px;
+	background: transparent url(./skin/icons/information.png) no-repeat 3px 3px;
 }
 .warning-icon {
 	padding-left: 25px !important;
-	background: transparent url(../lore/skin/icons/warning.png) no-repeat 3px 3px;
+	background: transparent url(./skin/icons/warning.png) no-repeat 3px 3px;
 }
 .error-icon {
 	padding-left: 25px !important;
-	background: transparent url(../lore/skin/icons/error.png) no-repeat 3px 3px;
+	background: transparent url(./skin/icons/error.png) no-repeat 3px 3px;
 }
 .loading-icon {
     padding-left: 25px !important;
@@ -71,13 +71,13 @@
     color:white;
 }
 .x-edit-img {
-	background-image: url(../lore/skin/icons/picture_add.png) !important;
+	background-image: url(./skin/icons/picture_add.png) !important;
 }
 .x-edit-outdent {
-	background: url(../lore/skin/icons/ore/edit-outdent.png) 0 0 no-repeat !important;
+	background: url(./skin/icons/ore/edit-outdent.png) 0 0 no-repeat !important;
 }
 .x-edit-indent {
-	background: url(../lore/skin/icons/ore/edit-indent.png) 0 0 no-repeat !important;
+	background: url(./skin/icons/ore/edit-indent.png) 0 0 no-repeat !important;
 }
 .x-form-item {
 	margin-bottom:2px
@@ -89,7 +89,7 @@
 	min-width:200px;
 }
 .x-form-field-wrap .x-form-ellipsis-trigger{
-    background-image:url(../lore/skin/icons/ore/ellipsis-trigger-grey.gif);
+    background-image:url(./skin/icons/ore/ellipsis-trigger-grey.gif);
     border-bottom-color:#b5b8c8;
 }
 .x-form-text, textarea.x-form-field{

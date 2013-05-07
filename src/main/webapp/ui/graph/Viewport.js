@@ -145,7 +145,7 @@ lore.ore.ui.Viewport = Ext.extend(Ext.Viewport, {
                                     });
                                    this.contextmenu.add({
                                         text: "Zoom out",
-                                        icon: "../skin/icons/ore/magnifier-zoom-out.png",
+                                        icon: "./skin/icons/ore/magnifier-zoom-out.png",
                                         scope: this,
                                         handler: function(b){
                                             if (this.scale >= 0.3) {this.scale = this.scale - 0.2}; 
@@ -155,7 +155,7 @@ lore.ore.ui.Viewport = Ext.extend(Ext.Viewport, {
                                     });
                                     this.contextmenu.add({
                                         text: "Zoom in",
-                                        icon: "../skin/icons/ore/magnifier-zoom-in.png",
+                                        icon: "./skin/icons/ore/magnifier-zoom-in.png",
                                         scope: this,
                                         handler: function(b){ 
                                             if (this.scale <  2.0) {this.scale = this.scale + 0.2};
@@ -165,7 +165,7 @@ lore.ore.ui.Viewport = Ext.extend(Ext.Viewport, {
                                     });
                                     this.contextmenu.add({
                                         text: "Reset Zoom",
-                                        icon: "../skin/icons/ore/ore/magnifier-zoom-actual.png",
+                                        icon: "./skin/icons/ore/ore/magnifier-zoom-actual.png",
                                         scope: this,
                                         handler: function(b){
                                             if (lore.ore.controller.high_contrast){
@@ -208,7 +208,7 @@ lore.ore.ui.Viewport = Ext.extend(Ext.Viewport, {
                     xtype: 'button',
                     hidden: true,
                     id: 'lockButton',
-                    icon: '../skin/icons/ore/lock.png',
+                    icon: './skin/icons/ore/lock.png',
                     tooltip: 'Resource Map is locked',
                     scope: lore.ore.controller
                 }
@@ -263,7 +263,7 @@ lore.ore.ui.Viewport = Ext.extend(Ext.Viewport, {
                                     '->',
                                     {
                                        xtype:'button',
-                                       icon: "../../skin/icons/feed.png",
+                                       icon: "./skin/icons/feed.png",
                                        tooltip: "Show feed",
                                        handler: function(){
                                            try{
@@ -436,7 +436,7 @@ lore.ore.ui.Viewport = Ext.extend(Ext.Viewport, {
     updateRDFXMLView : function() {
         var rdfXML = lore.ore.cache.getLoadedCompoundObject().serialize('rdf');
         lore.util.transformXML({ 
-            stylesheetURL: "../compound_objects/stylesheets/XMLPrettyPrint.xsl",
+            stylesheetURL: "./compound_objects/stylesheets/XMLPrettyPrint.xsl",
             theXML: rdfXML,
             window: window,
             serialize: true,
