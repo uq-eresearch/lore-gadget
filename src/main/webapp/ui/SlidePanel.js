@@ -10,7 +10,7 @@ lore.ore.ui.SlidePanel = Ext.extend(Ext.Panel,{
         this.ssid = config.ssid; // id of parent SlideShowPanel
 
         // Templates
-        this.tocTemplate = new Ext.Template("<li><a href='#' onclick='Ext.getCmp(\"" 
+        this.tocTemplate = new Ext.Template("<li><a href='javascript:void(0);' onclick='Ext.getCmp(\"" 
             + this.ssid + "\").setActiveItem(\"{id}\");'>{title}</a></li>",
             {compiled: true}
         );
@@ -83,7 +83,7 @@ lore.ore.ui.SlidePanel = Ext.extend(Ext.Panel,{
                         relhtml += "<p><b>" + Ext.util.Format.capitalize(theProp.name) + ":</b>&nbsp;";
                         // Open in browser link only for real resources, not placeholders
                         if (propR && !propR.get('isPlaceholder')){
-                            relhtml += "<a href='#' title='Show in browser' onclick='lore.util.launchTab(\"" 
+                            relhtml += "<a href='javascript:void(0);' title='Show in browser' onclick='lore.util.launchTab(\"" 
                                 + theProp.value 
                                 + ((propR && propR.get('representsAnno')) ? "?danno_useStylesheet=" : "") 
                                 + "\");'>";
@@ -104,7 +104,7 @@ lore.ore.ui.SlidePanel = Ext.extend(Ext.Panel,{
                         }
                         if (propR){
                             // Goto slide link (only if resource is in same Resource Map)
-                            relhtml += "&nbsp;<a href='#' title='Go to slide' onclick='Ext.getCmp(\"" 
+                            relhtml += "&nbsp;<a href='javascript:void(0);' title='Go to slide' onclick='Ext.getCmp(\"" 
                                 + this.ssid + "\").setActiveItem(\"" + theProp.value + "_" + container.uri+"\");'>"
                                 + "<img src='./skin/icons/ore/picture_empty.png'></a>";
                         }
@@ -247,7 +247,7 @@ lore.ore.ui.SlidePanel = Ext.extend(Ext.Panel,{
                     slidehtml += displayDate(resourceprops.representsCO.properties.getProperty(dcterms+"modified",0),", last updated ");
                     slidehtml += "</div>";
                 } else {
-                    slidehtml += "<a title='Open in LORE' href='#' onclick='lore.ore.controller.loadCompoundObjectFromURL(\"" + resourceprops.uri + "\");'>Nested Resource Map:<br>"
+                    slidehtml += "<a title='Open in LORE' href='javascript:void(0);' onclick='lore.ore.controller.loadCompoundObjectFromURL(\"" + resourceprops.uri + "\");'>Nested Resource Map:<br>"
                             + "<img src='./skin/icons/ore/action_go.gif'/> Load in LORE</p>";
                 }
                 slidehtml += "</div>";
@@ -281,7 +281,7 @@ lore.ore.ui.SlidePanel = Ext.extend(Ext.Panel,{
                     // no link for placeholder resource
                    slidehtml += "<li class='" + icontype + "'>&nbsp;"  + title + "</li>";
                 } else {
-                   slidehtml += "<a onclick='lore.util.launchTab(\"" + resourceprops.uri + "\");' href='#' title='Open in a new tab'><li class='" + icontype + "'>&nbsp;"  + title + "</li></a>";
+                   slidehtml += "<a onclick='lore.util.launchTab(\"" + resourceprops.uri + "\");' href='javascript:void(0);' title='Open in a new tab'><li class='" + icontype + "'>&nbsp;"  + title + "</li></a>";
                 }
                 slidehtml += "</div>";
                 slidehtml += this.displayProperties(resourceprops, resource.store.co);
@@ -313,18 +313,18 @@ lore.ore.ui.SlidePanel = Ext.extend(Ext.Panel,{
             
             slidehtml += "Viewing "
                 + (resourceprops.representsCO ? "nested Resource Map " : (resourceprops.isPlaceholder ? "a placeholder ": 
-                 "<a onclick='lore.util.launchTab(\"" + resourceprops.uri + (resourceprops.representsAnno? "?danno_useStylesheet=" : "") +"\");' href='#'>"  + resourceprops.uri + "</a>"));
+                 "<a onclick='lore.util.launchTab(\"" + resourceprops.uri + (resourceprops.representsAnno? "?danno_useStylesheet=" : "") +"\");' href='javascript:void(0);'>"  + resourceprops.uri + "</a>"));
             // TODO: refactor: remove hardcoding
             if (container){
-                slidehtml += " &nbsp; from &nbsp;&nbsp;<a href='#' onclick='Ext.getCmp(\"" + this.ssid + "\").setActiveItem(\""  + container.uri + "\");'>" + (container.properties.getTitle() || container.uri) + "</a>"; 
+                slidehtml += " &nbsp; from &nbsp;&nbsp;<a href='javascript:void(0);' onclick='Ext.getCmp(\"" + this.ssid + "\").setActiveItem(\""  + container.uri + "\");'>" + (container.properties.getTitle() || container.uri) + "</a>"; 
             }
             slidehtml += "<br>";
             if (container && container.uri.match(lore.ore.cache.getLoadedCompoundObjectUri())){
-                slidehtml += " <a href='#' title='Show in graphical editor' onclick='lore.ore.ui.graphicalEditor.showResource(\"" + resourceprops.uri +"\");'><img src='./skin/icons/ore/layout_pencil.png' alt='View in graphical editor'></a>";
-                slidehtml += " <a href='#' title='Show in resource list' onclick='Ext.getCmp(\"remlistview\").showResource(\"" + resourceprops.uri + "\")'><img src='./skin/icons/ore/table_edit.png'></a>";
-                slidehtml += " <a href='#' title='Show in details view' onclick='Ext.getCmp(\"remdetailsview\").showResource(\"" + resourceprops.uri + "\")'><img src='./skin/icons/ore/application_view_detail.png'></a>";
+                slidehtml += " <a href='javascript:void(0);' title='Show in graphical editor' onclick='lore.ore.ui.graphicalEditor.showResource(\"" + resourceprops.uri +"\");'><img src='./skin/icons/ore/layout_pencil.png' alt='View in graphical editor'></a>";
+                slidehtml += " <a href='javascript:void(0);' title='Show in resource list' onclick='Ext.getCmp(\"remlistview\").showResource(\"" + resourceprops.uri + "\")'><img src='./skin/icons/ore/table_edit.png'></a>";
+                slidehtml += " <a href='javascript:void(0);' title='Show in details view' onclick='Ext.getCmp(\"remdetailsview\").showResource(\"" + resourceprops.uri + "\")'><img src='./skin/icons/ore/application_view_detail.png'></a>";
             }   
-            slidehtml += " <a href='#' title='Show in explore view' onclick='lore.ore.explorePanel.showInExploreView(\"" + resourceprops.uri + "\",\"" + title + "\",false);'><img src='./skin/icons/ore/network.png' alt='View in explore view'></a>";
+            slidehtml += " <a href='javascript:void(0);' title='Show in explore view' onclick='lore.ore.explorePanel.showInExploreView(\"" + resourceprops.uri + "\",\"" + title + "\",false);'><img src='./skin/icons/ore/network.png' alt='View in explore view'></a>";
             
             slidehtml += "</p>";
         }

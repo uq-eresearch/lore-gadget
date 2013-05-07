@@ -66,9 +66,9 @@ Ext.onReady(function() {
 					    itemTpl: new Ext.XTemplate(
 		                    '<li class="{cls}" id="{id}"><a class="x-tab-strip-close"></a>',
 		                    '<tpl if="menuHandler">',
-		                        '<a title="{text} Menu" href="#" onclick="{menuHandler}" class="x-tab-strip-menu"></a>',
+		                        '<a title="{text} Menu" href="javascript:void(0);" onclick="{menuHandler}" class="x-tab-strip-menu"></a>',
 		                    '</tpl>',
-		                    '<a class="x-tab-right" href="#"><em class="x-tab-left">',
+		                    '<a class="x-tab-right" href="javascript:void(0);"><em class="x-tab-left">',
 		                    '<span class="x-tab-strip-inner"><span class="x-tab-strip-text {iconCls}">{text}</span></span>',
 		                    '</em></a>',
 		                    '</li>'

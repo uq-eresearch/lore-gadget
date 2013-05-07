@@ -72,7 +72,7 @@ lore.ore.ui.detailsCOTemplate = new Ext.XTemplate(
     '<div style="width:100%">',
         '<table style="whitespace:normal;width:100%;font-family:arial;padding-bottom;0.5em"><tr><td>',
         '<span style="font-size:140%;font-weight:bold;color:#cc0000;">{[values.properties.getTitle() || "Untitled Resource Map"]}</span></td><td style="text-align:right" width="30">',
-        '&nbsp;<a href="#" onclick="lore.ore.controller.exportCompoundObject(\'wordml\');">',
+        '&nbsp;<a href="javascript:void(0);" onclick="lore.ore.controller.exportCompoundObject(\'wordml\');">',
         '<img src="./skin/icons/ore/page_white_word.png" title="Export to MS Word"></a>',
         '</td></tr></table>',
         '<p style="font-style:italic;padding-bottom:0.3em;">{uri}</p>',
@@ -82,7 +82,7 @@ lore.ore.ui.detailsCOTemplate = new Ext.XTemplate(
     '</tpl>',
     {
         propTpl: new Ext.XTemplate('<tpl for="."><p style="padding-bottom:0.3em;"><span title="{id}" style="font-weight:bold">{[fm.capitalize(values.name)]}:&nbsp;&nbsp;</span>{value}</p></tpl>'),
-        resourcePropValueTpl: new Ext.XTemplate('<a href="#" title="Show {url} in browser" onclick="lore.util.launchTab(\'{url}\')">{title}</a>'),
+        resourcePropValueTpl: new Ext.XTemplate('<a href="javascript:void(0);" title="Show {url} in browser" onclick="lore.util.launchTab(\'{url}\')">{title}</a>'),
         
         /** Custom function to display properties because XTemplate doesn't support wildcard for iterating over object properties 
          *  @param {lore.ore.model.ResourceProperties} o
@@ -172,22 +172,22 @@ lore.ore.ui.detailsResTemplate = new Ext.XTemplate(
         '<div style="line-height:0.5em;border-top: 1px solid rgb(220, 224, 225); margin-top: 0.5em;"> </div>',
         '<table style="white-space:normal;width:100%;font-family:arial;padding-bottom:0.5em"><tr {[this.displayHighlightColor(values.properties)]}><td style="padding:4px;padding-top:6px;">',
         '<span style="font-size:130%;font-weight:bold">{title}<tpl if="!title">Untitled Resource</tpl></span></td>',
-        '<td width="80"><a href="#" title="Show in graphical editor" onclick="lore.ore.ui.graphicalEditor.showResource(\'{uri}\');"><img src="./skin/icons/ore/layout_pencil.png" alt="View in graphical editor"></a>',
-        '&nbsp;<a href="#" title="Show in resource list" onclick="Ext.getCmp(\'remlistview\').showResource(\'{uri}\')"><img src="./skin/icons/ore/table_edit.png"></a>',
-        '&nbsp;<a href="#" title="Show in slideshow view" onclick="Ext.getCmp(\'newss\').showResource(\'{uri}\');"><img src="./skin/icons/ore/picture_empty.png" alt="View in slideshow view"></a>',
-        '&nbsp;<a href="#" title="Show in explore view" onclick="lore.ore.explorePanel.showInExploreView(\'{uri}\',\'{title}\',{representsCO});"><img src="./skin/icons/ore/network.png" alt="View in explore view"></a>',
+        '<td width="80"><a href="javascript:void(0);" title="Show in graphical editor" onclick="lore.ore.ui.graphicalEditor.showResource(\'{uri}\');"><img src="./skin/icons/ore/layout_pencil.png" alt="View in graphical editor"></a>',
+        '&nbsp;<a href="javascript:void(0);" title="Show in resource list" onclick="Ext.getCmp(\'remlistview\').showResource(\'{uri}\')"><img src="./skin/icons/ore/table_edit.png"></a>',
+        '&nbsp;<a href="javascript:void(0);" title="Show in slideshow view" onclick="Ext.getCmp(\'newss\').showResource(\'{uri}\');"><img src="./skin/icons/ore/picture_empty.png" alt="View in slideshow view"></a>',
+        '&nbsp;<a href="javascript:void(0);" title="Show in explore view" onclick="lore.ore.explorePanel.showInExploreView(\'{uri}\',\'{title}\',{representsCO});"><img src="./skin/icons/ore/network.png" alt="View in explore view"></a>',
         '</td></tr></table>',
-        '<tpl if="representsCO == true"><ul><li class="mimeicon oreicon" style="font-style:italic;padding-bottom:0.5em;"><a title="Open in LORE" href="#" onclick="lore.ore.controller.loadCompoundObjectFromURL(\'{uri}\');">{uri}</a></li></ul></tpl>',
-        '<tpl if="representsCO == false && representsAnno == true"><ul><li class="mimeicon annoicon" style="font-style:italic;padding-bottom:0.5em;"><a title="Show in browser" onclick="lore.util.launchTab(\'{uri}?danno_useStylesheet=\')" href="#">{uri}</a></li></ul></tpl>',
-        '<tpl if="representsCO == false && representsAnno == false && isPlaceholder == false"><ul><li class="mimeicon {[lore.ore.controller.lookupIcon(values.properties.getProperty(lore.constants.NAMESPACES["dc"]+"type",0) || values.properties.getProperty(lore.constants.NAMESPACES["dc"]+"format",0), values.properties.getProperty(lore.constants.NAMESPACES["dc"]+"type",0))]}" style="font-style:italic;padding-bottom:0.5em;"><a title="Show in browser" onclick="lore.util.launchTab(\'{uri}\')" href="#">{uri}</a></li></ul></tpl>',
+        '<tpl if="representsCO == true"><ul><li class="mimeicon oreicon" style="font-style:italic;padding-bottom:0.5em;"><a title="Open in LORE" href="javascript:void(0);" onclick="lore.ore.controller.loadCompoundObjectFromURL(\'{uri}\');">{uri}</a></li></ul></tpl>',
+        '<tpl if="representsCO == false && representsAnno == true"><ul><li class="mimeicon annoicon" style="font-style:italic;padding-bottom:0.5em;"><a title="Show in browser" onclick="lore.util.launchTab(\'{uri}?danno_useStylesheet=\')" href="javascript:void(0);">{uri}</a></li></ul></tpl>',
+        '<tpl if="representsCO == false && representsAnno == false && isPlaceholder == false"><ul><li class="mimeicon {[lore.ore.controller.lookupIcon(values.properties.getProperty(lore.constants.NAMESPACES["dc"]+"type",0) || values.properties.getProperty(lore.constants.NAMESPACES["dc"]+"format",0), values.properties.getProperty(lore.constants.NAMESPACES["dc"]+"type",0))]}" style="font-style:italic;padding-bottom:0.5em;"><a title="Show in browser" onclick="lore.util.launchTab(\'{uri}\')" href="javascript:void(0);">{uri}</a></li></ul></tpl>',
         '<tpl if="isPlaceholder == true"><div style="font-style:italic;padding-bottom:0.5em;">(placeholder)</div></tpl>',
         '<tpl for="properties">{[this.displayProperties(values)]}</tpl>',
     '</div>',
     '</tpl>',
     {
         propTpl: new Ext.XTemplate('<p style="padding-bottom:0.3em;"><span title="{id}" style="font-weight:bold">{[fm.capitalize(values.name)]}:&nbsp;&nbsp;</span>{value}</p>'),
-        relTpl: new Ext.XTemplate('<p style="padding-bottom:0.3em;"><a href="#" onclick="Ext.getCmp(\'remdetailsview\').scrollToResource(\'{value}\')"><span title="{id}" style="font-weight:bold">{[fm.capitalize(values.name)]}:&nbsp;&nbsp;</span></a><a href="#" title="Show {url} in browser" onclick="lore.util.launchTab(\'{url}\')">{title}</a></p>'),
-        pRelTpl: new Ext.XTemplate('<p style="padding-bottom:0.3em;"><a href="#" onclick="Ext.getCmp(\'remdetailsview\').scrollToResource(\'{value}\')"><span title="{id}" style="font-weight:bold">{[fm.capitalize(values.name)]}:&nbsp;&nbsp;</span></a>{title}</p>'),
+        relTpl: new Ext.XTemplate('<p style="padding-bottom:0.3em;"><a href="javascript:void(0);" onclick="Ext.getCmp(\'remdetailsview\').scrollToResource(\'{value}\')"><span title="{id}" style="font-weight:bold">{[fm.capitalize(values.name)]}:&nbsp;&nbsp;</span></a><a href="javascript:void(0);" title="Show {url} in browser" onclick="lore.util.launchTab(\'{url}\')">{title}</a></p>'),
+        pRelTpl: new Ext.XTemplate('<p style="padding-bottom:0.3em;"><a href="javascript:void(0);" onclick="Ext.getCmp(\'remdetailsview\').scrollToResource(\'{value}\')"><span title="{id}" style="font-weight:bold">{[fm.capitalize(values.name)]}:&nbsp;&nbsp;</span></a>{title}</p>'),
         /** Convenience function to get style for highlighting resources according to highlightColor property 
          * @param {lore.ore.model.ResourceProperties} props 
          * */

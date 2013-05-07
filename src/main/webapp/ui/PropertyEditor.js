@@ -850,7 +850,7 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
             if (splitprop.length > 1){
                 var ns = lore.constants.NAMESPACES[splitprop[0]];
                 infoMsg += "<p>This property is defined in " 
-                        + "<a style='text-decoration:underline' href='#' onclick='lore.util.launchTab(\"" 
+                        + "<a style='text-decoration:underline' href='javascript:void(0);' onclick='lore.util.launchTab(\"" 
                         + ns + "\");'>" + ns + "</a></p>";
             }
             Ext.Msg.show({

@@ -233,7 +233,7 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
                 children: [
                   {
                     tag: "a",
-                    href: "#",
+                    href: "javascript:void(0);",
                     onclick: "lore.ore.controller.loadCompoundObjectFromURL('" + theurl + "');",
                     children: [
                         "Resource Map: ", 
@@ -261,7 +261,7 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
                             tag: "a",
                             title: theurl,
                             onclick: "lore.ore.controller.loadCompoundObjectFromURL('" + theurl + "');",
-                            href: "#",
+                            href: "javascript:void(0);",
                             children: [theurl]
                         }
                        ]

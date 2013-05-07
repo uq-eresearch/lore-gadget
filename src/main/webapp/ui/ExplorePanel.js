@@ -66,7 +66,7 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
             {compiled: true}
         );
         this.historyTemplate = new Ext.Template(
-            "<span style='white-space:nowrap;'><a title='{tooltip}' href='#' onclick='{action}'><img style='border:none' src='{icon}'></a>&nbsp;{name}</a></span>",
+            "<span style='white-space:nowrap;'><a title='{tooltip}' href='javascript:void(0);' onclick='{action}'><img style='border:none' src='{icon}'></a>&nbsp;{name}</a></span>",
             {compiled: true}
         );
         this.colorKeyWin = new Ext.Window({ 

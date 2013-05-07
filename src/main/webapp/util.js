@@ -160,7 +160,11 @@ lore.util = {
      * @param {Object} win The window in which to open the tab
      */
     launchTab : function(url, win) {
-		win.open(url, '_blank');
+    	if (win) {
+    		win.open(url, '_blank');
+    	} else {
+    		window.open(url, '_blank');
+    	}
     },
     /**
      * Format a date (long format)
