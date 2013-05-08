@@ -634,7 +634,6 @@ Ext.extend(lore.ore.ui.graph.COGraph, lore.draw2d.Workflow, {
                     try{
 	                    b.parentMenu.hide();
 	                    var imgData = this.getAsImage();
-	                    console.log(imgData);
 	                    if (imgData) {
 	                        lore.util.writeURIWithSaveAs("diagram", "png", window, imgData);
 	                    } else {
@@ -731,11 +730,11 @@ Ext.extend(lore.ore.ui.graph.COGraph, lore.draw2d.Workflow, {
             });
             this.contextmenu.add("-");
             this.contextmenu.add({
-                text: "Add current URL",
+                text: "Add URL to LORE Resource Map",
                 icon: "./skin/icons/add.png",
                 scope: this,
                 handler: function(evt){                 
-                    lore.ore.controller.addResource(lore.ore.controller.currentURL);  
+                    lore.ore.controller.addResourceWithPrompt();  
                 }
              });
             this.contextmenu.add("-");

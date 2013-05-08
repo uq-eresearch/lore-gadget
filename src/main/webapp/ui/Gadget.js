@@ -195,14 +195,14 @@ Ext.onReady(function() {
 		            new Ext.Toolbar({
 		            	items : [
 							new Ext.Action({
+								id: 'addIcon',
 								handler: function(){
 									lore.ore.controller.addResourceWithPrompt();
 							    },
-							    icon: './skin/icons/add.png',
-						        tooltip: '<b>Quick Tips</b><br/>Icon only button with tooltip'
-					            //tooltip: 'Add browser URL to LORE Resource Map'
+							    icon: './skin/icons/add.png'
 							}),
 							new Ext.Action({
+								id: 'placeholderIcon',
 								handler: function(){
 									lore.ore.controller.addPlaceholder();
 							    },
@@ -232,31 +232,35 @@ Ext.onReady(function() {
 					        },*/
 							'-',
 							new Ext.Action({
+								id: 'saveIcon',
 							    handler: function(){
 							    	lore.ore.controller.saveCompoundObjectToRepository();
 							    },
-							    icon: './skin/icons/ore/disk.png',
-					            tooltip: 'Save the current Resource Map to the repository'
+							    icon: './skin/icons/ore/disk.png'
 							}),
 							new Ext.Action({
+								id: 'dbAddIcon',
 								handler: function(){
 									lore.ore.controller.createCompoundObject();
 							    },
 							    icon: './skin/icons/ore/database_add.png'
 							}),
 							new Ext.Action({
+								id: 'dbCopyIcon',
 								handler: function(){
 									lore.ore.controller.copyCompoundObjectToNew();
 							    },
 							    icon: './skin/icons/ore/database_go.png'
 							}),
 							new Ext.Action({
+								id: 'lockIcon',
 								handler: function(){
 									lore.ore.controller.lockCompoundObjectInRepository();
 							    },
 							    icon: './skin/icons/ore/lock.png'
 							}),
 							new Ext.Action({
+								id: 'deleteIcon',
 								handler: function(){
 									lore.ore.controller.deleteCompoundObjectFromRepository();
 							    },
@@ -264,6 +268,7 @@ Ext.onReady(function() {
 							}),
 							'-',
 							{
+								id: 'exportMenu',
 							    icon: './skin/icons/table_refresh.png',
 							    menu: new Ext.menu.Menu({
 									id: 'menu2',
@@ -320,12 +325,14 @@ Ext.onReady(function() {
 								})
 							},
 							'-',
-							new Ext.Action({
+							/*new Ext.Action({
+								id: 'searchIcon',
 								handler: function(){
-									document.getElementById("graphiframe").contentWindow.find("",false, false, true, false, true, true);  
+									//document.getElementById("http://localhost:8080/gadgets/ifr?url=http://localhost:8080/lore/lore.xml-data").contentWindow.find("",false, false, true, false, true, true);
+									window.find("",false, false, true, false, true, true);  
 							    },
 							    icon: './skin/icons/ore/page_white_magnify.png'
-							}),
+							}),*/
 							/*new Ext.Action({
 								handler: function(){
 						            //var instantApply = getBoolPref("browser.preferences.instantApply");
@@ -337,6 +344,7 @@ Ext.onReady(function() {
 							    icon: './skin/icons/cog.png'
 							}),*/
 							new Ext.Action({
+								id: 'reportIcon',
 								handler: function(){
 						            try{ 
 						            	var version = this.version;
@@ -511,6 +519,56 @@ Ext.onReady(function() {
 	        }	        
 	    ]
     });
+	
+	new Ext.ToolTip({
+		target: 'addIcon',
+		html: 'Add URL to LORE Resource Map'
+	});
+	
+	new Ext.ToolTip({
+		target: 'placeholderIcon',
+		html: 'Add placeholder to represent a concept or thing that does not have a URI'
+	});
+	
+	new Ext.ToolTip({
+		target: 'saveIcon',
+		html: 'Save the current Resource Map to the repository'
+	});
+	
+	new Ext.ToolTip({
+		target: 'dbAddIcon',
+		html: 'Create a new (empty) Resource Map'
+	});
+	
+	new Ext.ToolTip({
+		target: 'dbCopyIcon',
+		html: 'Copy contents of the current Resource Map to a new Resource Map'
+	});
+	
+	new Ext.ToolTip({
+		target: 'lockIcon',
+		html: 'Save and lock Resource Map to prevent further editing'
+	});
+	
+	new Ext.ToolTip({
+		target: 'deleteIcon',
+		html: 'Delete the current Resource Map from the repository'
+	});
+	
+	new Ext.ToolTip({
+		target: 'exportMenu',
+		html: 'Import/Export Resource Map as file'
+	});
+	
+	/*new Ext.ToolTip({
+		target: 'searchIcon',
+		html: 'Find text within currently visible Resource Map view'
+	});*/
+	
+	new Ext.ToolTip({
+		target: 'reportIcon',
+		html: 'Report a problem'
+	});
 	
     lore.ore.ui.grid = Ext.getCmp("remgrid");
     lore.ore.ui.nodegrid = Ext.getCmp("nodegrid");
