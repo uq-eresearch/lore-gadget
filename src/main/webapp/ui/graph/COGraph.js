@@ -626,7 +626,7 @@ Ext.extend(lore.ore.ui.graph.COGraph, lore.draw2d.Workflow, {
                 }
             });
             this.contextmenu.add("-");
-            this.contextmenu.add({
+            /*this.contextmenu.add({
                 text: "Save diagram as image (PNG)",
                 icon: "./skin/icons/ore/image.png",
                 scope: this,
@@ -643,7 +643,7 @@ Ext.extend(lore.ore.ui.graph.COGraph, lore.draw2d.Workflow, {
 	                    lore.debug.ore("Error: unable to generate diagram image",e);
 	                }
                 }
-            });
+            });*/
             this.contextmenu.add({
                 text: "Auto layout",
                 icon: "./skin/icons/ore/layout.png",

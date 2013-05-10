@@ -512,7 +512,7 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
                 showSeparator: false
             });
             
-            this.contextmenu.add({
+            /*this.contextmenu.add({
                     text : "Save diagram as image",
                     icon: "./skin/icons/ore/image.png",
                     scope: this,
@@ -531,7 +531,7 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
                         
 
                     }
-             });
+             });*/
              this.contextmenu.add({
                 text: "Reset visualisation",
                 icon: "./skin/icons/arrow_refresh.png",

@@ -10,7 +10,7 @@ Ext.onReady(function() {
     
     lore.ore.controller.handlePreferencesChanged({
         creator: "Anonymous",
-        relonturl: "/lore/ontologies/austlitoaiore.owl",
+        relonturl: "./ontologies/austlitoaiore.owl",
         rdfrepos: "http://austlit.edu.au/auselit/ore/",
         rdfrepostype: "lorestore",
         annoserver: "http://austlit.edu.au/auselit/annotea",
@@ -20,7 +20,7 @@ Ext.onReady(function() {
     });
     
     lore.ore.ui.vp = new lore.ore.ui.Viewport();
-    lore.ore.reposAdapter = new lore.ore.repos.SPARQLAdapter("http://localhost/op");
+    lore.ore.reposAdapter = new lore.ore.repos.SPARQLAdapter("http://corbicula.huni.net.au/dataset");
     lore.ore.coListManager = new lore.ore.model.CompoundObjectListManager();
     lore.ore.cache = new lore.ore.model.CompoundObjectCache();  
     	
@@ -266,7 +266,7 @@ Ext.onReady(function() {
 							    },
 							    icon: './skin/icons/ore/database_delete.png'
 							}),
-							'-',
+							/*'-',
 							{
 								id: 'exportMenu',
 							    icon: './skin/icons/table_refresh.png',
@@ -323,7 +323,7 @@ Ext.onReady(function() {
 						                })
 						            ]
 								})
-							},
+							},*/
 							'-',
 							/*new Ext.Action({
 								id: 'searchIcon',

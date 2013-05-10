@@ -118,79 +118,74 @@ Ext.apply(lore.ore.model.OntologyManager.prototype, {
                 callback(this.relOntologyCache[ourl]);
                 return;
             }
-            // Load the ontology
-            var xhr = new XMLHttpRequest();
-            xhr.overrideMimeType('application/xml');
-            xhr.open("GET", ourl);
             
-            xhr.setRequestHeader('Content-Type', "application/rdf+xml");
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4) {
-                    try {
-                        var ontData = {relationships:{}, dataTypeProps: []};
-                        // Get xml:base
-                        var tmp = xhr.responseXML.getElementsByTagNameNS(lore.constants.NAMESPACES["rdf"], 'RDF')[0];
-                        if (tmp){
-                            tmp = tmp.getAttributeNS('http://www.w3.org/XML/1998/namespace','base');
-                        }
-                        if (tmp){
-                            ontData.nsuri = tmp;
-                        }
-                        // Load contents of ontology into rdfquery databank
-                        var db = jQuery.rdf.databank();
-                        for (ns in lore.constants.NAMESPACES) {
-                            db.prefix(ns, lore.constants.NAMESPACES[ns]);
-                        }
-                        db.load(xhr.responseXML);
-                        var relOntology = jQuery.rdf({
-                            databank : db
-                        });
-                        // always provide dc:relation as an option
-                        ontData.relationships["relation"] = lore.constants.NAMESPACES["dc"];
-                        // Cache RDF properties (add to both datatype and object property lists as could be either)
-                        relOntology.where('?prop rdf:type <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property>')
-                                .each(function() {
+            var params = {};
+            params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
+            var url = document.getElementsByTagName('base')[0].href + "ontologies/austlitoaiore.owl";
+            gadgets.io.makeRequest(url, function(response){
+                try {
+                    var ontData = {relationships:{}, dataTypeProps: []};
+                    // Get xml:base
+                    var tmp = response.data.getElementsByTagNameNS(lore.constants.NAMESPACES["rdf"], 'RDF')[0];
+                    if (tmp){
+                        tmp = tmp.getAttributeNS('http://www.w3.org/XML/1998/namespace','base');
+                    }
+                    if (tmp){
+                        ontData.nsuri = tmp;
+                    }
+                    // Load contents javascof ontology into rdfquery databank
+                    var db = jQuery.rdf.databank();
+                    for (ns in lore.constants.NAMESPACES) {
+                        db.prefix(ns, lore.constants.NAMESPACES[ns]);
+                    }
+                    db.load(response.data);
+                    var relOntology = jQuery.rdf({
+                        databank : db
+                    });
+                    // always provide dc:relation as an option
+                    ontData.relationships["relation"] = lore.constants.NAMESPACES["dc"];
+                    // Cache RDF properties (add to both datatype and object property lists as could be either)
+                    relOntology.where('?prop rdf:type <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property>')
+                            .each(function() {
+                                var relresult = lore.util
+                                        .splitTerm(this.prop.value
+                                                .toString());
+                                var ns = lore.constants.nsprefix(relresult.ns);
+                                ontData.relationships[relresult.term] = relresult.ns;
+                                ontData.dataTypeProps.push(ns + ":" + relresult.term);
+                            });
+                    // Cache OWL Object properties
+                    relOntology.where('?prop rdf:type <'
+                            + lore.constants.OWL_OBJPROP + '>').each(
+                            function() {
+                                try {
                                     var relresult = lore.util
                                             .splitTerm(this.prop.value
                                                     .toString());
-                                    var ns = lore.constants.nsprefix(relresult.ns);
                                     ontData.relationships[relresult.term] = relresult.ns;
-                                    ontData.dataTypeProps.push(ns + ":" + relresult.term);
-                                });
-                        // Cache OWL Object properties
-                        relOntology.where('?prop rdf:type <'
-                                + lore.constants.OWL_OBJPROP + '>').each(
-                                function() {
-                                    try {
-                                        var relresult = lore.util
-                                                .splitTerm(this.prop.value
-                                                        .toString());
-                                        ontData.relationships[relresult.term] = relresult.ns;
-                                    } catch (e) {
-                                        lore.debug.ore("Error loading rels", e);
-                                    }
-                        });
-                        // Cache datatype properties
-                        relOntology.where('?prop rdf:type <' + lore.constants.OWL_DATAPROP + '>').each(
-                                function (){
-                                    try {
-                                        var relresult = lore.util.splitTerm(this.prop.value.toString());
-                                        var ns = lore.constants.nsprefix(relresult.ns);
-                                        ontData.dataTypeProps.push(ns + ":" + relresult.term);
-                                    } catch (e){
-                                        lore.debug.ore("Error loading data props",e);
-                                    }
+                                } catch (e) {
+                                    lore.debug.ore("Error loading rels", e);
                                 }
-                        );
-                        ontData.ontology = relOntology;
-                        om.relOntologyCache[ourl] = ontData;
-                        callback(ontData);
-                    } catch (e) {
-                        lore.debug.ore("Error loading rels", e);
-                    }
+                    });
+                    // Cache datatype properties
+                    relOntology.where('?prop rdf:type <' + lore.constants.OWL_DATAPROP + '>').each(
+                            function (){
+                                try {
+                                    var relresult = lore.util.splitTerm(this.prop.value.toString());
+                                    var ns = lore.constants.nsprefix(relresult.ns);
+                                    ontData.dataTypeProps.push(ns + ":" + relresult.term);
+                                } catch (e){
+                                    lore.debug.ore("Error loading data props",e);
+                                }
+                            }
+                    );
+                    ontData.ontology = relOntology;
+                    om.relOntologyCache[ourl] = ontData;
+                    callback(ontData);
+                } catch (e) {
+                    lore.debug.ore("Error loading rels", e);
                 }
-            };
-            xhr.send(null);
+            }, params);
         }
     },
     /** Change the ontology currently used for relationships and properties */
