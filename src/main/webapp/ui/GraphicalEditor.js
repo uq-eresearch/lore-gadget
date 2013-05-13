@@ -110,9 +110,8 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
         lore.ore.controller.updateSelection(figure, this);
         if (figure != null) {
             // raise tab first so that properties are rendered and column widths get sized correctly for resource/rels
-            
+        	Ext.getCmp("propertytabs").activate("properties");
             if (figure instanceof lore.ore.ui.graph.EntityFigure) {
-                Ext.getCmp("propertytabs").activate("properties");
                 if (figure.model){
                     lore.ore.ui.nodegrid.bindModel(figure.model);
                 }
