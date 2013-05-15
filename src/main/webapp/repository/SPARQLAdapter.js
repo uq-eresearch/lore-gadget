@@ -64,46 +64,42 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
 		   	queryURL += encodeURIComponent("}}");
 		   	queryURL += "&output=xml";   
 		   	lore.debug.ore("SPARQLAdapter.getCompoundObjects", {queryURL:queryURL});
-	        var xhr = new XMLHttpRequest();
-	        xhr.open('GET', queryURL);
-	        
-	        xhr.onreadystatechange = function(aEvt) {
-	            if (xhr.readyState == 4) {
-	                if (xhr.responseText && xhr.status != 204 && xhr.status < 400) {
-	                    var xmldoc = xhr.responseXML;
-	                    var listname = (isSearchQuery? "search" : "browse");  
-	                    var result = {};
-	                    if (xmldoc) {
-	                        result = xmldoc.getElementsByTagNameNS(lore.constants.NAMESPACES["sparql"], "result");
-	                    }
-	                    lore.ore.coListManager.clear(listname);
-	                    
-	                    if (result.length > 0){
-	                        var coList = [];
-	                        var processed = {};
-	                        for (var i = 0; i < result.length; i++) {
-	                            var theobj = ra.parseCOFromXML(result[i]);
-	                            var resultIndex = processed[theobj.uri];
-	                            var existing = theobj; 
-	                            if (resultIndex >= 0){
-	                                existing = coList[resultIndex];
-	                                if (existing && !existing.creator.match(theobj.creator)){
-	                                    existing.creator = existing.creator + " &amp; " + theobj.creator;
-	                                }
-	                            } else {
-	                               if (matchval) {theobj.searchval = matchval;}
-	                               coList.push(theobj);
-	                               processed[theobj.uri] = coList.length - 1; 
-	                            }    
-	                        }
-	                        lore.ore.coListManager.add(coList,listname);
-	                    } 
-	                } else if (xhr.status == 404){
-	                    lore.debug.ore("Error: 404 accessing Resource Map repository",xhr);
-	                }
-	            }
-	        };
-	        xhr.send(null);
+		   	
+		    var oThis = this;
+		    var params = {};
+		    params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
+		    params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
+		    var url = queryURL;
+		    gadgets.io.makeRequest(url, function(response){
+		    	var xmldoc = response.data;
+                var listname = (isSearchQuery? "search" : "browse");  
+                var result = {};
+                if (xmldoc) {
+                    result = xmldoc.getElementsByTagNameNS(lore.constants.NAMESPACES["sparql"], "result");
+                }
+                lore.ore.coListManager.clear(listname);
+                
+                if (result.length > 0){
+                    var coList = [];
+                    var processed = {};
+                    for (var i = 0; i < result.length; i++) {
+                        var theobj = ra.parseCOFromXML(result[i]);
+                        var resultIndex = processed[theobj.uri];
+                        var existing = theobj; 
+                        if (resultIndex >= 0){
+                            existing = coList[resultIndex];
+                            if (existing && !existing.creator.match(theobj.creator)){
+                                existing.creator = existing.creator + " &amp; " + theobj.creator;
+                            }
+                        } else {
+                           if (matchval) {theobj.searchval = matchval;}
+                           coList.push(theobj);
+                           processed[theobj.uri] = coList.length - 1; 
+                        }    
+                    }
+                    lore.ore.coListManager.add(coList,listname);
+                }
+		    }, params);
 	    } catch (e) {
 	        lore.debug.ore("Error: Unable to retrieve Resource Maps",e);
 	        lore.ore.ui.vp.warning("Unable to retrieve Resource Maps");
@@ -130,46 +126,18 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
         for (var i = 0; i < triples.length; i++) {
             trigs += triples[i];
         }
-          
-    	var xhr = new XMLHttpRequest();
-    	
-        xhr.open("PUT", this.reposURL + "/graph-store?graph=" + remid);
-        xhr.setRequestHeader("Content-type", "application/turtle");
+                  
+		var params = {};
+		params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.PUT;
+		params[gadgets.io.RequestParameters.POST_DATA]= trigs;
+		params[gadgets.io.RequestParameters.HEADERS] = {'Content-Type' : 'application/turtle'};
+        var url = this.reposURL + "/graph-store?graph=" + remid;
         
-        theURL = this.reposURL + "/graph-store?graph=" + remid;
-        xhr.onreadystatechange = function() {            
-            if (xhr.readyState == 4) {
-                Ext.Msg.hide();
-                if (xhr.status == 200 || xhr.status == 201 || xhr.status == 204) { // OK
-                    lore.debug.ore("lorestore: RDF saved", xhr);
-                    lore.ore.ui.vp.info("Resource Map " + remid + " saved");
-                    callback(remid);
-                } else {
-                    lore.debug.ore("Error: Unable to save Resource Map " + remid + " to " + theURL, {
-                        xhr : xhr,
-                        headers : xhr.getAllResponseHeaders()
-                        
-                    });
-                    lore.ore.ui.vp.error('Unable to save to repository: ' + xhr.statusText);
-                    var msg;
-                    if (xhr.status == 403) {
-                        msg = "<b>Permission Denied</b><br><br>You are not signed in or you do not own this Resource Map</a>"
-                    } else {
-                        msg = '<b>' + xhr.statusText + '</b>'  
-                            + '<br><br>If an error has occurred, please save your Resource Map to a file using the <i>Export to RDF/XML</i> menu option from the toolbar and contact the Aus-e-Lit team with details of the error for further assistance.'
-                            + '<br><br><a style="text-decoration:underline;color:blue" href="#" onclick="lore.util.launchWindow(\'data:text/html,' + encodeURIComponent(xhr.responseText) + '\',false,window)\">View Details</a>';
-                    }
-                    Ext.Msg.show({
-                        title : 'Unable to save Resource Map',
-                        buttons : Ext.MessageBox.OK,
-                        defaultTextHeight: 100,
-                        msg : msg
-                    });
-                    
-                }
-            }
-        };
-        xhr.send(trigs);
+        gadgets.io.makeRequest(url, function(response){
+            lore.debug.ore("lorestore: RDF saved");
+            lore.ore.ui.vp.info("Resource Map " + remid + " saved");
+            callback(remid);
+        }, params);
     },
     loadNew : function(oldURI, newURI) {
         lore.ore.cache.remove(oldURI);
@@ -181,31 +149,13 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
         lore.debug.ore("deleting from lorestore repository " + remid);
         try {
     	   	//lore.ore.am.runWithAuthorisation(function() {
-            var xhr = new XMLHttpRequest();
-            xhr.open("DELETE", this.reposURL + "/graph-store?graph=" + remid);  
-            xhr.onreadystatechange= function(){  
-                if (xhr.readyState == 4) {
-                    if (xhr.status == 200 || xhr.status == 201 || xhr.status == 204) { // OK
-                        callback(remid);
-                    } else {
-                        lore.ore.ui.vp.error('Unable to delete Resource Map' + xhr.statusText);
-                         
-                        lore.debug.ore("Error: Unable to delete Resource Map", {
-                            xhr : xhr,
-                            headers : xhr.getAllResponseHeaders()
-                        });
-                        var msg = '<b>' + xhr.statusText + '</b>'  
-                                + '<br><br>If an error has occurred please contact the Aus-e-Lit team with details of the error for further assistance.'
-                                + '<br><br><a style="text-decoration:underline;color:blue" href="#" onclick="lore.util.launchWindow(\'data:text/html,' + encodeURIComponent(xhr.responseText) + '\',false,window)\">View Details</a>';  
-                        Ext.Msg.show({
-                            title : 'Unable to delete Resource Map',
-                            buttons : Ext.MessageBox.OK,
-                            msg : msg
-                        });
-                    }
-                }
-            };
-            xhr.send();
+			var params = {};
+            params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
+			params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.DELETE;
+            var url = this.reposURL + "/graph-store?graph=" + remid;
+            gadgets.io.makeRequest(url, function(response){
+            	callback(remid);
+            }, params);
             //});
         } catch (e){
             Ext.MessageBox.hide();
@@ -273,17 +223,17 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
                    xsltproc.setParameter(null,'isCompoundObject','y');
                }
             
-               xhr.open("GET",queryURL);
-               xhr.onreadystatechange= function(){
-                    if (xhr.readyState == 4) {
-                        var rdfDoc = xhr.responseXML;
-                        var serializer = new XMLSerializer();
-                        var thefrag = xsltproc.transformToFragment(rdfDoc, document);
-                        var jsonobj = Ext.decode(thefrag.textContent);
-                        callback(jsonobj);
-                    }
-               }
-               xhr.send(null);
+			   var params = {};
+	           params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
+			   params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
+	           var url = queryURL;
+	           gadgets.io.makeRequest(url, function(response){
+	        	   var rdfDoc = response.data;
+                   var serializer = new XMLSerializer();
+                   var thefrag = xsltproc.transformToFragment(rdfDoc, document);
+                   var jsonobj = Ext.decode(thefrag.textContent);
+                   callback(jsonobj);
+	           }, params);
             } else {
                 lore.debug.ore("Explore view stylesheet not ready",this);
                 lore.ore.ui.vp.info(" ");

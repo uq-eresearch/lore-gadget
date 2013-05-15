@@ -1016,7 +1016,7 @@ lore.util = {
     sanitizeHTML : function(html, win, asHTML) {        
         html = html.replace(/<br>$/,'');
         // parseFragment sanitizes html content
-        if (typeof Components != 'undefined') {
+        /*if (typeof Components != 'undefined') {
 	        var fragment = Components.classes["@mozilla.org/feed-unescapehtml;1"]  
 	            .getService(Components.interfaces.nsIScriptableUnescapeHTML)  
 	            .parseFragment(html, false, null, win.document.body);
@@ -1042,10 +1042,12 @@ lore.util = {
 	                // use XML Serializer to serialize fragment to XML
 	                var buf = serializer.serializeToString(fragment);
 	                // remove garbage
-	                return buf.replace(/[\x80-\xff|\u0080-\uFFFF]*/g, '');
+	    */
+	    //          return buf.replace(/[\x80-\xff|\u0080-\uFFFF]*/g, '');
+        /*
 	            }
 	        }
-        } 
+        } */
         return html;
     },
     /**
