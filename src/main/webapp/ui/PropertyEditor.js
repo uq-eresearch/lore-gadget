@@ -109,7 +109,7 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                             {
                                 xtype: 'button',                    
                                 text: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-                                icon: './skin/icons/cc/by.png',
+                                icon: lore.constants.baseUrl + 'skin/icons/cc/by.png',
                                 tooltip: 'Set to Creative Commons Attribution license',
                                 scope: this,
                                 handler: function(){
@@ -120,7 +120,7 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                             {
                                 xtype: 'button',
                                 text: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-                                icon: './skin/icons/cc/bysa.png',
+                                icon: lore.constants.baseUrl + 'skin/icons/cc/bysa.png',
                                 tooltip: 'Set to Creative Commons Attribution Share Alike license',
                                 scope: this,
                                 handler: function(){
@@ -131,7 +131,7 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                             {
                                 xtype: 'button',
                                 text: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-                                icon: './skin/icons/cc/bync.png',
+                                icon: lore.constants.baseUrl + 'skin/icons/cc/bync.png',
                                 tooltip: 'Set to Creative Commons Attribution Noncommercial license',
                                 scope: this,
                                 handler: function(){
@@ -142,7 +142,7 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                             {
                                 xtype: 'button',
                                 text: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-                                icon: './skin/icons/cc/bynd.png',
+                                icon: lore.constants.baseUrl + 'skin/icons/cc/bynd.png',
                                 tooltip: 'Set to Creative Commons Attribution No Derivative Works license',
                                 scope: this,
                                 handler: function(){
@@ -153,7 +153,7 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                             {
                                 xtype: 'button',
                                 text: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-                                icon: './skin/icons/cc/byncsa.png',
+                                icon: lore.constants.baseUrl + 'skin/icons/cc/byncsa.png',
                                 tooltip: 'Set to Creative Commons Attribution Noncommercial Share Alike license',
                                 scope: this,
                                 handler: function(){
@@ -164,7 +164,7 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                             {
                                 xtype: 'button',                        
                                 text: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-                                icon: './skin/icons/cc/byncnd.png',
+                                icon: lore.constants.baseUrl + 'skin/icons/cc/byncnd.png',
                                 tooltip: 'Set to Creative Commons Attribution Noncommercial No Derivatives license',
                                 scope: this,
                                 handler: function(){
@@ -598,12 +598,12 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
     propNameRenderFunction: function(val, cell, rec){
         if (rec && rec.data && rec.data.id == "lorestore:isPrivate_0"){
             // display eye icon for private property
-            return "<img title='Private Resource Maps are not visible to other users' src='./skin/icons/eye.png' alt=''><span style='"
+            return "<img title='Private Resource Maps are not visible to other users' src='" + lore.constants.baseUrl + "skin/icons/eye.png' alt=''><span style='"
             + (lore.ore.controller.readOnly ? "color:grey;" : "") + "vertical-align:3px'> Private</span>";
         }
         if (rec && rec.data && rec.data.id == "lorestore:isLocked_0"){
             // display lock icon for locked property
-            return "<img src='./skin/icons/ore/lock.png' alt=''><span style='"
+            return "<img src='" + lore.constants.baseUrl + "skin/icons/ore/lock.png' alt=''><span style='"
             + (lore.ore.controller.readOnly ? "color:grey;" : "") + "vertical-align:3px'> Locked</span>";
         }
         if (lore.ore.controller.readOnly || (rec && rec.data && 

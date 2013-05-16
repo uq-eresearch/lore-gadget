@@ -86,7 +86,6 @@
         <link rel="stylesheet" type="text/css" href="lib/ext/ux/Ext.ux.ScrollMenu.css"/>
         
         <link rel="stylesheet" type="text/css" href="loreui.css"/>
-        <base href="http://localhost:8080/lore/" target="_blank">
         
         <div id="tabs1">
 	    </div>

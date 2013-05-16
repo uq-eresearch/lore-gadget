@@ -102,7 +102,7 @@ lore.ore.ui.SlideShowPanel = Ext.extend(Ext.Panel,{
                     {
                         id: 'reset-slide',
                         tooltip: 'Reset slide preview',
-                        icon: './skin/icons/arrow_refresh.png',
+                        icon: lore.constants.baseUrl + 'skin/icons/arrow_refresh.png',
                         handler: this.resetSlide.createDelegate(this)
                     },
                     '->',

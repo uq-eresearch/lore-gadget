@@ -252,7 +252,7 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
             });
             this.contextmenu.add({
                 text: "Copy URI to clipboard",
-                icon: "./skin/icons/ore/page_white_paste.png",
+                icon: lore.constants.baseUrl + "skin/icons/ore/page_white_paste.png",
                 scope: this,
                 handler: function(evt){
                     if (!this.tmpPlaceholder){
@@ -266,7 +266,7 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
             
             this.contextmenu.add({
                 text: "Show in browser",
-                icon: "./skin/icons/page_go.png",
+                icon: lore.constants.baseUrl + "skin/icons/page_go.png",
                 scope: this,
                 handler: function(evt){
                     if (!this.tmpPlaceholder){
@@ -279,7 +279,7 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
             
             this.contextmenu.add({
                 text: "Delete resource from Resource Map",
-                icon: "./skin/icons/delete.png",
+                icon: lore.constants.baseUrl + "skin/icons/delete.png",
                 scope: this,
                 handler: function(evt){
                     if (lore.ore.controller.checkReadOnly()){
@@ -291,7 +291,7 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
             this.contextmenu.add("-");
             this.contextmenu.add({
                 text: "Show in Graphical Editor",
-                icon: "./skin/icons/ore/layout_pencil.png",
+                icon: lore.constants.baseUrl + "skin/icons/ore/layout_pencil.png",
                 scope: this,
                 handler: function(evt){
                     lore.ore.ui.graphicalEditor.showResource(this.tmpurl);          
@@ -299,7 +299,7 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
             });
             this.contextmenu.add({
                 text: "Show in Details view",
-                icon: "./skin/icons/ore/application_view_detail.png",
+                icon: lore.constants.baseUrl + "skin/icons/ore/application_view_detail.png",
                 scope: this,
                 handler: function(evt){
                     Ext.getCmp("remdetailsview").showResource(this.tmpurl);             
@@ -307,7 +307,7 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
             });
             this.contextmenu.add({
                 text: "Show in Slideshow view",
-                icon: "./skin/icons/ore/picture_empty.png",
+                icon: lore.constants.baseUrl + "skin/icons/ore/picture_empty.png",
                 scope: this,
                 handler: function(evt){         
                     Ext.getCmp("newss").showResource(this.tmpurl);
@@ -315,7 +315,7 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
             });
             this.contextmenu.add({
                 text: "Show in Explore view",
-                icon: "./skin/icons/ore/network.png",
+                icon: lore.constants.baseUrl + "skin/icons/ore/network.png",
                 scope: this,
                 handler: function(evt){
                     var title = this.tmpurl;

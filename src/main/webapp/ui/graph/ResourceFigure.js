@@ -54,7 +54,7 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
         
         this.metadataarea = document.createElement("div");
         this.metadataarea.className = "co-uri";
-        this.uriexpander = "<img class=\"hideuri\" style=\"margin-left:-7px\" onclick=\"if(this.className){this.className = '';this.parentNode.parentNode.className='';} else {this.className = 'hideuri';this.parentNode.parentNode.className='hideuribox';}\" src=\"./skin/icons/ore/bullet_arrow_down.png\">";
+        this.uriexpander = "<img class=\"hideuri\" style=\"margin-left:-7px\" onclick=\"if(this.className){this.className = '';this.parentNode.parentNode.className='';} else {this.className = 'hideuri';this.parentNode.parentNode.className='hideuribox';}\" src=\"" + lore.constants.baseUrl + "skin/icons/ore/bullet_arrow_down.png\">";
         var ifa = document.createElement("div");
         this.iframearea = ifa;
         this.iframearea.style.border = "none";
@@ -74,7 +74,7 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
         toggleIcon.className = "toggleIcon x-tool x-unselectable";
         Ext.get(toggleIcon).createChild({
                 tag: "img",
-                src: "./skin/blank.png"
+                src: lore.constants.baseUrl + "skin/blank.png"
         });
         this.toggleIcon = toggleIcon;
         item.appendChild(toggleIcon);
@@ -240,7 +240,7 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
                         {tag: "br"}, 
                         {
                             tag: "img",
-                            src: "./skin/icons/ore/action_go.gif"
+                            src: lore.constants.baseUrl + "skin/icons/ore/action_go.gif"
                         }, 
                         "&nbsp;Load in LORE"
                     ]
@@ -347,29 +347,29 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
         } else if (dctype) {
         	var src = "";
     		if (dctype.match("http://purl.org/dc/dcmitype/Moving")){
-    			src = "./skin/icons/ore/film_large.png";
+    			src = lore.constants.baseUrl + "skin/icons/ore/film_large.png";
 			} else if (dctype.match("http://purl.org/dc/dcmitype/StillImage")){
-    			src = "./skin/icons/ore/image_large.png";
+    			src = lore.constants.baseUrl + "skin/icons/ore/image_large.png";
 			} else if (dctype.match("http://purl.org/dc/dcmitype/Image")){
-    			src = "./skin/icons/ore/image_large.png";
+    			src = lore.constants.baseUrl + "skin/icons/ore/image_large.png";
 			} else if (dctype.match("http://purl.org/dc/dcmitype/Sound")){
-    			src = "./skin/icons/ore/page_sound_large.gif";
+    			src = lore.constants.baseUrl + "skin/icons/ore/page_sound_large.gif";
 			} else if (dctype.match("http://purl.org/dc/dcmitype/PhysicalObject")){
-    			src = "./skin/icons/ore/chair_large.png";
+    			src = lore.constants.baseUrl + "skin/icons/ore/chair_large.png";
 			} else if (dctype.match("http://purl.org/dc/dcmitype/Text")){
-    			src = "./skin/icons/ore/page_white_text_large.png";
+    			src = lore.constants.baseUrl + "skin/icons/ore/page_white_text_large.png";
 			} else if (dctype.match("http://purl.org/dc/dcmitype/Software")){
-    			src = "./skin/icons/ore/application_large.png";
+    			src = lore.constants.baseUrl + "skin/icons/ore/application_large.png";
 			} else if (dctype.match("http://purl.org/dc/dcmitype/Service")){
-    			src = "./skin/icons/ore/server-network_large.png";
+    			src = lore.constants.baseUrl + "skin/icons/ore/server-network_large.png";
 			} else if (dctype.match("http://purl.org/dc/dcmitype/InteractiveResource")){
-    			src = "./skin/icons/ore/map_cursor_large.png";
+    			src = lore.constants.baseUrl + "skin/icons/ore/map_cursor_large.png";
 			} else if (dctype.match("http://purl.org/dc/dcmitype/Event")){
-    			src = "./skin/icons/ore/alarm-clock-select_large.png";
+    			src = lore.constants.baseUrl + "skin/icons/ore/alarm-clock-select_large.png";
 			} else if (dctype.match("http://purl.org/dc/dcmitype/Collection")){
-    			src = "./skin/icons/ore/page_white_stack_large.png";
+    			src = lore.constants.baseUrl + "skin/icons/ore/page_white_stack_large.png";
 			} else if (dctype.match("http://purl.org/dc/dcmitype/Dataset")){
-    			src = "./skin/icons/ore/database_table_large.png";
+    			src = lore.constants.baseUrl + "skin/icons/ore/database_table_large.png";
 			}
         	previewArea.createChild({
                 tag: "img",
@@ -683,7 +683,7 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
         if (this.iframe){
             menu.add({
                 text: "Reset preview",
-                icon: "./skin/icons/arrow_refresh.png",
+                icon: lore.constants.baseUrl + "skin/icons/arrow_refresh.png",
                 scope: this,
                 handler: function(evt){
                     if (this.iframe && !this.abstractPreview) {
@@ -711,7 +711,7 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
         if (!format || !format.match("rdf")) {
             menu.add({
                 text: "Open resource in separate window",
-                icon: "./skin/icons/page_go.png",
+                icon: lore.constants.baseUrl + "skin/icons/page_go.png",
                 scope: this,
                 handler: function(evt){
                     lore.util.launchWindow(this.url, true, window);

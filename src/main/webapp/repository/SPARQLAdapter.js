@@ -107,7 +107,7 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
     },
     loadCompoundObject : function(remid, callback, failcallback){
          Ext.Ajax.request({
-        		url: this.reposURL + "/graph-store?graph=" + remid,
+        		url: this.reposURL + "/data?graph=" + remid,
                 headers: {
                     Accept: 'application/rdf+xml'
                 },
@@ -131,7 +131,7 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
 		params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.PUT;
 		params[gadgets.io.RequestParameters.POST_DATA]= trigs;
 		params[gadgets.io.RequestParameters.HEADERS] = {'Content-Type' : 'application/turtle'};
-        var url = this.reposURL + "/graph-store?graph=" + remid;
+        var url = this.reposURL + "/data?graph=" + remid;
         
         gadgets.io.makeRequest(url, function(response){
             lore.debug.ore("lorestore: RDF saved");
@@ -152,7 +152,7 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
 			var params = {};
             params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
 			params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.DELETE;
-            var url = this.reposURL + "/graph-store?graph=" + remid;
+            var url = this.reposURL + "/data?graph=" + remid;
             gadgets.io.makeRequest(url, function(response){
             	callback(remid);
             }, params);
@@ -209,10 +209,7 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
             
             if (this.exploreStylesheet){
                
-                var xsltproc = new XSLTProcessor();
-                var xhr = new XMLHttpRequest();                
-                xhr.overrideMimeType('text/xml');
-                
+               var xsltproc = new XSLTProcessor();                
             
                xsltproc.importStylesheet(this.exploreStylesheet);
                xsltproc.setParameter(null,'subj',eid);

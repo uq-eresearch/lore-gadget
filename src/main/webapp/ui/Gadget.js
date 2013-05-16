@@ -182,7 +182,7 @@ Ext.onReady(function() {
 	                    xtype: 'button',
 	                    hidden: true,
 	                    id: 'lockButton',
-	                    icon: './skin/icons/ore/lock.png',
+	                    icon: lore.constants.baseUrl + 'skin/icons/ore/lock.png',
 	                    tooltip: 'Resource Map is locked',
 	                    scope: lore.ore.controller
 	                }
@@ -199,14 +199,14 @@ Ext.onReady(function() {
 								handler: function(){
 									lore.ore.controller.addResourceWithPrompt();
 							    },
-							    icon: './skin/icons/add.png'
+							    icon: lore.constants.baseUrl + 'skin/icons/add.png'
 							}),
 							new Ext.Action({
 								id: 'placeholderIcon',
 								handler: function(){
 									lore.ore.controller.addPlaceholder();
 							    },
-							    icon: './skin/icons/ore/plus-white.png'
+							    icon: lore.constants.baseUrl + 'skin/icons/ore/plus-white.png'
 							}),
 							/*{
 					            menu: new Ext.menu.Menu({
@@ -236,40 +236,40 @@ Ext.onReady(function() {
 							    handler: function(){
 							    	lore.ore.controller.saveCompoundObjectToRepository();
 							    },
-							    icon: './skin/icons/ore/disk.png'
+							    icon: lore.constants.baseUrl + 'skin/icons/ore/disk.png'
 							}),
 							new Ext.Action({
 								id: 'dbAddIcon',
 								handler: function(){
 									lore.ore.controller.createCompoundObject();
 							    },
-							    icon: './skin/icons/ore/database_add.png'
+							    icon: lore.constants.baseUrl + 'skin/icons/ore/database_add.png'
 							}),
 							new Ext.Action({
 								id: 'dbCopyIcon',
 								handler: function(){
 									lore.ore.controller.copyCompoundObjectToNew();
 							    },
-							    icon: './skin/icons/ore/database_go.png'
+							    icon: lore.constants.baseUrl + 'skin/icons/ore/database_go.png'
 							}),
 							new Ext.Action({
 								id: 'lockIcon',
 								handler: function(){
 									lore.ore.controller.lockCompoundObjectInRepository();
 							    },
-							    icon: './skin/icons/ore/lock.png'
+							    icon: lore.constants.baseUrl + 'skin/icons/ore/lock.png'
 							}),
 							new Ext.Action({
 								id: 'deleteIcon',
 								handler: function(){
 									lore.ore.controller.deleteCompoundObjectFromRepository();
 							    },
-							    icon: './skin/icons/ore/database_delete.png'
+							    icon: lore.constants.baseUrl + 'skin/icons/ore/database_delete.png'
 							}),
 							/*'-',
 							{
 								id: 'exportMenu',
-							    icon: './skin/icons/table_refresh.png',
+							    icon: lore.constants.baseUrl + 'skin/icons/table_refresh.png',
 							    menu: new Ext.menu.Menu({
 									id: 'menu2',
 							        style: {
@@ -331,7 +331,7 @@ Ext.onReady(function() {
 									//document.getElementById("http://localhost:8080/gadgets/ifr?url=http://localhost:8080/lore/lore.xml-data").contentWindow.find("",false, false, true, false, true, true);
 									window.find("",false, false, true, false, true, true);  
 							    },
-							    icon: './skin/icons/ore/page_white_magnify.png'
+							    icon: lore.constants.baseUrl + 'skin/icons/ore/page_white_magnify.png'
 							}),*/
 							/*new Ext.Action({
 								handler: function(){
@@ -341,7 +341,7 @@ Ext.onReady(function() {
 						            window.open("./options.xul","", features);
 						            
 							    },
-							    icon: './skin/icons/cog.png'
+							    icon: lore.constants.baseUrl + 'skin/icons/cog.png'
 							}),*/
 							new Ext.Action({
 								id: 'reportIcon',
@@ -361,7 +361,7 @@ Ext.onReady(function() {
 						            	lore.debug.ui("Error in loreoverlay.reportProblem",e);
 						            }
 							    },
-							    icon: './skin/icons/mail-exclamation.png'
+							    icon: lore.constants.baseUrl + 'skin/icons/mail-exclamation.png'
 							})
 		            	]
 		            }),

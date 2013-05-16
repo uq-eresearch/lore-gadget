@@ -528,9 +528,10 @@ lore.ore.model.CompoundObject = Ext.extend(Ext.util.Observable, {
 lore.ore.WordSerializer = function(){
     var oThis = this;
     // Load xslt from local file for transforming body content to ooxml for inclusion in docx
+    
     var xhr = new XMLHttpRequest();                
     xhr.overrideMimeType('text/xml');
-    xhr.open("GET", './export/html2word.xsl');
+    xhr.open("GET", lore.constants.baseUrl + 'export/html2word.xsl');
     xhr.onreadystatechange= function(){
         if (xhr.readyState == 4) {
             oThis.bodyStylesheet = xhr.responseXML;
