@@ -9,7 +9,7 @@ lore.ore.repos.RepositoryAdapter = function (baseURL){
     var oThis = this;
     var params = {};
     params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
-    var url = document.getElementsByTagName('base')[0].href + "sparqlexplore.xsl";
+    var url = lore.constants.baseUrl + "sparqlexplore.xsl";
     gadgets.io.makeRequest(url, function(response){
         oThis.exploreStylesheet = response.data;
     }, params);
