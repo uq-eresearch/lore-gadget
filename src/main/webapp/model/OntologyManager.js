@@ -123,7 +123,7 @@ Ext.apply(lore.ore.model.OntologyManager.prototype, {
             params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
             params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
             //var url = document.getElementsByTagName('base')[0].href + "ontologies/austlitoaiore.owl";
-            var url = lore.constants.baseUrl + 'lore/ontologies/austlitoaiore.owl';
+            var url = lore.constants.baseUrl + 'ontologies/austlitoaiore.owl';
             gadgets.io.makeRequest(url, function(response){
                 try {
                     var ontData = {relationships:{}, dataTypeProps: []};

@@ -529,18 +529,15 @@ lore.ore.WordSerializer = function(){
     var oThis = this;
     // Load xslt from local file for transforming body content to ooxml for inclusion in docx
     
-    var xhr = new XMLHttpRequest();                
-    xhr.overrideMimeType('text/xml');
-    xhr.open("GET", lore.constants.baseUrl + 'export/html2word.xsl');
-    xhr.onreadystatechange= function(){
-        if (xhr.readyState == 4) {
-            oThis.bodyStylesheet = xhr.responseXML;
-            oThis.xsltproc = new XSLTProcessor();
-            oThis.xsltproc.importStylesheet(oThis.bodyStylesheet);
-        }
-    };
-    xhr.send(null);
-    this.docxTemplate.setSerializer(this);
+    var oThis = this;
+    var params = {};
+    params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
+    var url = lore.constants.baseUrl + 'export/html2word.xsl';
+    gadgets.io.makeRequest(url, function(response){
+    	oThis.bodyStylesheet = response.data;
+        oThis.xsltproc = new XSLTProcessor();
+        oThis.xsltproc.importStylesheet(oThis.bodyStylesheet);
+    }, params);
 };
 Ext.apply(lore.ore.WordSerializer.prototype, {
     serialize: function(co) {
