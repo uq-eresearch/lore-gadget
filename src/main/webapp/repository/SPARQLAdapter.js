@@ -124,9 +124,13 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
         var triples = sparqlData.databank.triples();
         var trigs = "";
         for (var i = 0; i < triples.length; i++) {
-            trigs += triples[i];
+        	var currentTriple = triples[i];
+        	// SPARQL triplestores cannot handle rdf:about triples
+        	if (currentTriple.property.value._string != "http://www.w3.org/1999/02/22-rdf-syntax-ns#about"){
+                trigs += triples[i];
+        	}
         }
-                  
+        
 		var params = {};
 		params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.PUT;
 		params[gadgets.io.RequestParameters.POST_DATA]= trigs;

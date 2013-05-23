@@ -38,7 +38,7 @@ lore.ore.ui.PagingToolbar = Ext.extend(Ext.PagingToolbar, {
 	        {
                 xtype: 'combo',
                 triggerAction: 'all',
-                width: 100,
+                width: 120,
                 editable: false,
                 mode: 'local',
                 displayField: 'desc',

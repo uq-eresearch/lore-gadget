@@ -173,11 +173,20 @@ Ext.apply(lore.ore.Controller.prototype, {
      */
     loadCompoundObject : function(rdf) {
         try {
-	    	Ext.get('centerPanel').update('<pre>' + lore.ore.controller.formatXML(rdf.responseText)
-	    			.replace(/&/g, "&amp;")
-	    			.replace(/>/g, "&gt;")
-	    			.replace(/</g, "&lt;")
-	    			.replace(/"/g, "&quot;") + '</pre>');
+        	if (typeof rdf.responseXML != 'undefined') {
+    	    	Ext.get('centerPanel').update('<pre>' + lore.ore.controller.formatXML(rdf.responseText)
+    	    			.replace(/&/g, "&amp;")
+    	    			.replace(/>/g, "&gt;")
+    	    			.replace(/</g, "&lt;")
+    	    			.replace(/"/g, "&quot;") + '</pre>');
+	        } else {
+		    	Ext.get('centerPanel').update('<pre>' + lore.ore.controller.formatXML(rdf)
+		    			.replace(/&/g, "&amp;")
+		    			.replace(/>/g, "&gt;")
+		    			.replace(/</g, "&lt;")
+		    			.replace(/"/g, "&quot;") + '</pre>');
+	        }
+
 	    	
 	        var getDatatype = function(propname, propvalue) {
 	            var dtype = propvalue.datatype;
@@ -204,9 +213,11 @@ Ext.apply(lore.ore.Controller.prototype, {
 	        var rdfDoc;
 	        if (typeof rdf != 'object') {
 	            rdfDoc = new DOMParser().parseFromString(rdf, "text/xml");
-	        } else {
+	        } else if (typeof rdf.responseXML != 'undefined') {
 	            showInHistory = true;
 	            rdfDoc = rdf.responseXML;
+	        } else {
+	        	rdfDoc = rdf;
 	        }
 	        // lore.debug.timeElapsed("creating databank");
 	        var databank = jQuery.rdf.databank();
@@ -352,6 +363,7 @@ Ext.apply(lore.ore.Controller.prototype, {
 	            if (!title) {
 	                title = "Untitled";
 	            }
+                lore.ore.historyManager.addToHistory(remurl, title, (isPrivate && isPrivate.value == true ? true: false));
 	        }
 	        if (lore.ore.ui.topView
 	                && lore.ore.ui.graphicalEditor.lookup[lore.ore.controller.currentURL]) {
@@ -598,7 +610,7 @@ Ext.apply(lore.ore.Controller.prototype, {
                                     lore.ore.controller.createCompoundObject(); 
                                 }
                                 lore.ore.coListManager.remove(deletedrem);
-                                /*lore.ore.historyManager.deleteFromHistory(deletedrem);*/
+                                lore.ore.historyManager.deleteFromHistory(deletedrem);
                                 lore.ore.ui.vp.info("Resource Map deleted");
                                 Ext.MessageBox.hide();
                             } catch (ex){
@@ -816,7 +828,7 @@ Ext.apply(lore.ore.Controller.prototype, {
            lore.ore.coListManager.add([coopts]);
         }
         var priv = currentCO.properties.getProperty(lore.constants.NAMESPACES["lorestore"] + "isPrivate");
-        /*lore.ore.historyManager.addToHistory(remid, title, (priv && priv.value == true ? true : false));  */
+        lore.ore.historyManager.addToHistory(remid, title, (priv && priv.value == true ? true : false));  
     },
     persistAllLayout: function(){
         // make sure layout info is up to date in model
@@ -855,7 +867,9 @@ Ext.apply(lore.ore.Controller.prototype, {
 	            lore.debug.ore("docx",docxData);
 	            wExp.createWordFile(docxData.docxml, docxData.rels);
 	        } else {
-	            lore.util.writeFileWithSaveAs("Export Resource Map as", 
+	        	var blob = new Blob([currentCO.serialize(format)], {type: "text/plain;charset=utf-8"});
+	        	saveAs(blob, format + ".txt");
+	        	/*lore.util.writeFileWithSaveAs("Export Resource Map as", 
 	                fileExtensions[format],
 	                // savecb callback will actually write the file
 	                function(savecb){ 
@@ -863,7 +877,7 @@ Ext.apply(lore.ore.Controller.prototype, {
 	                        saveContents(savecb, currentCO.serialize(format));
 	                },
 	                window
-	            );
+	            );*/
 	        }        
         } catch (e) {
             lore.debug.ore("Error saving Resource Maps data",e );

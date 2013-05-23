@@ -43,7 +43,9 @@ lore.ore.ui.CompoundObjectDataView = Ext.extend(Ext.DataView, {
         // When data is loaded, refresh view to reset numbering
         this.store.on("load", 
             function(){
-                this.refresh();
+    			if (typeof this.getTemplateTarget() != 'undefined') {
+    				this.refresh();
+    			}
                 // auto raise browse view when results are loaded
                 if (this.id == 'cobview'){
                     if (!this.parentPanel) {

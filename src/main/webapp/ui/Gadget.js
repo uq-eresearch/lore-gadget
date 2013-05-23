@@ -22,6 +22,7 @@ Ext.onReady(function() {
     lore.ore.ui.vp = new lore.ore.ui.Viewport();
     lore.ore.reposAdapter = new lore.ore.repos.SPARQLAdapter("http://corbicula.huni.net.au/dataset");
     lore.ore.coListManager = new lore.ore.model.CompoundObjectListManager();
+    lore.ore.historyManager = new lore.ore.model.HistoryManager(lore.ore.coListManager);
     lore.ore.cache = new lore.ore.model.CompoundObjectCache();  
     	
 	lore.ore.reposAdapter.getCompoundObjects(null, null, null, true);
@@ -189,7 +190,7 @@ Ext.onReady(function() {
 	            ]
 	        },{
 		        region: 'west',
-		        width: 350,
+		        width: 375,
                 split:true,
 		        items: [
 		            new Ext.Toolbar({
@@ -266,7 +267,7 @@ Ext.onReady(function() {
 							    },
 							    icon: lore.constants.baseUrl + 'skin/icons/ore/database_delete.png'
 							}),
-							/*'-',
+							'-',
 							{
 								id: 'exportMenu',
 							    icon: lore.constants.baseUrl + 'skin/icons/table_refresh.png',
@@ -276,12 +277,12 @@ Ext.onReady(function() {
 							            overflow: 'visible'
 							        },
 									items: [
-										new Ext.Action({
+										/*new Ext.Action({
 											handler: function(){
 												lore.ore.controller.exportCompoundObject('wordml');
 										    },
 						                    text: 'Export Summary to Word'
-						                }), 
+						                }), */
 						                new Ext.Action({
 											handler: function(){
 												lore.ore.controller.exportCompoundObject('rdf');
@@ -302,16 +303,15 @@ Ext.onReady(function() {
 						                }), 
 						                new Ext.Action({
 											handler: function(){
-												try{
-									                var fObj =  lore.util.loadFileWithOpen("Select Resource Map RDF/XML file", 
-									                {desc:"RDF documents", filter:"*.rdf"}, window);
-									                
-									                if ( fObj) {
-									                    loreoverlay.coView().loadCompoundObject(fObj.data);
-									                }
-									            } catch (e){
-									                lore.debug.ui("Error importing Resource Map from file",e);
-									            }
+												$('#myInput')[0].onchange = function(result) {													 
+													 var reader = new FileReader();
+													 reader.onload = function(e) {
+														 var data = e.target.result;
+														 lore.ore.controller.loadCompoundObject(data);
+													 }
+													 reader.readAsText(result.target.files[0]);
+										        }
+												$('#myInput').click();
 										    },
 						                    text: 'Import from RDF/XML file'
 						                }), 
@@ -323,7 +323,7 @@ Ext.onReady(function() {
 						                })
 						            ]
 								})
-							},*/
+							},
 							'-',
 							/*new Ext.Action({
 								id: 'searchIcon',
@@ -483,8 +483,36 @@ Ext.onReady(function() {
 	    							    ]
 	    							}
 	                            ]
-                            })
-							,
+                            }), 
+					        new Ext.Panel({
+					             id : "historyform",
+					         	 layout : "anchor",
+					             title : "History",
+					             tabTip: "List recently viewed Resource Maps",
+							     height: "500px",
+					             items : [
+					                {   
+	    							    minHeight: 0,
+	    							    normal: false,
+	    							    border : false,
+	    							    layout: "anchor",
+	    							    "id": "historyPanel",
+	    							    autoScroll: true, 
+	    							    "tbar": {
+	    							        "xtype": "pagingToolbar",
+	    							        "store": "history",
+	    							        "id": "hpager"		                    
+	    							    },
+	    							    items: [
+	    									{
+							                    "xtype": "codataview",
+							                    "store": "history",
+							                    "id": "hisview"
+							                }
+	    							    ]
+    							    }
+					            ]
+					        }),
 							new Ext.Panel({
 						    	id: 'properties',
 						        title: 'Properties',

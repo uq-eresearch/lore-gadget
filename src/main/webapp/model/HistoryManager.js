@@ -7,7 +7,7 @@ Ext.namespace("lore.ore.model");
  */
 lore.ore.model.HistoryManager = function (listManager){
     this.listManager = listManager;
-    if (lore.ore.firefox){
+    /*if (lore.ore.firefox){
         this.historyService = Components.classes["@mozilla.org/browser/nav-history-service;1"]
                   .getService(Components.interfaces.nsINavHistoryService);
         this.historyService.addObserver(this,false);
@@ -23,7 +23,7 @@ lore.ore.model.HistoryManager = function (listManager){
                 }
             }
         });
-    }
+    }*/
     this.loadHistory();
 };
 Ext.apply(lore.ore.model.HistoryManager.prototype, {
@@ -39,7 +39,7 @@ Ext.apply(lore.ore.model.HistoryManager.prototype, {
             window.localStorage.setItem(key, value);
          };
         try {
-            if (lore.ore.firefox){
+            /*if (lore.ore.firefox){
                  var theuri = Components.classes["@mozilla.org/network/io-service;1"].
                      getService(Components.interfaces.nsIIOService).
                      newURI(remurl, null, null);
@@ -62,7 +62,8 @@ Ext.apply(lore.ore.model.HistoryManager.prototype, {
                     storeHistoryMetadata(remurl+".isPrivate",isPrivate);
                 }
                 
-            }
+            }*/
+        	 var visitDate = new Date();
              this.listManager.add(
                 [
                 {
@@ -85,7 +86,7 @@ Ext.apply(lore.ore.model.HistoryManager.prototype, {
        * @param {} remurl
        */
       deleteFromHistory: function(remurl){
-        if (lore.ore.firefox) {
+        /*if (lore.ore.firefox) {
             var theuri = Components.classes["@mozilla.org/network/io-service;1"].
                      getService(Components.interfaces.nsIIOService).
                      newURI(remurl, null, null);
@@ -96,14 +97,14 @@ Ext.apply(lore.ore.model.HistoryManager.prototype, {
             chrome.history.deleteUrl({url:remurl});
             window.localStorage.removeItem(remurl+".title");
             window.localStorage.removeItem(remurl+".isPrivate");
-        }
+        }*/
       },
       /**
        * Load Resource Maps from the browse history into the Resource Maps history list
        */
       loadHistory : function (){
         try{
-            if (lore.ore.firefox){
+            /*if (lore.ore.firefox){
                 var query = this.historyService.getNewQuery(); 
                 query.annotation = "lore/compoundObject";
                 var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
@@ -171,7 +172,7 @@ Ext.apply(lore.ore.model.HistoryManager.prototype, {
                         that.listManager.add(coList, 'history');
                     }
                 });
-            }
+            }*/
           } catch (e) {
             lore.debug.ore("Error retrieving history",e);
           }

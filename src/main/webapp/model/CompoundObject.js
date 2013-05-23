@@ -88,15 +88,15 @@ lore.ore.model.CompoundObject = Ext.extend(Ext.util.Observable, {
             
             // remove ore:describes property
             this.properties.removeProperty(lore.constants.NAMESPACES["ore"]+ "describes",0);
-            
-            /*this.properties.setProperty({
+                                    
+            this.properties.setProperty({
                id: lore.constants.NAMESPACES["rdf"]+ "about",
                ns: lore.constants.NAMESPACES["rdf"],
                name: "about",
                value: newUri,
                prefix: "rdf",
                type: "uri"
-            },0);*/
+            },0);
             // reset creation and modification dates to now
             var dcterms = lore.constants.NAMESPACES["dcterms"];
             var created = this.properties.getProperty(dcterms + "created",0);

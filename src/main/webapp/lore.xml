@@ -25,6 +25,11 @@
         <script type="text/javascript" src="lib/ext/ux/MidasCommand.js"></script>
         <script type="text/javascript" src="lib/ext/ux/SuperBoxSelect.js"></script>
         
+        <script type="text/javascript" src="lib/FileSaver/FileSaver.js"></script>
+        <script type="text/javascript" src="lib/FileSaver/Blob.js"></script>
+        <script type="text/javascript" src="lib/FileSaver/canvas-toBlob.js"></script>
+        <script type="text/javascript" src="lib/html2canvas.js"></script>
+        
         <script type="text/javascript" src="namespaces.js"></script>
         <script type="text/javascript" src="lib/raphael.js"></script>
         <script type="text/javascript" src="lib/jit.js"></script>
@@ -93,5 +98,6 @@
 		</div>
    	    <div id="tabs3" style="height:100%">
 	    </div>
+	    <input id="myInput" type="file" style="visibility:hidden" />
   ]]></Content>
 </Module>

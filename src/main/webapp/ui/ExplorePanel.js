@@ -512,26 +512,20 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
                 showSeparator: false
             });
             
-            /*this.contextmenu.add({
+            this.contextmenu.add({
                     text : "Save diagram as image",
                     icon: lore.constants.baseUrl + "skin/icons/ore/image.png",
                     scope: this,
                     handler : function(evt) {
-                        lore.ore.ui.vp.progress("Preparing explore image");
-                        this.contextmenu.hide();
-                        // use set timeout so that UI updates
-                        setTimeout(function(ep) {
-                            var imgData = ep.getAsImage();
-                            if (imgData) {
-                                lore.util.writeURIWithSaveAs("explore", "png", window, imgData);
-                            } else {
-                                lore.ore.ui.vp.error("Unable to generate explore image");
-                            }
-                        }, 10, this);
-                        
-
+                    	html2canvas(this.body.dom, {
+                		  onrendered: function(canvas) {
+                			canvas.toBlob(function(blob) {
+                          	    saveAs(blob, "explore.png");
+                          	});
+                		  }
+                		});
                     }
-             });*/
+             });
              this.contextmenu.add({
                 text: "Reset visualisation",
                 icon: lore.constants.baseUrl + "skin/icons/arrow_refresh.png",
