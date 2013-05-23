@@ -513,18 +513,18 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
             });
             
             this.contextmenu.add({
-                    text : "Save diagram as image",
-                    icon: lore.constants.baseUrl + "skin/icons/ore/image.png",
-                    scope: this,
-                    handler : function(evt) {
-                    	html2canvas(this.body.dom, {
-                		  onrendered: function(canvas) {
-                			canvas.toBlob(function(blob) {
-                          	    saveAs(blob, "explore.png");
-                          	});
-                		  }
-                		});
-                    }
+	            text : "Save diagram as image",
+	            icon: lore.constants.baseUrl + "skin/icons/ore/image.png",
+	            scope: this,
+	            handler : function(evt) {
+	              html2canvas($("#infovis"), {
+	        		onrendered: function(canvas) {
+	        		  canvas.toBlob(function(blob) {
+	                    saveAs(blob, "explore.png");
+	                  });
+	        		}
+	        	  });
+	            }
              });
              this.contextmenu.add({
                 text: "Reset visualisation",
