@@ -4,12 +4,17 @@
  * @extends lore.ore.repos.RepositoryAdapter
  */
 lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
+
+	graphStoreEndPoint : "",
+	graphNamePrefix : "",
 	
-    constructor : function(baseURL) {
+    constructor : function(baseURL, graphStoreEndPoint, graphNamePrefix) {
         lore.ore.repos.SPARQLAdapter.superclass.constructor.call(this, baseURL);
         this.reposURL = baseURL;
         this.idPrefix = this.reposURL;
         this.unsavedSuffix = "#unsaved";
+        this.graphStoreEndPoint = graphStoreEndPoint;
+        this.graphNamePrefix = graphNamePrefix;
     },
     getCompoundObjects : function(matchuri, matchpred, matchval, isSearchQuery){ 
     	try {
@@ -107,7 +112,7 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
     },
     loadCompoundObject : function(remid, callback, failcallback){
          Ext.Ajax.request({
-        		url: this.reposURL + "/graph-store?graph=" + remid,
+        		url: this.reposURL + this.graphStoreEndPoint + "?graph=" + remid,
                 headers: {
                     Accept: 'application/rdf+xml'
                 },
@@ -135,7 +140,7 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
 		params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.PUT;
 		params[gadgets.io.RequestParameters.POST_DATA]= trigs;
 		params[gadgets.io.RequestParameters.HEADERS] = {'Content-Type' : 'application/turtle'};
-        var url = this.reposURL + "/graph-store?graph=" + remid;
+        var url = this.reposURL + this.graphStoreEndPoint + "?graph=" + remid;
         
         gadgets.io.makeRequest(url, function(response){
             lore.debug.ore("lorestore: RDF saved");
@@ -156,7 +161,7 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
 			var params = {};
             params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
 			params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.DELETE;
-            var url = this.reposURL + "/graph-store?graph=" + remid;
+            var url = this.reposURL + this.graphStoreEndPoint + "?graph=" + remid;
             gadgets.io.makeRequest(url, function(response){
             	callback(remid);
             }, params);
@@ -245,7 +250,7 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
     },
     
     generateID : function() {
-    	return this.reposURL + "/data/" + lore.draw2d.UUID.create();
+    	return this.graphNamePrefix + lore.draw2d.UUID.create();
     },
     /**
     * Parses Resource Map details from a SPARQL XML result
