@@ -245,7 +245,7 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
     },
     
     generateID : function() {
-    	return this.reposURL + "/" + lore.draw2d.UUID.create();
+    	return this.reposURL + "/data/" + lore.draw2d.UUID.create();
     },
     /**
     * Parses Resource Map details from a SPARQL XML result

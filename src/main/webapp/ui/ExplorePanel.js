@@ -21,13 +21,13 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
                     useSplitTips: true,
                     height: 28,
                     minHeight: 0,
-                    //style: 'position: relative;',
+                    style: 'position: relative; padding-bottom: 5px;',
                     bodyCssClass: 'exploreHistory'
                 },{
                     region: "center",
                     id: "exploreinfovis",
                     forceLayout: true,
-                    //style: 'position: relative;',
+                    style: 'position: static; background-color: #FFFFFF; border: 1px solid; border-color: #D0D0D0;',
                     html: "<div id='infovis'></div>"
                 }
             ]
@@ -630,7 +630,7 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
 	            try {
 	            this.clearExploreData();
 	            this.exploreLoaded = "";
-	            Ext.getCmp("exploreHistory").body.update("No connections to explore from repository: current Resource Map is unsaved&nbsp;");
+	            Ext.getCmp("exploreHistory").body.update("&nbsp;&nbsp;No connections to explore from repository: current Resource Map is unsaved&nbsp;&nbsp;");
 	            return;
             } catch (ex){
                 lore.debug.ore("Error updating explore view",ex);
