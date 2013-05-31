@@ -48,10 +48,6 @@ Ext.onReady(function() {
 	new Ext.Viewport({
 		layout: 'border',
         items: [
-	        /*{
-	            region: 'center',
-        		html: '<p id="centerPanel">north - generally for menus, toolbars and/or advertisements</p>'
-	        },*/
 	        {
 	        	region: 'center',
 	        	items: [
@@ -115,11 +111,11 @@ Ext.onReady(function() {
 		                            bubble : false
 		                }),
 					    items : [
-							{
+							/**{							
 								title: 'Raw RDF',
 								html: '<p id="centerPanel" style="white-space: pre; overflow: scroll; height: 100%"></p>',
 								iconCls: "code-icon"
-							},{
+							},*/{
 	                            title : "Graphical Editor",
 	                            tabTip: "View or edit the Resource Map graphically",
 	                            id : "drawingarea",

@@ -172,8 +172,8 @@ Ext.apply(lore.ore.Controller.prototype, {
      * @param {} rdf XML doc or XML HTTP response containing the Resource Map (RDF/XML)
      */
     loadCompoundObject : function(rdf) {
-        try {
-        	if (typeof rdf.responseXML != 'undefined') {
+        try { 
+        	/** if (typeof rdf.responseXML != 'undefined') {
     	    	Ext.get('centerPanel').update('<pre>' + lore.ore.controller.formatXML(rdf.responseText)
     	    			.replace(/&/g, "&amp;")
     	    			.replace(/>/g, "&gt;")
@@ -185,9 +185,8 @@ Ext.apply(lore.ore.Controller.prototype, {
 		    			.replace(/>/g, "&gt;")
 		    			.replace(/</g, "&lt;")
 		    			.replace(/"/g, "&quot;") + '</pre>');
-	        }
-
-	    	
+	        } */
+           	
 	        var getDatatype = function(propname, propvalue) {
 	            var dtype = propvalue.datatype;
 	            if (dtype && dtype._string == "http://purl.org/dc/terms/W3CDTF") {
@@ -967,10 +966,12 @@ Ext.apply(lore.ore.Controller.prototype, {
 	        var isPrivate = false;
 	                        
 	        if (remQuery.length > 0) {
-	        	lore.ore.controller.createCompoundObject();
-	        	for (var i = 0; i < remQuery.length; i++) {
-	        		lore.ore.controller.addHuniResource(remQuery.get(i).o.value.toString());
-	        	}
+	        	lore.ore.controller.createCompoundObject(true, function(){
+		        	for (var i = 0; i < remQuery.length; i++) {
+		        		lore.ore.controller.addHuniResource(remQuery.get(i).o.value.toString());
+		        	}
+	        	});      
+	        	
 	        } else {
 	            lore.ore.ui.vp.warning("No Resources found");
 	            lore.debug.ore("Error: No Resources found", loadedRDF);
@@ -1056,9 +1057,18 @@ Ext.apply(lore.ore.Controller.prototype, {
             lore.debug.ore("Error: no remurl found in RDF", loadedRDF);
             return;
         }
+
+        lore.ore.ui.graphicalEditor.NODE_WIDTH   = 180;
+        lore.ore.ui.graphicalEditor.NODE_HEIGHT  = 30;
+        lore.ore.ui.graphicalEditor.NODE_SPACING = 20;
         
-        var figure = lore.ore.ui.graphicalEditor.addFigure({url:uri, props: props});
+        var figure = lore.ore.ui.graphicalEditor.addFigure({url:uri, props: props, 
+        	oh: 170, h: 30, w: 180});
         lore.ore.ui.graphicalEditor.showResource(uri);
+        
+        lore.ore.ui.graphicalEditor.NODE_WIDTH   = 220;
+        lore.ore.ui.graphicalEditor.NODE_HEIGHT  = 170;
+        lore.ore.ui.graphicalEditor.NODE_SPACING = 40;
     },
     /**
      * Add a resource to the Resource Map

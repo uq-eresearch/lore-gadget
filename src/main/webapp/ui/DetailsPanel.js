@@ -37,11 +37,12 @@ lore.ore.ui.DetailsPanel = Ext.extend(Ext.Panel,{
             var currentCO = lore.ore.cache.getLoadedCompoundObject();
             // FIXME: adding resources to model causing errors when we attach directly
             //this.getComponent(1).bindStore(currentCO.aggregatedResourceStore);
-            var tmpCO = new lore.ore.model.CompoundObject();
-            tmpCO.load({format: 'rdfquery', content: currentCO.serialize('rdfquery')});
-            this.getComponent(1).bindStore(tmpCO.aggregatedResourceStore);
-            this.getComponent(0).body.update(lore.ore.ui.detailsCOTemplate.apply([currentCO]));
-             
+            if (currentCO) {
+            	var tmpCO = new lore.ore.model.CompoundObject();
+            	tmpCO.load({format: 'rdfquery', content: currentCO.serialize('rdfquery')});
+            	this.getComponent(1).bindStore(tmpCO.aggregatedResourceStore);
+            	this.getComponent(0).body.update(lore.ore.ui.detailsCOTemplate.apply([currentCO]));
+            }
             Ext.Msg.hide();
         } catch(e){
             lore.debug.ore("Error in updateBinding",e);
