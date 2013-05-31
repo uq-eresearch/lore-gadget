@@ -2,8 +2,7 @@
 <Module>
 
   <ModulePrefs author="Simon McNaughton" author_email="simon.mcnaughton@uqconnect.edu.au"
-    description="Literature Object Re-use and Exchange" title="LORE">
-  </ModulePrefs>
+    description="Literature Object Re-use and Exchange" title="LORE"  height="600" width= "500"/>
 
   <Content type="html" view="home, profile, preview"><![CDATA[
         <script type="text/javascript" src="lib/jquery-1.6.3.min.js"></script>
@@ -96,7 +95,7 @@
 	    </div>
 	    <div id="tabs2">
 		</div>
-   	    <div id="tabs3" style="height:100%">
+   	    <div id="tabs3" style="height:100%; width: 100%;">
 	    </div>
 	    <input id="myInput" type="file" style="visibility:hidden" />
   ]]></Content>

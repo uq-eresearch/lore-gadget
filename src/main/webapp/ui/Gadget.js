@@ -21,7 +21,7 @@ Ext.onReady(function() {
     
     lore.ore.ui.vp = new lore.ore.ui.Viewport();
     lore.ore.reposAdapter = new lore.ore.repos.SPARQLAdapter(
-    		"http://localhost/op", "/data", "http://localhost/op/data/");
+    		"http://corbicula.huni.net.au/dataset", "/graph-store", "http://corbicula.huni.net.au/dataset/data/");
     lore.ore.coListManager = new lore.ore.model.CompoundObjectListManager();
     lore.ore.historyManager = new lore.ore.model.HistoryManager(lore.ore.coListManager);
     lore.ore.cache = new lore.ore.model.CompoundObjectCache();  
@@ -191,7 +191,7 @@ Ext.onReady(function() {
 	            ]
 	        },{
 		        region: 'west',
-		        width: 375,
+		        width: 260,
                 split:true,
 		        items: [
 		            new Ext.Toolbar({
@@ -321,6 +321,12 @@ Ext.onReady(function() {
 												lore.ore.controller.loadCompoundObjectPromptForURL();
 										    },
 						                    text: 'Import from RDF/XML URL'
+						                }), 
+						                new Ext.Action({
+											handler: function(){
+												lore.ore.controller.addFacetResourceWithPrompt();
+										    },
+						                    text: 'Import from Facet URL'
 						                })
 						            ]
 								})
@@ -410,8 +416,8 @@ Ext.onReady(function() {
 									        new Ext.FormPanel({
 									            url:'save-form.php',
 									            frame:true,
-									            width: 250,
-									            defaults: {width: 245},
+									            width: 180,
+									            defaults: {width: 175},
 									            defaultType: 'textfield',
 									            
 									            title : "Advanced",
@@ -421,7 +427,7 @@ Ext.onReady(function() {
 									            id : "advsearchform",
 									            border : false,
 									            bodyStyle : "padding: 0 10px 4px 4px",
-									            labelWidth : 75,
+									            labelWidth : 60,
 									            items: [{
 									                    xtype : "label",
 									                    id : "find-co-label",

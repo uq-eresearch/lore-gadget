@@ -935,6 +935,131 @@ Ext.apply(lore.ore.Controller.prototype, {
             prompt : true
         });
     },
+    addFacetResourceWithPrompt: function(){
+        Ext.Msg.show({
+            title : 'Add resource URL',
+            buttons : Ext.MessageBox.OKCANCEL,
+            msg : 'Please enter the URL of the resource:',
+            scope: this,
+            fn : function(btn, theurl) {
+                if (btn == 'ok') {
+                    this.addFacetResource(theurl);
+                }
+            },
+            prompt : true
+        });
+    },
+    addFacetResource: function(uri){ 
+	    var params = {};
+	    params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
+	    params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
+	    gadgets.io.makeRequest(uri, function(response){
+	    	var databank = jQuery.rdf.databank();
+	        for (ns in lore.constants.NAMESPACES) {
+	            databank.prefix(ns, lore.constants.NAMESPACES[ns]);
+	        }
+	        databank.load(response.data);
+	        var loadedRDF = jQuery.rdf({
+	            databank : databank
+	        });
+	        
+	        var remQuery = loadedRDF.where('?s <http://www.openarchives.org/ore/terms/aggregates> ?o');
+	        var isPrivate = false;
+	                        
+	        if (remQuery.length > 0) {
+	        	lore.ore.controller.createCompoundObject();
+	        	for (var i = 0; i < remQuery.length; i++) {
+	        		lore.ore.controller.addHuniResource(remQuery.get(i).o.value.toString());
+	        	}
+	        } else {
+	            lore.ore.ui.vp.warning("No Resources found");
+	            lore.debug.ore("Error: No Resources found", loadedRDF);
+	            return;
+	        }
+	    }, params);
+    },
+    addHuniResource: function(uri){
+    	var params = {};
+	    params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
+	    params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
+	    gadgets.io.makeRequest(uri, function(response){
+	    	var xmldoc = response.data;
+            var result = xmldoc.getElementsByTagNameNS(lore.constants.NAMESPACES["sparql"], "result");
+            
+            if (result.length > 0){
+            	var graphuri, uri;
+                for (var i = 0; i < result.length; i++) {
+                	var bindings = result[i].getElementsByTagName('binding');
+                    for (var j = 0; j < bindings.length; j++){  
+                    	attr = bindings[j].getAttribute('name');
+                    	if (attr == 'g') {
+                    		node = bindings[j].getElementsByTagName('uri'); 
+                    		graphuri = lore.util.safeGetFirstChildValue(node); 
+                    	} else if (attr == 's') {
+                    		node = bindings[j].getElementsByTagName('uri'); 
+                    		uri = lore.util.safeGetFirstChildValue(node); 
+                    	}
+                    }
+                }
+                lore.ore.reposAdapter.loadCompoundObject(graphuri, 
+                		function(rdf) {lore.ore.controller.loadHuniCompoundObject(graphuri, uri, rdf)}, 
+                		lore.ore.controller.afterLoadCompoundObjectFail);
+            }
+	    }, params);
+    },
+    loadHuniCompoundObject : function(graphuri, uri, rdf) {
+    	var props = {"dc:title" : graphuri};
+                
+        var rdfDoc;
+        if (typeof rdf != 'object') {
+            rdfDoc = new DOMParser().parseFromString(rdf, "text/xml");
+        } else if (typeof rdf.responseXML != 'undefined') {
+            showInHistory = true;
+            rdfDoc = rdf.responseXML;
+        } else {
+        	rdfDoc = rdf;
+        }
+        
+        var databank = jQuery.rdf.databank();
+        for (ns in lore.constants.NAMESPACES) {
+            databank.prefix(ns, lore.constants.NAMESPACES[ns]);
+        }
+        databank.load(rdfDoc);
+        var loadedRDF = jQuery.rdf({
+            databank : databank
+        });
+        
+        var remQuery = loadedRDF.where('<' + uri + '> ?p ?o');
+        var isPrivate = false;
+                        
+        if (remQuery.length > 0) {
+        	for (var i = 0; i < remQuery.length; i++) {
+        		var res = remQuery.get(i);
+        		
+        		var property = res.p.value.toString();
+        		var value = res.o.value.toString();
+        		        		
+        		for (var ns in lore.constants.NAMESPACES) {
+        			if (property.indexOf(lore.constants.NAMESPACES[ns]) == 0) {
+        				property = ns + ":" + property.substring(lore.constants.NAMESPACES[ns].length);
+        			}
+        		}
+        		
+        		if (props[property]) {
+        			props[property] += " " + value;
+        		} else {
+        			props[property] = value;
+        		}
+        	}
+        } else {
+            lore.ore.ui.vp.warning("No Resource Map found");
+            lore.debug.ore("Error: no remurl found in RDF", loadedRDF);
+            return;
+        }
+        
+        var figure = lore.ore.ui.graphicalEditor.addFigure({url:uri, props: props});
+        lore.ore.ui.graphicalEditor.showResource(uri);
+    },
     /**
      * Add a resource to the Resource Map
      * @param {} uri
