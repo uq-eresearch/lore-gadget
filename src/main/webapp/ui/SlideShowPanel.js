@@ -8,7 +8,7 @@ lore.ore.ui.SlideShowPanel = Ext.extend(Ext.Panel,{
     activeItem: 0,
     playing: false,
     interval: 3,
-    bodyStyle: 'padding:3px; height: 100%;',
+    bodyStyle: 'padding:3px; min-height: 506px;',
     style: 'height: 100%;',
     bwrapStyle: 'height: 100%',
     defaults: {

@@ -936,9 +936,9 @@ Ext.apply(lore.ore.Controller.prototype, {
     },
     addFacetResourceWithPrompt: function(){
         Ext.Msg.show({
-            title : 'Add resource URL',
+            title : 'Load from Facet RDF URL',
             buttons : Ext.MessageBox.OKCANCEL,
-            msg : 'Please enter the URL of the resource:',
+            msg : 'Please enter the RDF URL of the Facet Search:',
             scope: this,
             fn : function(btn, theurl) {
                 if (btn == 'ok') {
@@ -992,13 +992,21 @@ Ext.apply(lore.ore.Controller.prototype, {
                 for (var i = 0; i < result.length; i++) {
                 	var bindings = result[i].getElementsByTagName('binding');
                     for (var j = 0; j < bindings.length; j++){  
+                    	var g, s, resource;
                     	attr = bindings[j].getAttribute('name');
                     	if (attr == 'g') {
-                    		node = bindings[j].getElementsByTagName('uri'); 
-                    		graphuri = lore.util.safeGetFirstChildValue(node); 
+                    		g = lore.util.safeGetFirstChildValue(
+                    				bindings[j].getElementsByTagName('uri'));
                     	} else if (attr == 's') {
-                    		node = bindings[j].getElementsByTagName('uri'); 
-                    		uri = lore.util.safeGetFirstChildValue(node); 
+                    		s = lore.util.safeGetFirstChildValue(
+                    				bindings[j].getElementsByTagName('uri'));
+                    	} else if (attr == 'resource') {
+                    		resource = lore.util.safeGetFirstChildValue(
+                    				bindings[j].getElementsByTagName('uri'));
+                    	}
+                    	if (s == resource && g.indexOf("oai:") == 0) {
+                    		graphuri = g;
+                    		uri = s;
                     	}
                     }
                 }
@@ -1009,8 +1017,8 @@ Ext.apply(lore.ore.Controller.prototype, {
 	    }, params);
     },
     loadHuniCompoundObject : function(graphuri, uri, rdf) {
-    	var props = {"dc:title" : graphuri};
-                
+    	var props = {"dc:title_0" : graphuri};
+    	                
         var rdfDoc;
         if (typeof rdf != 'object') {
             rdfDoc = new DOMParser().parseFromString(rdf, "text/xml");

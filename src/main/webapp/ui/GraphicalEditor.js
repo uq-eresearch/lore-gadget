@@ -22,7 +22,7 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
         this.NODE_SPACING = 40;
         /** Used for layout in graphical editor - Maximum width before nodes are positioned on new row 
          * @const */
-        this.ROW_WIDTH        = 400;
+        this.ROW_WIDTH    = 400;
         /** Used for layout of new nodes */
         this.dummylayoutx = this.NODE_SPACING;
         /** Used for layout of new nodes */
@@ -531,8 +531,8 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
     nextXY : function(prevx, prevy) {
         this.dummylayoutprevx = prevx;
         this.dummylayoutprevy = prevy;
-        if (prevx > this.ROW_WIDTH) {
-            this.dummylayoutx = 50;
+        if (prevx + this.NODE_WIDTH > this.ROW_WIDTH) {
+            this.dummylayoutx = 40;
             this.dummylayouty = prevy + this.NODE_HEIGHT + this.NODE_SPACING;
         } else {
             this.dummylayoutx = prevx + this.NODE_WIDTH + this.NODE_SPACING;

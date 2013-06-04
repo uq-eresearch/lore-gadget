@@ -5,7 +5,7 @@
 lore.ore.ui.DetailsPanel = Ext.extend(Ext.Panel,{ 
    constructor: function (config){
         config = config || {};
-        config.bodyStyle = "padding:10px;font-family: arial;font-size:90%"; 
+        config.bodyStyle = "padding:20px;font-family: arial;font-size:90%"; 
         config.autoScroll = true;
         lore.ore.ui.DetailsPanel.superclass.constructor.call(this, config);
         this.loaded = "";

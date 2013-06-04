@@ -132,7 +132,8 @@ Ext.onReady(function() {
 	                            id: "remdetailsview",
 	                            tabTip: "View detailed description of Resource Map contents including properties and relationships",
 	                            xtype: "detailspanel",
-	                            iconCls: "detail-icon"
+	                            iconCls: "detail-icon",
+	                            style: "height: 100%; overflow: auto;"
 	                        },  {
 	                            layout : 'fit',
 	                            id : "remslideview",
@@ -322,7 +323,7 @@ Ext.onReady(function() {
 											handler: function(){
 												lore.ore.controller.addFacetResourceWithPrompt();
 										    },
-						                    text: 'Import from Facet URL'
+						                    text: 'Import from Facet Search'
 						                })
 						            ]
 								})
