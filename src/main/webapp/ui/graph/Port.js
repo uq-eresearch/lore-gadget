@@ -71,11 +71,15 @@ Ext.extend(lore.draw2d.Port, lore.draw2d.Rectangle, {
         this.yoffset = wf.getScrollTop();
         this.xoffset = wf.getScrollLeft();
       }
+      var scale = lore.ore.ui.graphicalEditor.coGraph.scale;
+                  
       wf.showConnectionLine(
-        pn.x + dcenter[0] - (this.xoffset - wf.getScrollLeft()),
-        pn.y + dcenter[1] - (this.yoffset - wf.getScrollTop()),
-        pn.x+this.originX,
-        pn.y+this.originY
+        pn.x + (dcenter[0] / scale) - (this.xoffset - wf.getScrollLeft())
+        		- (((1/scale) - 1) * this.originX),
+        pn.y + (dcenter[1] / scale) - (this.yoffset - wf.getScrollTop())
+        		- (((1/scale) - 1) * this.originY),
+        pn.x + this.originX,
+        pn.y + this.originY
       );
       this.fireMoveEvent();
         } catch (ex){
@@ -224,10 +228,15 @@ Ext.extend(lore.draw2d.Port, lore.draw2d.Rectangle, {
         this.originY = y;
     },
     isOver : function(iX, iY) {
+    	var scale = lore.ore.ui.graphicalEditor.coGraph.scale;
         var x = this.getAbsoluteX() - this.coronaWidth - this.getWidth() / 2;
         var y = this.getAbsoluteY() - this.coronaWidth - this.getHeight() / 2;
         var iX2 = x + this.width + (this.coronaWidth * 2) + this.getWidth() / 2;
         var iY2 = y + this.height + (this.coronaWidth * 2) + this.getHeight() / 2;
+        x = x * scale;
+        y = y * scale;
+        iX2 = iX2 * scale;
+        iY2 = iY2 * scale;
         return (iX >= x && iX <= iX2 && iY >= y && iY <= iY2);
     },
     paint : function() {
