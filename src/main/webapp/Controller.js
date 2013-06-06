@@ -942,42 +942,55 @@ Ext.apply(lore.ore.Controller.prototype, {
             scope: this,
             fn : function(btn, theurl) {
                 if (btn == 'ok') {
-                    this.addFacetResource(theurl);
+                    lore.ore.controller.addFacetResource(theurl);
                 }
             },
             prompt : true
         });
     },
     addFacetResource: function(uri){ 
-	    var params = {};
-	    params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
-	    params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
-	    gadgets.io.makeRequest(uri, function(response){
-	    	var databank = jQuery.rdf.databank();
-	        for (ns in lore.constants.NAMESPACES) {
-	            databank.prefix(ns, lore.constants.NAMESPACES[ns]);
-	        }
-	        databank.load(response.data);
-	        var loadedRDF = jQuery.rdf({
-	            databank : databank
-	        });
-	        
-	        var remQuery = loadedRDF.where('?s <http://www.openarchives.org/ore/terms/aggregates> ?o');
-	        var isPrivate = false;
-	                        
-	        if (remQuery.length > 0) {
-	        	lore.ore.controller.createCompoundObject(true, function(){
-		        	for (var i = 0; i < remQuery.length; i++) {
-		        		lore.ore.controller.addHuniResource(remQuery.get(i).o.value.toString());
-		        	}
-	        	});      
-	        	
-	        } else {
-	            lore.ore.ui.vp.warning("No Resources found");
-	            lore.debug.ore("Error: No Resources found", loadedRDF);
-	            return;
-	        }
-	    }, params);
+        window.parent.Ext.getBody().mask();
+        
+        Ext.Ajax.request({
+    		url: uri,
+            headers: {
+                Accept: 'application/rdf+xml'
+            },
+            method: "GET",
+            disableCaching: false,
+            success: function (xhr) {
+            	var databank = jQuery.rdf.databank();
+    	        for (ns in lore.constants.NAMESPACES) {
+    	            databank.prefix(ns, lore.constants.NAMESPACES[ns]);
+    	        }
+    	        databank.load(xhr.responseXML);
+    	        var loadedRDF = jQuery.rdf({
+    	            databank : databank
+    	        });
+    	        
+    	        var remQuery = loadedRDF.where('?s <http://www.openarchives.org/ore/terms/aggregates> ?o');
+    	        var isPrivate = false;
+    	                        
+    	        if (remQuery.length > 0) {
+            		lore.ore.facetImportWin.getComponent(0).removeAll();
+            		
+    	        	for (var i = 0; i < remQuery.length; i++) {
+    	        		var value = remQuery.get(i).o.value.toString();
+    	        		lore.ore.facetImportWin.getComponent(0).add({
+    	                    name: value,
+    	                    boxLabel: value,
+    	                    checked: true
+    	                });
+    	        	}  
+    	        } else {
+    	            lore.ore.ui.vp.warning("No Resources found");
+    	            lore.debug.ore("Error: No Resources found", loadedRDF);
+    	            return;
+    	        }
+
+                lore.ore.facetImportWin.show();
+            }
+        }); 
     },
     addHuniResource: function(uri){
     	var params = {};
@@ -1004,7 +1017,7 @@ Ext.apply(lore.ore.Controller.prototype, {
                     		resource = lore.util.safeGetFirstChildValue(
                     				bindings[j].getElementsByTagName('uri'));
                     	}
-                    	if (s == resource && g.indexOf("oai:") == 0) {
+                    	if (s == resource) {
                     		graphuri = g;
                     		uri = s;
                     	}

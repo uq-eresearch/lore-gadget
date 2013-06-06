@@ -45,6 +45,57 @@ Ext.onReady(function() {
         }
     });
     
+    lore.ore.facetImportWin = new Ext.Window({ 
+        closable: false,
+        layout: 'anchor',
+        closeAction: 'hide',
+        animateTarget: 'drawingarea',
+        width: 450,
+        height: 200,
+        autoScroll: true,
+        title: "Facet Import Selection",
+        items: [
+           {
+               xtype: 'fieldset',
+               defaultType: 'checkbox',
+               id: 'facetFieldset',
+               defaults: {
+                   hideLabel: true
+               },
+               anchor: "-20",
+               style: "border: 0px"
+           }
+        ],
+        bbar: [
+           '->',
+           {
+             xtype: 'button',
+             text: 'OK',
+             tooltip: 'Apply and close',
+             handler: function(b, e){ 
+				 lore.ore.controller.createCompoundObject(true, function(){           	 
+				 	 Ext.getCmp('facetFieldset').items.each(function(item, index, length){
+						 if (item.getValue()) {
+							 lore.ore.controller.addHuniResource(item.getName());
+						 }
+				     });
+				 });
+            	 lore.ore.facetImportWin.hide();
+     	         window.parent.Ext.getBody().unmask();
+             }
+           },
+           {
+               xtype: 'button',
+               text: 'Cancel',
+               tooltip: 'Cancel',
+               handler: function(b, e){   
+              	 lore.ore.facetImportWin.hide();
+     	         window.parent.Ext.getBody().unmask();
+               }
+             }
+        ]
+    });
+    
 	new Ext.Viewport({
 		layout: 'border',
         items: [

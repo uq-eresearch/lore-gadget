@@ -5,7 +5,8 @@
 lore.ore.ui.DetailsPanel = Ext.extend(Ext.Panel,{ 
    constructor: function (config){
         config = config || {};
-        config.bodyStyle = "padding:20px;font-family: arial;font-size:90%"; 
+        config.bodyStyle = "padding:20px;font-family: arial;font-size:90%; overflow: visible;"; 
+        config.bwrapStyle = "overflow-y: visible; overflow-x: hidden;";
         config.autoScroll = true;
         lore.ore.ui.DetailsPanel.superclass.constructor.call(this, config);
         this.loaded = "";
@@ -73,8 +74,8 @@ lore.ore.ui.detailsCOTemplate = new Ext.XTemplate(
     '<div style="width:100%">',
         '<table style="whitespace:normal;width:100%;font-family:arial;padding-bottom;0.5em"><tr><td>',
         '<span style="font-size:140%;font-weight:bold;color:#cc0000;">{[values.properties.getTitle() || "Untitled Resource Map"]}</span></td><td style="text-align:right" width="30">',
-        '&nbsp;<a href="javascript:void(0);" onclick="lore.ore.controller.exportCompoundObject(\'wordml\');">',
-        '<img src="' + lore.constants.baseUrl + 'skin/icons/ore/page_white_word.png" title="Export to MS Word"></a>',
+        /*'&nbsp;<a href="javascript:void(0);" onclick="lore.ore.controller.exportCompoundObject(\'wordml\');">',
+        '<img src="' + lore.constants.baseUrl + 'skin/icons/ore/page_white_word.png" title="Export to MS Word"></a>',*/
         '</td></tr></table>',
         '<p style="font-style:italic;padding-bottom:0.3em;">{uri}</p>',
         '<tpl for="properties">{[this.displayProperties(values)]}</tpl>',
