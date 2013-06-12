@@ -934,21 +934,91 @@ Ext.apply(lore.ore.Controller.prototype, {
             prompt : true
         });
     },
-    addFacetResourceWithPrompt: function(){
+    addFromCorbiculaURLWithPrompt: function(){
         Ext.Msg.show({
-            title : 'Load from Facet RDF URL',
+            title : 'Load from Corbicula URL',
             buttons : Ext.MessageBox.OKCANCEL,
-            msg : 'Please enter the RDF URL of the Facet Search:',
+            msg : 'Please enter the URL of the Corbicula Resource:',
             scope: this,
             fn : function(btn, theurl) {
                 if (btn == 'ok') {
-                    lore.ore.controller.addFacetResource(theurl);
+                    lore.ore.controller.addFromCorbiculaURL(theurl);
                 }
             },
             prompt : true
         });
     },
-    addFacetResource: function(uri){ 
+    addFromCorbiculaURL: function(uri){ 
+    	var params = {};
+	    params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
+	    params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
+	    gadgets.io.makeRequest(uri, function(response){
+	    	var xmldoc = response.data;
+            var result = xmldoc.getElementsByTagNameNS(lore.constants.NAMESPACES["sparql"], "result");
+            
+            if (result.length > 0){
+            	var graphuri, uri;
+            	var subjects = [];
+                for (var i = 0; i < result.length; i++) {
+                	var bindings = result[i].getElementsByTagName('binding');
+                    for (var j = 0; j < bindings.length; j++){  
+                    	var s;
+                    	attr = bindings[j].getAttribute('name');
+                    	if (attr == 's') {
+                    		s = lore.util.safeGetFirstChildValue(
+                    				bindings[j].getElementsByTagName('uri'));
+                    		if (subjects.indexOf(s) == -1) {
+                    			subjects.push(s);
+                    		}
+                    	}
+                    }
+                }
+                var relations = [];
+                for (var i = 0; i < result.length; i++) {
+                	var bindings = result[i].getElementsByTagName('binding');
+                    for (var j = 0; j < bindings.length; j++){  
+                    	var s,p,o;
+                    	attr = bindings[j].getAttribute('name');
+                    	if (attr == 's') {
+                    		s = lore.util.safeGetFirstChildValue(
+                    				bindings[j].getElementsByTagName('uri'));
+                    	} else if (attr == 'p') {
+                    		p = lore.util.safeGetFirstChildValue(
+                    				bindings[j].getElementsByTagName('uri'));
+                    	} else if (attr == 'o') {
+                    		o = lore.util.safeGetFirstChildValue(
+                    				bindings[j].getElementsByTagName('uri'));
+                    	}
+                    }
+                    if (subjects.indexOf(s) != -1 && subjects.indexOf(o) != -1) {
+                    	relations.push({subject: s, obj:o, pred: p});
+                    }
+                }
+                if (subjects.length > 0) {
+   				   lore.ore.controller.createCompoundObject(true, function(){           	 
+   					   for (var i = 0; i < subjects.length; i++) {
+   						   lore.ore.controller.addHuNIResource(subjects[i], relations);
+   					   }
+   				   });
+                }
+            }
+	    }, params);
+    },
+    addFacetSearchRDFWithPrompt: function(){
+        Ext.Msg.show({
+            title : 'Load from Facet Search RDF URL',
+            buttons : Ext.MessageBox.OKCANCEL,
+            msg : 'Please enter the RDF URL of the Facet Search:',
+            scope: this,
+            fn : function(btn, theurl) {
+                if (btn == 'ok') {
+                    lore.ore.controller.addFacetSearchResource(theurl);
+                }
+            },
+            prompt : true
+        });
+    },
+    addFacetSearchResource: function(uri){ 
         window.parent.Ext.getBody().mask();
         
         Ext.Ajax.request({
@@ -992,7 +1062,7 @@ Ext.apply(lore.ore.Controller.prototype, {
             }
         }); 
     },
-    addHuniResource: function(uri){
+    addHuNIResource: function(uri, relations){
     	var params = {};
 	    params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
 	    params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
@@ -1001,36 +1071,86 @@ Ext.apply(lore.ore.Controller.prototype, {
             var result = xmldoc.getElementsByTagNameNS(lore.constants.NAMESPACES["sparql"], "result");
             
             if (result.length > 0){
-            	var graphuri, uri;
+            	var graphuri, value, first, last, type, prefLabel;
                 for (var i = 0; i < result.length; i++) {
+                	var s, p, o, g, resource;
                 	var bindings = result[i].getElementsByTagName('binding');
                     for (var j = 0; j < bindings.length; j++){  
-                    	var g, s, resource;
                     	attr = bindings[j].getAttribute('name');
-                    	if (attr == 'g') {
-                    		g = lore.util.safeGetFirstChildValue(
-                    				bindings[j].getElementsByTagName('uri'));
-                    	} else if (attr == 's') {
+                    	if (attr == 's') {
                     		s = lore.util.safeGetFirstChildValue(
+                    				bindings[j].getElementsByTagName('uri'));
+                    	} else if (attr == 'p') {
+                    		p = lore.util.safeGetFirstChildValue(
+                    				bindings[j].getElementsByTagName('uri'));
+                    	} else if (attr == 'o') {
+                    		o = lore.util.safeGetFirstChildValue(
+                    				bindings[j].getElementsByTagName('uri'));
+                    		if (!o) {
+                    			o = lore.util.safeGetFirstChildValue(
+                        				bindings[j].getElementsByTagName('literal'));
+                    		}
+                    	} else if (attr == 'g') {
+                    		g = lore.util.safeGetFirstChildValue(
                     				bindings[j].getElementsByTagName('uri'));
                     	} else if (attr == 'resource') {
                     		resource = lore.util.safeGetFirstChildValue(
                     				bindings[j].getElementsByTagName('uri'));
                     	}
-                    	if (s == resource) {
-                    		graphuri = g;
-                    		uri = s;
-                    	}
                     }
+                	if (s == resource && uri == resource) {
+                		graphuri = g;
+                		
+                    	if (p == "http://www.w3.org/1999/02/22-rdf-syntax-ns#value") {
+                    		value = o;
+                    	} else if (p == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") {
+                    		type = o;
+                    	} else if (p == "http://www.w3.org/2004/02/skos/core#prefLabel") {
+                    		prefLabel = o;
+                    	} else if (p == "http://xmlns.com/foaf/0.1/firstName") {
+                    		first = o;
+                    	} else if (p == "http://xmlns.com/foaf/0.1/lastName") {
+                    		last = o;
+                    	}
+                	}
                 }
-                lore.ore.reposAdapter.loadCompoundObject(graphuri, 
-                		function(rdf) {lore.ore.controller.loadHuniCompoundObject(graphuri, uri, rdf)}, 
-                		lore.ore.controller.afterLoadCompoundObjectFail);
+
+                var title;
+                if (prefLabel) {
+                	title = prefLabel;
+                } else if (first && last) {
+                	title = first + " " + last;
+                } else if (value){
+                	title = value
+                } else if (type){
+                	title = type
+                } else {
+                	title = graphuri;
+                }
+                
+                title = title.split("/");
+                title = title[title.length - 1];
+                
+                lore.ore.reposAdapter.loadCompoundObject(graphuri, function(rdf) {
+        			lore.ore.controller.loadHuNICompoundObject(title, uri, rdf);
+        			
+        			if (relations) {
+        				for (var i = 0; i < relations.length; i++) {
+        					if (relations[i].subject == uri || relations[i].obj == uri) {
+        						if ((relations[i].subject == uri && lore.ore.ui.graphicalEditor.lookupFigure(relations[i].obj)) || 
+        								(relations[i].obj == uri && lore.ore.ui.graphicalEditor.lookupFigure(relations[i].subject))) {
+        							lore.ore.ui.graphicalEditor.addConnection(relations[i]).updateModel();
+        						}
+        					}
+        				}
+        			}
+        		}, 
+        		lore.ore.controller.afterLoadCompoundObjectFail);
             }
 	    }, params);
     },
-    loadHuniCompoundObject : function(graphuri, uri, rdf) {
-    	var props = {"dc:title_0" : graphuri};
+    loadHuNICompoundObject : function(title, uri, rdf) {
+    	var props = {"dc:title_0" : title};
     	                
         var rdfDoc;
         if (typeof rdf != 'object') {

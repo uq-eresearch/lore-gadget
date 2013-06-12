@@ -59,7 +59,8 @@ lore.constants = {
         "danno"   	: "http://metadata.net/2009/09/danno#",
         "lorestore" : "http://auselit.metadata.net/lorestore/",
         "cnt"     	: "http://www.w3.org/2011/content#",
-        "ecrm"		: "http://erlangen-crm.org/current/"
+        "ecrm"		: "http://erlangen-crm.org/current/",
+        "skos"		: "http://www.w3.org/2004/02/skos/core#"
     },
     
     // RDF/OWL

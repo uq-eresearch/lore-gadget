@@ -76,7 +76,7 @@ Ext.onReady(function() {
 				 lore.ore.controller.createCompoundObject(true, function(){           	 
 				 	 Ext.getCmp('facetFieldset').items.each(function(item, index, length){
 						 if (item.getValue()) {
-							 lore.ore.controller.addHuniResource(item.getName());
+							 lore.ore.controller.addHuNIResource(item.getName());
 						 }
 				     });
 				 });
@@ -372,9 +372,15 @@ Ext.onReady(function() {
 						                }), 
 						                new Ext.Action({
 											handler: function(){
-												lore.ore.controller.addFacetResourceWithPrompt();
+												lore.ore.controller.addFacetSearchRDFWithPrompt();
 										    },
 						                    text: 'Import from Facet Search'
+						                }), 
+						                new Ext.Action({
+											handler: function(){
+												lore.ore.controller.addFromCorbiculaURLWithPrompt();
+										    },
+						                    text: 'Import from Corbicula URL'
 						                })
 						            ]
 								})
