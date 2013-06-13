@@ -1066,7 +1066,7 @@ Ext.apply(lore.ore.Controller.prototype, {
     	var params = {};
 	    params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
 	    params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
-	    gadgets.io.makeRequest(uri, function(response){
+	    gadgets.io.makeRequest(encodeURI(uri), function(response){
 	    	var xmldoc = response.data;
             var result = xmldoc.getElementsByTagNameNS(lore.constants.NAMESPACES["sparql"], "result");
             
