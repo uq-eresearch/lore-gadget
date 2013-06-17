@@ -20,6 +20,15 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
         /** Default spacing between new nodes in graphical editor 
          * @const */
         this.NODE_SPACING = 40;
+        /** Compact width of new nodes in graphical editor 
+         * @const */
+        this.COMPACT_NODE_WIDTH   = 180;
+        /** Compact height of new nodes in graphical editor 
+         * @const */
+        this.COMPACT_NODE_HEIGHT  = 30;
+        /** Compact spacing between new nodes in graphical editor 
+         * @const */
+        this.COMPACT_NODE_SPACING = 20;     
         /** Used for layout in graphical editor - Maximum width before nodes are positioned on new row 
          * @const */
         this.ROW_WIDTH    = 400;
@@ -235,7 +244,7 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
                 // reset dummy graph layout position to prevent new nodes being added too far from content
                 if (comm instanceof lore.draw2d.CommandMove  && comm.oldX == this.dummylayoutprevx 
                     && comm.oldY == this.dummylayoutprevy) {   
-                        this.nextXY(comm.newX, comm.newY);
+                        this.nextXY(comm.newX, comm.newY, false);
                 }
                 // remove the url from lookup if node is deleted, add it back if it is undone
                 // update address bar add icon to reflect whether current URL is in Resource Map
@@ -383,7 +392,7 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
     * @param {} opts The options
     * @return {}
     */
-   addFigure : function(opts) {
+   addFigure : function(opts, compact) {
 	   if (!this.model) {
 		   lore.ore.controller.createCompoundObject();
 	   }
@@ -505,7 +514,7 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
             lore.ore.ui.vp.warning("Resource is already in the Resource Map: " + theURL);
         }
         if (fig){
-            this.nextXY(opts.x,opts.y);
+            this.nextXY(opts.x, opts.y, compact);
         }
         return fig;
       } catch (ex){
@@ -528,15 +537,28 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
      * @param {} prevx
      * @param {} prevy
      */
-    nextXY : function(prevx, prevy) {
+    nextXY : function(prevx, prevy, compact) {
         this.dummylayoutprevx = prevx;
         this.dummylayoutprevy = prevy;
-        if (prevx + this.NODE_WIDTH > this.ROW_WIDTH) {
-            this.dummylayoutx = 40;
-            this.dummylayouty = prevy + this.NODE_HEIGHT + this.NODE_SPACING;
+        if (compact) {
+        	var rw = lore.ore.ui.graphicalEditor.coGraph.canvElem.width - 220;
+        	
+            if (prevx + this.COMPACT_NODE_WIDTH > rw) {
+                this.dummylayoutx = 40;
+                this.dummylayouty = prevy + this.COMPACT_NODE_HEIGHT + this.COMPACT_NODE_SPACING;
+            } else {
+                this.dummylayoutx = prevx + this.COMPACT_NODE_WIDTH + this.COMPACT_NODE_SPACING;
+                this.dummylayouty = prevy;
+            }
         } else {
-            this.dummylayoutx = prevx + this.NODE_WIDTH + this.NODE_SPACING;
-            this.dummylayouty = prevy;
+            if (prevx + this.NODE_WIDTH > this.ROW_WIDTH) {
+                this.dummylayoutx = 40;
+                this.dummylayouty = prevy + this.NODE_HEIGHT + this.NODE_SPACING;
+            } else {
+                this.dummylayoutx = prevx + this.NODE_WIDTH + this.NODE_SPACING;
+                this.dummylayouty = prevy;
+            }
+        	
         }
     }
 });

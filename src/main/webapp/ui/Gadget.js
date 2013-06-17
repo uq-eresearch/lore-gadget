@@ -81,7 +81,7 @@ Ext.onReady(function() {
 				     });
 				 });
             	 lore.ore.facetImportWin.hide();
-     	         window.parent.Ext.getBody().unmask();
+     	         Ext.getBody().unmask();
              }
            },
            {
@@ -90,7 +90,7 @@ Ext.onReady(function() {
                tooltip: 'Cancel',
                handler: function(b, e){   
               	 lore.ore.facetImportWin.hide();
-     	         window.parent.Ext.getBody().unmask();
+     	         Ext.getBody().unmask();
                }
              }
         ]
@@ -111,6 +111,7 @@ Ext.onReady(function() {
 					    applyTo: 'tabs3',
 					    border : false,
 					    bwrapStyle : "position: absolute; top: 26px; bottom: 0px; width: 100%; height: auto;",
+					    bodyStyle : "height: 100%;",
 				        deferredRender: false,
 					    itemTpl: new Ext.XTemplate(
 		                    '<li class="{cls}" id="{id}"><a class="x-tab-strip-close"></a>',
@@ -177,7 +178,8 @@ Ext.onReady(function() {
 	                            tabTip: "View or edit the list of resources in the Resource Map",
 	                            xtype : "resourcepanel",
 	                            id : "remlistview",
-	                            iconCls: "list-icon"
+	                            iconCls: "list-icon",
+		                        style: "height: 100%; overflow: auto;"
 	                        },  {
 	                            title : "Details",
 	                            id: "remdetailsview",
@@ -194,7 +196,8 @@ Ext.onReady(function() {
 	                            items : [{
                                     id : 'newss',
                                     xtype : "slideshowpanel",
-                                    autoScroll : true
+                                    height : "512"
+                                    //autoScroll : true
                                 }]
 	                        },	{
 	                            title : "Explore",
@@ -239,7 +242,7 @@ Ext.onReady(function() {
 	            ]
 	        },{
 		        region: 'west',
-		        width: 260,
+		        width: 280,
                 split:true,
 		        items: [
 		            new Ext.Toolbar({

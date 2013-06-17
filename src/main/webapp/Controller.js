@@ -954,54 +954,58 @@ Ext.apply(lore.ore.Controller.prototype, {
 	    params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
 	    gadgets.io.makeRequest(uri, function(response){
 	    	var xmldoc = response.data;
-            var result = xmldoc.getElementsByTagNameNS(lore.constants.NAMESPACES["sparql"], "result");
-            
-            if (result.length > 0){
-            	var graphuri, uri;
-            	var subjects = [];
-                for (var i = 0; i < result.length; i++) {
-                	var bindings = result[i].getElementsByTagName('binding');
-                    for (var j = 0; j < bindings.length; j++){  
-                    	var s;
-                    	attr = bindings[j].getAttribute('name');
-                    	if (attr == 's') {
-                    		s = lore.util.safeGetFirstChildValue(
-                    				bindings[j].getElementsByTagName('uri'));
-                    		if (subjects.indexOf(s) == -1) {
-                    			subjects.push(s);
-                    		}
-                    	}
-                    }
-                }
-                var relations = [];
-                for (var i = 0; i < result.length; i++) {
-                	var bindings = result[i].getElementsByTagName('binding');
-                    for (var j = 0; j < bindings.length; j++){  
-                    	var s,p,o;
-                    	attr = bindings[j].getAttribute('name');
-                    	if (attr == 's') {
-                    		s = lore.util.safeGetFirstChildValue(
-                    				bindings[j].getElementsByTagName('uri'));
-                    	} else if (attr == 'p') {
-                    		p = lore.util.safeGetFirstChildValue(
-                    				bindings[j].getElementsByTagName('uri'));
-                    	} else if (attr == 'o') {
-                    		o = lore.util.safeGetFirstChildValue(
-                    				bindings[j].getElementsByTagName('uri'));
-                    	}
-                    }
-                    if (subjects.indexOf(s) != -1 && subjects.indexOf(o) != -1) {
-                    	relations.push({subject: s, obj:o, pred: p});
-                    }
-                }
-                if (subjects.length > 0) {
-   				   lore.ore.controller.createCompoundObject(true, function(){           	 
-   					   for (var i = 0; i < subjects.length; i++) {
-   						   lore.ore.controller.addHuNIResource(subjects[i], relations);
-   					   }
-   				   });
-                }
-            }
+	    	if (xmldoc) {
+	            var result = xmldoc.getElementsByTagNameNS(lore.constants.NAMESPACES["sparql"], "result");
+	            
+	            if (result.length > 0){
+	            	var graphuri, uri;
+	            	var subjects = [];
+	                for (var i = 0; i < result.length; i++) {
+	                	var bindings = result[i].getElementsByTagName('binding');
+	                    for (var j = 0; j < bindings.length; j++){  
+	                    	var s;
+	                    	attr = bindings[j].getAttribute('name');
+	                    	if (attr == 's') {
+	                    		s = lore.util.safeGetFirstChildValue(
+	                    				bindings[j].getElementsByTagName('uri'));
+	                    		if (subjects.indexOf(s) == -1) {
+	                    			subjects.push(s);
+	                    		}
+	                    	}
+	                    }
+	                }
+	                var relations = [];
+	                for (var i = 0; i < result.length; i++) {
+	                	var bindings = result[i].getElementsByTagName('binding');
+	                    for (var j = 0; j < bindings.length; j++){  
+	                    	var s,p,o;
+	                    	attr = bindings[j].getAttribute('name');
+	                    	if (attr == 's') {
+	                    		s = lore.util.safeGetFirstChildValue(
+	                    				bindings[j].getElementsByTagName('uri'));
+	                    	} else if (attr == 'p') {
+	                    		p = lore.util.safeGetFirstChildValue(
+	                    				bindings[j].getElementsByTagName('uri'));
+	                    	} else if (attr == 'o') {
+	                    		o = lore.util.safeGetFirstChildValue(
+	                    				bindings[j].getElementsByTagName('uri'));
+	                    	}
+	                    }
+	                    if (subjects.indexOf(s) != -1 && subjects.indexOf(o) != -1) {
+	                    	relations.push({subject: s, obj:o, pred: p});
+	                    }
+	                }
+	                if (subjects.length > 0) {
+	   				   lore.ore.controller.createCompoundObject(true, function(){           	 
+	   					   for (var i = 0; i < subjects.length; i++) {
+	   						   lore.ore.controller.addHuNIResource(subjects[i], relations);
+	   					   }
+	   				   });
+	                }
+	            }
+	    	} else {
+	            lore.ore.ui.vp.warning("No Resources found");
+	    	}
 	    }, params);
     },
     addFacetSearchRDFWithPrompt: function(){
@@ -1019,7 +1023,7 @@ Ext.apply(lore.ore.Controller.prototype, {
         });
     },
     addFacetSearchResource: function(uri){ 
-        window.parent.Ext.getBody().mask();
+        Ext.getBody().mask();
         
         Ext.Ajax.request({
     		url: uri,
@@ -1052,13 +1056,18 @@ Ext.apply(lore.ore.Controller.prototype, {
     	                    checked: true
     	                });
     	        	}  
+                    lore.ore.facetImportWin.show();
     	        } else {
+    	        	Ext.getBody().unmask();
     	            lore.ore.ui.vp.warning("No Resources found");
     	            lore.debug.ore("Error: No Resources found", loadedRDF);
     	            return;
     	        }
-
-                lore.ore.facetImportWin.show();
+            },
+            failure: function(response, opts) {
+	            lore.ore.ui.vp.warning("No Resources found");
+            	lore.debug.ore("Error: Unable to load URL " + opts.url, response);
+	        	Ext.getBody().unmask();
             }
         }); 
     },
@@ -1071,7 +1080,7 @@ Ext.apply(lore.ore.Controller.prototype, {
             var result = xmldoc.getElementsByTagNameNS(lore.constants.NAMESPACES["sparql"], "result");
             
             if (result.length > 0){
-            	var graphuri, value, first, last, type, prefLabel;
+            	var graphuri, value, name, first, last, type, prefLabel;
                 for (var i = 0; i < result.length; i++) {
                 	var s, p, o, g, resource;
                 	var bindings = result[i].getElementsByTagName('binding');
@@ -1107,6 +1116,8 @@ Ext.apply(lore.ore.Controller.prototype, {
                     		type = o;
                     	} else if (p == "http://www.w3.org/2004/02/skos/core#prefLabel") {
                     		prefLabel = o;
+                    	} else if (p == "http://xmlns.com/foaf/0.1/name") {
+                    		name = o;
                     	} else if (p == "http://xmlns.com/foaf/0.1/firstName") {
                     		first = o;
                     	} else if (p == "http://xmlns.com/foaf/0.1/lastName") {
@@ -1120,6 +1131,8 @@ Ext.apply(lore.ore.Controller.prototype, {
                 	title = prefLabel;
                 } else if (first && last) {
                 	title = first + " " + last;
+                } else if (name){
+                	title = name
                 } else if (value){
                 	title = value
                 } else if (type){
@@ -1198,18 +1211,10 @@ Ext.apply(lore.ore.Controller.prototype, {
             lore.debug.ore("Error: no remurl found in RDF", loadedRDF);
             return;
         }
-
-        lore.ore.ui.graphicalEditor.NODE_WIDTH   = 180;
-        lore.ore.ui.graphicalEditor.NODE_HEIGHT  = 30;
-        lore.ore.ui.graphicalEditor.NODE_SPACING = 20;
         
         var figure = lore.ore.ui.graphicalEditor.addFigure({url:uri, props: props, 
-        	oh: 170, h: 30, w: 180});
+        	oh: 170, h: 30, w: 180}, true);
         lore.ore.ui.graphicalEditor.showResource(uri);
-        
-        lore.ore.ui.graphicalEditor.NODE_WIDTH   = 220;
-        lore.ore.ui.graphicalEditor.NODE_HEIGHT  = 170;
-        lore.ore.ui.graphicalEditor.NODE_SPACING = 40;
     },
     /**
      * Add a resource to the Resource Map

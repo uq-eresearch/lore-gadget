@@ -86,7 +86,7 @@
 	padding:0;margin:0
 }
 .x-combo-list, .x-combo-list-inner {
-	min-width:200px;
+	min-width:100px;
 }
 .x-form-field-wrap .x-form-ellipsis-trigger{
     background-image:url(./skin/icons/ore/ellipsis-trigger-grey.gif);

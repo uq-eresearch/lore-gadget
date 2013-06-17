@@ -250,7 +250,7 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
                 id : this.id + "-context-menu",
                 showSeparator: false
             });
-            this.contextmenu.add({
+            /*this.contextmenu.add({
                 text: "Copy URI to clipboard",
                 icon: lore.constants.baseUrl + "skin/icons/ore/page_white_paste.png",
                 scope: this,
@@ -262,7 +262,7 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
                         lore.ore.ui.vp.info("Cannot copy URI for placeholder");
                     }
                 }
-             });
+             });*/
             
             this.contextmenu.add({
                 text: "Show in browser",
