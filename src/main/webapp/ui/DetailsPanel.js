@@ -171,7 +171,7 @@ lore.ore.ui.detailsCOTemplate = new Ext.XTemplate(
 lore.ore.ui.detailsResTemplate = new Ext.XTemplate(  
     '<tpl for=".">',
     '<div id="s{uri}">',
-        '<div style="line-height:0.5em;border-top: 1px solid rgb(220, 224, 225); margin-top: 0.5em;"> </div>',
+        '<div style="line-height:0.5em;border-top: 1px solid rgb(220, 224, 225); margin-top: 0.5em;"></div>',
         '<table style="white-space:normal;width:100%;font-family:arial;padding-bottom:0.5em"><tr {[this.displayHighlightColor(values.properties)]}><td style="padding:4px;padding-top:6px;">',
         '<span style="font-size:130%;font-weight:bold">{title}<tpl if="!title">Untitled Resource</tpl></span></td>',
         '<td width="80"><a href="javascript:void(0);" title="Show in graphical editor" onclick="lore.ore.ui.graphicalEditor.showResource(\'{uri}\');"><img src="' + lore.constants.baseUrl + 'skin/icons/ore/layout_pencil.png" alt="View in graphical editor"></a>',
@@ -191,8 +191,8 @@ lore.ore.ui.detailsResTemplate = new Ext.XTemplate(
         relTpl: new Ext.XTemplate('<p style="padding-bottom:0.3em;"><a href="javascript:void(0);" onclick="Ext.getCmp(\'remdetailsview\').scrollToResource(\'{value}\')"><span title="{id}" style="font-weight:bold">{[fm.capitalize(values.name)]}:&nbsp;&nbsp;</span></a><a href="javascript:void(0);" title="Show {url} in browser" onclick="lore.util.launchTab(\'{url}\')">{title}</a></p>'),
         pRelTpl: new Ext.XTemplate('<p style="padding-bottom:0.3em;"><a href="javascript:void(0);" onclick="Ext.getCmp(\'remdetailsview\').scrollToResource(\'{value}\')"><span title="{id}" style="font-weight:bold">{[fm.capitalize(values.name)]}:&nbsp;&nbsp;</span></a>{title}</p>'),
         /** Convenience function to get style for highlighting resources according to highlightColor property 
-         * @param {lore.ore.model.ResourceProperties} props 
-         * */
+         *  @param {lore.ore.model.ResourceProperties} props 
+         **/
         displayHighlightColor: function(props){
           var hc = props.getProperty(lore.constants.NAMESPACES["layout"]+"highlightColor");
           if (hc){ 
