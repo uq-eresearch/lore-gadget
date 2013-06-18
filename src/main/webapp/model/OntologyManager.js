@@ -118,7 +118,7 @@ Ext.apply(lore.ore.model.OntologyManager.prototype, {
                 callback(this.relOntologyCache[ourl]);
                 return;
             }
-            
+            // Load the ontology
             var params = {};
             params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
             params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;

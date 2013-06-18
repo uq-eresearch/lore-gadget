@@ -948,6 +948,11 @@ Ext.apply(lore.ore.Controller.prototype, {
             prompt : true
         });
     },
+    /**
+     * Add a resource to the Resource Map for each subject associated
+     * with an entry in Corbicula.
+     * @param {} uri
+     */
     addFromCorbiculaURL: function(uri){ 
     	var params = {};
 	    params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
@@ -1022,6 +1027,11 @@ Ext.apply(lore.ore.Controller.prototype, {
             prompt : true
         });
     },
+    /**
+     * Add a resource to the Resource Map for each entry in a 
+     * Facet Search results xml.
+     * @param {} uri
+     */
     addFacetSearchResource: function(uri){ 
         Ext.getBody().mask();
         
@@ -1071,6 +1081,13 @@ Ext.apply(lore.ore.Controller.prototype, {
             }
         }); 
     },
+    /**
+     * Load a HUNI resource from a uri and add a resource to the 
+     * Resource Map. If the new resource is in a relations, add it
+     * to the Resource Map.
+     * @param {} uri
+     * @param {} relations
+     */
     addHuNIResource: function(uri, relations){
     	var params = {};
 	    params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;

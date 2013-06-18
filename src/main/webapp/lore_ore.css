@@ -459,12 +459,13 @@ div.coListing:hover {
     right:3px;
     cursor:pointer;
     z-index:2;
-	
 }
 .x-tab-strip .x-tab-strip-active a.x-tab-strip-menu {
     opacity:.8;
 }
 .x-tab-strip .x-tab-strip-active a.x-tab-strip-menu:hover{
     opacity:1;
-
+}
+.ext-el-mask {
+    z-index: 9999;
 }

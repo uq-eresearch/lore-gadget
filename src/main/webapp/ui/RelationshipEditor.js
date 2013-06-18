@@ -215,7 +215,6 @@ lore.ore.ui.RelationshipEditor = Ext.extend(Ext.grid.EditorGridPanel,{
             taEl.on("scroll",function(e,t,o){this.repaint();},taEl);
         }, this.relEditorWindow, {single:true});
         
-        
     },
     /** Handler for plus tool button on relationship grids 
      * 

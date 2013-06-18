@@ -167,7 +167,7 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
                 // Resource and relationships grid will be visible
                 lore.ore.ui.nodegrid.expand();
             }
-            else if (figure.edgetype) {            	
+            else if (figure.edgetype) {
                 var tp = figure.targetPort.parentNode;
                 var sp = figure.sourcePort.parentNode;
                 lore.ore.ui.relsgrid.store.loadData([
@@ -189,7 +189,7 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
                
             }
             lore.ore.ui.relsgrid.expand();
-        	lore.ore.ui.grid.collapse();
+            lore.ore.ui.grid.collapse();
         } else {
             //lore.ore.ui.nodegrid.store.removeAll();
             lore.ore.ui.nodegrid.bindModel(null);
@@ -536,6 +536,7 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
      * Updates variables used for layout
      * @param {} prevx
      * @param {} prevy
+     * @param {} compact
      */
     nextXY : function(prevx, prevy, compact) {
         this.dummylayoutprevx = prevx;

@@ -16,6 +16,14 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
         this.graphStoreEndPoint = graphStoreEndPoint;
         this.graphNamePrefix = graphNamePrefix;
     },
+    /**
+     * Retrieve a set of compound objects from the SPARQL repository,
+     * matching the given parameters.
+     * @param {} matchuri
+     * @param {} matchpred
+     * @param {} matchval
+     * @param {} isSearchQuery
+     */
     getCompoundObjects : function(matchuri, matchpred, matchval, isSearchQuery){ 
     	try {
 	    	if (matchuri == null && matchpred == null && matchval == null) {
@@ -110,6 +118,13 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
 	        lore.ore.ui.vp.warning("Unable to retrieve Resource Maps");
 	    }
     },
+    /**
+     * Load a compound object from the SPARQL repository
+     * @param {} remid
+     * @param {} callback
+     * @param {} failcallback
+     * @return {}
+     */
     loadCompoundObject : function(remid, callback, failcallback){
          Ext.Ajax.request({
         		url: this.reposURL + this.graphStoreEndPoint + "?graph=" + remid,
@@ -122,6 +137,12 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
                 failure: failcallback
             }); 
     },
+    /**
+     * Commit a compound object to the SPARQL repository
+     * @param {} theco
+     * @param {} callback
+     * @return {}
+     */
     saveCompoundObject : function (theco,callback){
         var remid = theco.uri;
 
@@ -148,12 +169,24 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
             callback(remid);
         }, params);
     },
+    /**
+     * Remove a graph from the SPARQL repository
+     * @param {} oldURI
+     * @param {} newURI
+     * @return {}
+     */
     loadNew : function(oldURI, newURI) {
         lore.ore.cache.remove(oldURI);
         
         controller.loadCompoundObjectFromURL(newURI);
         lore.ore.reposAdapter.loadCompoundObject(rdfURL, lore.ore.controller.loadCompoundObject, lore.ore.controller.afterLoadCompoundObjectFail);
     },
+    /**
+     * Remove a graph from the SPARQL repository
+     * @param {} remid
+     * @param {} callback
+     * @return {}
+     */
     deleteCompoundObject : function(remid, callback){
         lore.debug.ore("deleting from lorestore repository " + remid);
         try {

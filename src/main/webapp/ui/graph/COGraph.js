@@ -580,10 +580,10 @@ Ext.extend(lore.ore.ui.graph.COGraph, lore.draw2d.Workflow, {
         vp.setSize(vpsize);
         vp.syncSize();
 
-        return imgData;     
+        return imgData;
      } catch (e) {
         lore.debug.ore("Error in getAsImage",e);
-     }   
+     }
     },
    
     addResourceFigure: function(fig, x, y) {

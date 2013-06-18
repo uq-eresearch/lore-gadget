@@ -8,6 +8,7 @@ Ext.onReady(function() {
         currentURL: "http://austlit.edu.au"
     });
     
+    // Initialize default user preferences
     lore.ore.controller.handlePreferencesChanged({
         creator: "Anonymous",
         relonturl: "./ontologies/austlitoaiore.owl",
@@ -28,14 +29,14 @@ Ext.onReady(function() {
     	
 	lore.ore.reposAdapter.getCompoundObjects(null, null, null, true);
 		
-    var action1 = new Ext.Action({
+    var basicSearchButton = new Ext.Action({
         text: '<b>Search</b>',
         handler: function(){
         	lore.ore.reposAdapter.getCompoundObjects(null, null, Ext.getCmp("kwsearchval").getValue(), true);
         }
     });	
     
-    var action2 = new Ext.Action({
+    var advancedSearchButton = new Ext.Action({
         text: '<b>Search</b>',
         handler: function(){
         	var searchuri = Ext.getCmp("advsearchform").getForm().findField("searchuri").getValue();
@@ -467,7 +468,7 @@ Ext.onReady(function() {
 									                    id : "kwsearchval",
 									                    flex : 1
 									                },
-									                new Ext.Button(action1)
+									                new Ext.Button(basicSearchButton)
 									             ]
 									        }), 
 									        new Ext.FormPanel({
@@ -520,7 +521,7 @@ Ext.onReady(function() {
 									            ],
 									
 									            buttons: [
-									                new Ext.Button(action2)
+									                new Ext.Button(advancedSearchButton)
 											    ]
 									        })
 										]

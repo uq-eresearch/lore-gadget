@@ -39,7 +39,7 @@ lore.ore.model.CompoundObjectListManager = function(){
                     }]
        }),
        "browse" : new Ext.ux.data.PagingJsonStore({
-    	   idProperty : "uri",
+            idProperty : "uri",
             sortInfo: {
               field: "modified",
               direction: "desc"
