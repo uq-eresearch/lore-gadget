@@ -526,6 +526,39 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
 	        	  });
 	            }
              });
+            this.contextmenu.add({
+	            text : "Center visualisation",
+	            icon: "http://localhost:8080/lore/skin/icons/ore/arrow_move.png",
+	            scope: this,
+	            handler : function(evt) {	             	            	
+	              var left, right, top, bottom;
+	            	
+	              for (var i = 0; i < $("#infovis-label")[0].children.length; i++) {
+	            	  var child = $("#infovis-label")[0].children[i];
+	            	  
+	            	  var cLeft = child.offsetLeft;
+	            	  var cRight = child.offsetLeft + child.offsetWidth;
+	            	  var cTop = child.offsetTop;
+	            	  var cBottom = child.offsetTop + child.offsetHeight;
+	            	  
+	            	  if (!left || cLeft < left) {
+	            		  left = cLeft;
+	            	  }
+	            	  if (!right || cRight > right) {
+	            		  right = cRight;
+	            	  }
+	            	  if (!top || cTop < top) {
+	            		  top = cTop;
+	            	  }
+	            	  if (!bottom || cBottom > bottom) {
+	            		  bottom = cBottom;
+	            	  }
+	              }	       	              
+	              this.fd.canvas.translate(((($("#exploreinfovis")[0].clientWidth) - (left + right)) / 2) 
+	            		  / this.fd.canvas.scaleOffsetX, ((($("#exploreinfovis")[0].clientHeight) 
+	            				  - (top + 20 + bottom)) / 2) / this.fd.canvas.scaleOffsetY);
+	            }
+             });
              this.contextmenu.add({
                 text: "Reset visualisation",
                 icon: lore.constants.baseUrl + "skin/icons/arrow_refresh.png",
@@ -721,6 +754,9 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
 	                  if (canv.translateOffsetX == 0){
 	                    var newx = 0 - ((1100 - ep.getWidth()) / 2);
 	                    var newy = 0 - ((1100 - ep.getHeight()) / 2);
+	                    console.log("Yoman");
+	                    console.log(newx);
+	                    console.log(newy);
 	                    canv.translate(newx,newy);
 	                  }
 	                }
