@@ -469,3 +469,12 @@ div.coListing:hover {
 .ext-el-mask {
     z-index: 9999;
 }
+.ext-mb-textarea {
+	display: none !important;
+}
+.x-tbar-page-next {
+	width: 7px !important;
+}
+.x-tbar-page-prev {
+	width: 7px !important;
+}

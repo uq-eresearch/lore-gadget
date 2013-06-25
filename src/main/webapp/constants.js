@@ -9,6 +9,7 @@ if (typeof lore !== "object"){
     var lore = {};   
 }
 lore.constants = {
+	 //baseUrl: "http://localhost:8080/lore/", 
 	 baseUrl: "http://115.146.93.139/virtual_lab/toolLibrary/annotation/lore-test-2/",	
      nsprefix : function(ns, defaultNS) {
         var nssize = 0;

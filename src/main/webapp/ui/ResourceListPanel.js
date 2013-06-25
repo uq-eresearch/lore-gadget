@@ -242,7 +242,13 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
     showContextMenu: function(grid, rowIndex, e){
         try{
         var rec = this.store.getAt(rowIndex);
+        this.tmptitle = rec.get("title");
         this.tmpurl = rec.get("uri");
+        
+        if (this.tmptitle.length > 45) {
+        	this.tmptitle = this.tmptitle.substring(0, 42) + '...';
+        }
+        
         this.tmpPlaceholder = rec.get("isPlaceholder");
         this.tmpColor = rec.get("properties").getProperty(lore.constants.NAMESPACES["layout"] + "highlightColor",0).value;
         if (!this.contextmenu) {
@@ -250,19 +256,35 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
                 id : this.id + "-context-menu",
                 showSeparator: false
             });
-            /*this.contextmenu.add({
+            this.contextmenu.add({
                 text: "Copy URI to clipboard",
                 icon: lore.constants.baseUrl + "skin/icons/ore/page_white_paste.png",
                 scope: this,
                 handler: function(evt){
-                    if (!this.tmpPlaceholder){
-                       lore.util.copyToClip(this.tmpurl);
-                       lore.ore.ui.vp.info("URI copied to clipboard: " + this.tmpurl);
-                    } else {
-                        lore.ore.ui.vp.info("Cannot copy URI for placeholder");
-                    }
+                	Ext.getBody().mask();
+                	var copyWin = new Ext.Window({
+                		title : this.tmptitle,
+                        closable : true,
+                        height: 53,
+                        width : 300,
+                        listeners: {
+                            beforeclose: function(){
+                            	Ext.getBody().unmask();
+                            }
+                        },
+                        items: [{
+                        	id   : 'copyTextField',
+                            xtype: 'textfield',
+                            value: this.tmpurl,
+                            width: 300,
+                        }]
+                    });
+                	copyWin.show();
+            		setTimeout(function(){
+                		$("#copyTextField")[0].select();
+            		}, 10);
                 }
-             });*/
+             });
             
             this.contextmenu.add({
                 text: "Show in browser",

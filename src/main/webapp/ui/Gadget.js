@@ -243,7 +243,7 @@ Ext.onReady(function() {
 	            ]
 	        },{
 		        region: 'west',
-		        width: 280,
+		        width: 260,
                 split:true,
 		        items: [
 		            new Ext.Toolbar({
