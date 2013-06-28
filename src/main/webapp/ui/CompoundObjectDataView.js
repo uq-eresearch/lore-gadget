@@ -8,17 +8,20 @@ lore.ore.ui.CompoundObjectDataView = Ext.extend(Ext.DataView, {
             plugins: new Ext.DataView.DragSelector({dragSafe:true}),
             tpl :  new Ext.XTemplate(               
                 '<tpl for=".">',
-                '<div class="coListing" onclick="lore.ore.controller.loadCompoundObjectFromURL(\'{uri}\')">',
+                '<tpl if="type"><div class="coListing"></tpl>',
+                '<tpl if="!type"><div class="coListing" onclick="lore.ore.controller.loadCompoundObjectFromURL(\'{uri}\')"></tpl>',
                     '<table><tr valign="top"><td>{[this.genNumber(values.uri)]}</td><td>',
                     '<div style="float:left;padding:2px;">',
-                    '<tpl if="lore.ore.reposAdapter && uri.match(lore.ore.reposAdapter.idPrefix)"><img src="' + lore.constants.baseUrl + 'skin/icons/oaioreicon-sm.png"></tpl>',
-                    '<tpl if="lore.ore.reposAdapter && !uri.match(lore.ore.reposAdapter.idPrefix)"><img src="' + lore.constants.baseUrl + 'skin/icons/oaioreicon-grey.png"></tpl>',
+                    '<tpl if="lore.ore.reposAdapter && uri.match(lore.ore.reposAdapter.idPrefix) && !isObject"><img src="' + lore.constants.baseUrl + 'skin/icons/oaioreicon-sm.png"></tpl>',
+                    '<tpl if="lore.ore.reposAdapter && !uri.match(lore.ore.reposAdapter.idPrefix) && !isObject"><img src="' + lore.constants.baseUrl + 'skin/icons/oaioreicon-grey.png"></tpl>',
+                    '<tpl if="isObject"><img src="' + lore.constants.baseUrl + 'skin/icons/object.png"></tpl>',
                     '<tpl if="isPrivate"><img style="float:left;position:absolute;left:11px" src="' + lore.constants.baseUrl + 'skin/icons/eye.png"></tpl>',
                     '</div>',
                     '<div>{title}</div>',
                     '<div class="detailText">',
                         '<tpl if="typeof modified != \'undefined\' && modified != null">Last modified {[fm.date(values.modified,\'j M Y, g:ia\')]}</tpl>',
                         '<tpl if="typeof accessed != \'undefined\' && accessed != null">Last accessed {[fm.date(values.accessed,\'j M Y, g:ia\')]}</tpl>',
+                        '<tpl if="type">{type}</tpl>',
                     '</div>',
                     '</td></tr></table>',
                 '</div>',
@@ -109,10 +112,14 @@ lore.ore.ui.CompoundObjectDataView = Ext.extend(Ext.DataView, {
                     iconCls: "add-icon",
                     scope: this,
                     handler : function(obj, evt) {
-                        lore.ore.ui.graphicalEditor.addFigure({url:this.sel.data.uri,
-                            props:{
-                            "rdf:type_0": lore.constants.RESOURCE_MAP,
-                            "dc:title_0": this.sel.data.title}});
+                    	if (this.sel.data.type) {
+                    		lore.ore.controller.addHuNIResource(this.sel.data.uri);
+                    	} else {
+                            lore.ore.ui.graphicalEditor.addFigure({url:this.sel.data.uri,
+                                props:{
+                                "rdf:type_0": lore.constants.RESOURCE_MAP,
+                                "dc:title_0": this.sel.data.title}});
+                    	}
                  }});
                  if (this.id == 'cohview'){
                     cm.add({
@@ -135,6 +142,11 @@ lore.ore.ui.CompoundObjectDataView = Ext.extend(Ext.DataView, {
                         menu.localDelete.show();
                         menu.remoteMsg.hide();
                         menu.remoteLoad.hide();
+                    } else if(this.sel.data.type){
+                        menu.remoteLoad.hide();
+                        menu.remoteMsg.hide();
+                        menu.localDelete.hide();
+                        menu.localLoad.hide();
                     } else {
                         menu.remoteLoad.show();
                         menu.remoteMsg.show();

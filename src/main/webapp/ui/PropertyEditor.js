@@ -626,8 +626,8 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
     renderFunction: function(val, cell, rec){
         if (rec.get("type") == "boolean"){
             // display a checkbox for boolean values
-            var checkedImg = './lib/ext3.2/resources/images/default/menu/checked.gif';
-            var uncheckedImg = './lib/ext3.2/resources/images/default/menu/unchecked.gif';
+            var checkedImg = lore.constants.baseUrl + '/lib/ext3.2/resources/images/default/menu/checked.gif';
+            var uncheckedImg = lore.constants.baseUrl + '/lib/ext3.2/resources/images/default/menu/unchecked.gif';
             var cb = ''
                 + '<div style="height:13px;overflow:visible">'
                 + '<img style="vertical-align:-3px" src="'
@@ -731,7 +731,7 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
         if (panel.id == "remgrid"){
             panel.propMenu.add({
                 id: "remgrid-add-lorestore:isPrivate",
-                icon: "./skin/icons/eye.png",
+                icon: lore.constants.baseUrl + "skin/icons/eye.png",
                 text: "Private",
                 propname: "lorestore:isPrivate",
                 handler: addPropHandler

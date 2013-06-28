@@ -14,7 +14,7 @@ lore.ore.model.CompoundObjectList = Ext.extend(Ext.ux.data.PagingJsonStore, {
             lastOptions : {
                 params : {
                     start : 0,
-                    limit : 5
+                    limit : lore.constants.pageSize
                 }
             },
             "fields" : [{
@@ -33,6 +33,10 @@ lore.ore.model.CompoundObjectList = Ext.extend(Ext.ux.data.PagingJsonStore, {
                         "name" : "match"
                     }, {
                         "name" : "isPrivate"
+                    }, {
+                    	"name" : "isObject"
+                    }, {
+                    	"name" : "type"
                     }]
        });
        lore.ore.model.CompoundObjectList.superclass.constructor.call(this,this.config);

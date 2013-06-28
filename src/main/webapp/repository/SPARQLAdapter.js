@@ -25,8 +25,154 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
      * @param {} isSearchQuery
      */
     getCompoundObjects : function(matchuri, matchpred, matchval, isSearchQuery){ 
+        lore.ore.coListManager.clear((isSearchQuery? "search" : "browse"));
+        if (isSearchQuery) {
+        	//lore.ore.reposAdapter.getBasicObjects(matchval);
+        }
+        lore.ore.reposAdapter.getResourceMapObjects(matchuri, matchpred, matchval, isSearchQuery);
+    },
+    getBasicObjects : function(matchval){            
     	try {
-	    	if (matchuri == null && matchpred == null && matchval == null) {
+	    	if (matchval == null || matchval == "") {
+	    		return;
+	    	}
+	    	
+	    	var queryURL = "http://corbicula.huni.net.au/dataset/query?query=" 
+	    	queryURL += encodeURIComponent("SELECT distinct(?item as ?hit) ?name ?type ");
+	    	queryURL += encodeURIComponent("WHERE {");
+	    	queryURL += encodeURIComponent("{?item a ?type.");
+	    	queryURL += encodeURIComponent("?item (<http://xmlns.com/foaf/0.1/name>|<http://xmlns.com/foaf/0.1/firstName>|");
+	    	queryURL += encodeURIComponent("<http://xmlns.com/foaf/0.1/lastName>|<http://www.w3.org/2004/02/skos/core#prefLabel>) ?textValue. ");
+	    	queryURL += encodeURIComponent("FILTER(REGEX(?textValue, '" + matchval + "', 'i'))} ");
+	    	queryURL += encodeURIComponent("OPTIONAL {?item <http://xmlns.com/foaf/0.1/firstName> ?name}");
+	    	queryURL += encodeURIComponent("OPTIONAL {?item <http://xmlns.com/foaf/0.1/lastName> ?name}");
+	    	queryURL += encodeURIComponent("OPTIONAL {?item <http://xmlns.com/foaf/0.1/name> ?name}");
+	    	queryURL += encodeURIComponent("OPTIONAL {?item <http://www.w3.org/2004/02/skos/core#prefLabel> ?name}}");
+		   	queryURL += "&output=xml";   
+		   	lore.debug.ore("SPARQLAdapter.getBasicObjects", {queryURL:queryURL});
+		   	
+	        Ext.Ajax.request({
+	    		url: queryURL,
+	            headers: {
+	                Accept: 'application/rdf+xml'
+	            },
+	            method: "GET",
+	            success: function (xhr) {
+	            	console.log("Yoman");
+	            	
+	            	var xmldoc = xhr.responseXML;
+	                var results = {};
+	                if (xmldoc) {
+	                    results = xmldoc.getElementsByTagNameNS(lore.constants.NAMESPACES["sparql"], "result");
+	                }
+	                
+	                if (results.length > 0){
+	                    var coList = [];
+	                    
+	                    for (var i = 0; i < results.length; i++) {                    	
+	                    	var bindings = results[i].getElementsByTagName("binding");
+	                    	
+	                    	var props = {};
+	                    	props.creator = "Corbicula";
+	                    	props.type = "";
+	                    	props.isObject = true;
+	                    	
+	                        for (var j = 0; j < bindings.length; j++){  
+		                         attr = bindings[j].getAttribute('name');
+		                         if (attr =='hit'){
+		                             var node = bindings[j].getElementsByTagName('uri'); 
+		                             props.uri = lore.util.safeGetFirstChildValue(node);
+		                         } else if (attr == 'type'){
+		                             var node = bindings[j].getElementsByTagName('uri'); 
+		                             var type = lore.util.safeGetFirstChildValue(node);
+		                             
+		                             while (type.indexOf("_") != -1) {
+		                            	 type = type.substring(type.indexOf("_") + 1);
+	                            	 }
+		                             while (type.indexOf("#") != -1) {
+		                            	 type = type.substring(type.indexOf("#") + 1);
+	                            	 }
+		                             props.type = type;
+		                         } else if (attr == 'name'){
+		                             var node = bindings[j].getElementsByTagName('literal');
+		                             var nodeVal = lore.util.safeGetFirstChildValue(node);
+		                             if (!nodeVal){
+		                                 node = bindings[j].getElementsByTagName('uri');
+		                                 nodeVal = lore.util.safeGetFirstChildValue(node);
+		                             }
+		                             props.title = nodeVal;
+		                         } 
+	                        }
+	                        
+	                        if (!props.title) {
+	                        	//props.title = 
+	                        }
+	                        coList.push(props);
+	                    }
+	                    lore.ore.coListManager.add(coList, "search");
+	                }
+                },
+                failure: function(response, opts) {
+    	            lore.ore.ui.vp.warning("Unable to contact corbicula.");
+                	lore.debug.ore("Error: Unable to load URL " + opts.url, response);
+                }
+	        }); 
+		   	
+		    /*var oThis = this;
+		    var params = {};
+		    params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
+		    params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
+		    //params[gadgets.io.RequestParameters.POST_DATA] = encodeURIComponent(postdata);
+		    var url = queryURL;
+		    gadgets.io.makeRequest(url, function(response){
+		    	console.log("Yoman");
+		    	
+		    	var xmldoc = response.data;
+                var results = {};
+                if (xmldoc) {
+                    results = xmldoc.getElementsByTagNameNS(lore.constants.NAMESPACES["sparql"], "result");
+                }
+                
+                if (results.length > 0){
+                    var coList = [];
+                    
+                    for (var i = 0; i < results.length; i++) {                    	
+                    	var bindings = results[i].getElementsByTagName("binding");
+                    	
+                    	var props = {};
+                    	props.creator = "Corbicula";
+                    	props.type = "Person";
+                    	props.isObject = true;
+                    	
+                        for (var j = 0; j < bindings.length; j++){  
+	                         attr = bindings[j].getAttribute('name');
+	                         if (attr =='hit'){
+	                             var node = bindings[j].getElementsByTagName('uri'); 
+	                             props.uri = lore.util.safeGetFirstChildValue(node);
+	                         } else if (attr == 'name'){
+	                             var node = bindings[j].getElementsByTagName('literal');
+	                             var nodeVal = lore.util.safeGetFirstChildValue(node);
+	                             if (!nodeVal){
+	                                 node = bindings[j].getElementsByTagName('uri');
+	                                 nodeVal = lore.util.safeGetFirstChildValue(node);
+	                             }
+	                             props.title = nodeVal;
+	                         } 
+                        }
+                        
+                        coList.push(props);
+                    }
+                    lore.ore.coListManager.add(coList, "search");
+                }
+		    }, params);*/
+	    } catch (e) {
+	        lore.debug.ore("Error: Unable to retrieve Resource Maps",e);
+	        lore.ore.ui.vp.warning("Unable to retrieve Resource Maps");
+	    }
+    },
+    getResourceMapObjects : function(matchuri, matchpred, matchval, isSearchQuery){ 
+    	try {
+	    	if (matchuri == null && matchpred == null && (matchval == null || matchval == "")) {
 	    		return;
 	    	}
 	    	
@@ -90,7 +236,6 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
                 if (xmldoc) {
                     result = xmldoc.getElementsByTagNameNS(lore.constants.NAMESPACES["sparql"], "result");
                 }
-                lore.ore.coListManager.clear(listname);
                 
                 if (result.length > 0){
                     var coList = [];
@@ -301,6 +446,7 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
         var bindings, node, attr, nodeVal;
         props.title = "Untitled";
         props.creator = "Anonymous";
+        props.isObject = false;
         try {  
            bindings = result.getElementsByTagName('binding');
            for (var j = 0; j < bindings.length; j++){  

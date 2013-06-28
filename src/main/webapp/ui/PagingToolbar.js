@@ -1,7 +1,7 @@
 Ext.onReady(function() {
 				
 lore.ore.ui.PagingToolbar = Ext.extend(Ext.PagingToolbar, {
-		pageSize: 5,
+		pageSize: lore.constants.pageSize,
 	       initComponent : function(){
 	        var pagingItems = [this.prev = new Ext.Toolbar.Button({
 	            tooltip: this.prevText,
@@ -90,7 +90,7 @@ lore.ore.ui.PagingToolbar = Ext.extend(Ext.PagingToolbar, {
 	     */
 	    onClear: function () {
 	        this.cursor = 0;
-	        this.store.lastOptions = {params:{start: 0, limit: 5}};
+	        this.store.lastOptions = {params:{start: 0, limit: lore.constants.pageSize}};
 	        this.onChange();
 	    },
 	    bindStore: function (store, initial) {

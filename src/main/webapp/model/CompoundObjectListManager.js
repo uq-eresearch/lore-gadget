@@ -17,7 +17,7 @@ lore.ore.model.CompoundObjectListManager = function(){
             lastOptions : {
                 params : {
                     start : 0,
-                    limit : 5
+                    limit : lore.constants.pageSize
                 }
             },
             fields : [{
@@ -36,6 +36,10 @@ lore.ore.model.CompoundObjectListManager = function(){
                         "name" : "match"
                     }, {
                         "name" : "isPrivate"
+                    }, {
+                    	"name" : "isObject"
+                    }, {
+                    	"name" : "type"
                     }]
        }),
        "browse" : new Ext.ux.data.PagingJsonStore({
@@ -49,7 +53,7 @@ lore.ore.model.CompoundObjectListManager = function(){
             lastOptions : {
                 params : {
                     start : 0,
-                    limit : 5
+                    limit : lore.constants.pageSize
                 }
             },
             fields : [{
@@ -68,6 +72,10 @@ lore.ore.model.CompoundObjectListManager = function(){
                         "name" : "match"
                     }, {
                         "name" : "isPrivate"
+                    }, {
+                    	"name" : "isObject"
+                    }, {
+                    	"name" : "type"
                     }]
        }),
         "history" : new Ext.ux.data.PagingJsonStore({
@@ -81,7 +89,7 @@ lore.ore.model.CompoundObjectListManager = function(){
             lastOptions : {
                 params : {
                     start : 0,
-                    limit : 5
+                    limit : lore.constants.pageSize
                 }
             },
             fields : [{
@@ -100,6 +108,10 @@ lore.ore.model.CompoundObjectListManager = function(){
                         "name" : "match"
                     }, {
                         "name" : "isPrivate"
+                    }, {
+                    	"name" : "isObject"
+                    }, {
+                    	"name" : "type"
                     }]
        })
     };
@@ -126,7 +138,7 @@ Ext.apply(lore.ore.model.CompoundObjectListManager.prototype, {
         }
         var store = this.lists[listname];
         // reset to first page of results
-        store.lastOptions={params:{start: 0,limit:5}};
+        store.lastOptions={params:{start: 0,limit:lore.constants.pageSize}};
         if (coSummaries){
             try{
                 store.loadData(coSummaries,true);  
