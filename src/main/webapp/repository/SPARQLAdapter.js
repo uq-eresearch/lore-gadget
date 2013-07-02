@@ -7,6 +7,8 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
 
 	graphStoreEndPoint : "",
 	graphNamePrefix : "",
+	mask : null,
+	maskCount : 0, 
 	
     constructor : function(baseURL, graphStoreEndPoint, graphNamePrefix) {
         lore.ore.repos.SPARQLAdapter.superclass.constructor.call(this, baseURL);
@@ -26,6 +28,11 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
      */
     getCompoundObjects : function(matchuri, matchpred, matchval, isSearchQuery){ 
         lore.ore.coListManager.clear((isSearchQuery? "search" : "browse"));
+        if (!lore.ore.repos.SPARQLAdapter.mask && Ext.get('westPanel')) {
+        	lore.ore.repos.SPARQLAdapter.mask = new Ext.LoadMask(Ext.get('westPanel'), {msg:"Loading..."});
+        }
+        lore.ore.repos.SPARQLAdapter.maskCount = 0;
+        
         if (isSearchQuery) {
         	//lore.ore.reposAdapter.getBasicObjects(matchval);
         }
@@ -50,6 +57,11 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
 	    	queryURL += encodeURIComponent("OPTIONAL {?item <http://www.w3.org/2004/02/skos/core#prefLabel> ?name}}");
 		   	queryURL += "&output=xml";   
 		   	lore.debug.ore("SPARQLAdapter.getBasicObjects", {queryURL:queryURL});
+
+		   	if (lore.ore.repos.SPARQLAdapter.maskCount == 0) {
+			   	lore.ore.repos.SPARQLAdapter.mask.show();
+		   	}
+		   	lore.ore.repos.SPARQLAdapter.maskCount += 1;
 		   	
 	        Ext.Ajax.request({
 	    		url: queryURL,
@@ -58,8 +70,11 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
 	            },
 	            method: "GET",
 	            success: function (xhr) {
-	            	console.log("Yoman");
-	            	
+	    		   	lore.ore.repos.SPARQLAdapter.maskCount += -1;
+	    		   	if (lore.ore.repos.SPARQLAdapter.maskCount <= 0) {
+	    			   	lore.ore.repos.SPARQLAdapter.mask.hide();
+	    		   	}
+	    		   	
 	            	var xmldoc = xhr.responseXML;
 	                var results = {};
 	                if (xmldoc) {
@@ -113,6 +128,11 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
 	                }
                 },
                 failure: function(response, opts) {
+	    		   	lore.ore.repos.SPARQLAdapter.maskCount += -1;
+	    		   	if (lore.ore.repos.SPARQLAdapter.maskCount <= 0) {
+	    			   	lore.ore.repos.SPARQLAdapter.mask.hide();
+	    		   	}
+	    		   	
     	            lore.ore.ui.vp.warning("Unable to contact corbicula.");
                 	lore.debug.ore("Error: Unable to load URL " + opts.url, response);
                 }
@@ -229,7 +249,18 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
 		    params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
 		    params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
 		    var url = queryURL;
+		    
+		   	if (lore.ore.repos.SPARQLAdapter.maskCount == 0) {
+			   	lore.ore.repos.SPARQLAdapter.mask.show();
+		   	}
+		   	lore.ore.repos.SPARQLAdapter.maskCount += 1;
+		    
 		    gadgets.io.makeRequest(url, function(response){
+    		   	lore.ore.repos.SPARQLAdapter.maskCount += -1;
+    		   	if (lore.ore.repos.SPARQLAdapter.maskCount <= 0) {
+    			   	lore.ore.repos.SPARQLAdapter.mask.hide();
+    		   	}
+    		   	
 		    	var xmldoc = response.data;
                 var listname = (isSearchQuery? "search" : "browse");  
                 var result = {};
@@ -259,6 +290,11 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
                 }
 		    }, params);
 	    } catch (e) {
+		   	lore.ore.repos.SPARQLAdapter.maskCount += -1;
+		   	if (lore.ore.repos.SPARQLAdapter.maskCount <= 0) {
+			   	lore.ore.repos.SPARQLAdapter.mask.hide();
+		   	}
+		   	
 	        lore.debug.ore("Error: Unable to retrieve Resource Maps",e);
 	        lore.ore.ui.vp.warning("Unable to retrieve Resource Maps");
 	    }

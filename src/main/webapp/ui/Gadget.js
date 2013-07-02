@@ -22,6 +22,7 @@ Ext.onReady(function() {
     
     lore.ore.ui.vp = new lore.ore.ui.Viewport();
     lore.ore.reposAdapter = new lore.ore.repos.SPARQLAdapter(
+    		//"http://localhost/op", "/data", "http://localhost/op/data/");
     		"http://corbicula.huni.net.au/dataset", "/graph-store", "http://corbicula.huni.net.au/dataset/data/");
     lore.ore.coListManager = new lore.ore.model.CompoundObjectListManager();
     lore.ore.historyManager = new lore.ore.model.HistoryManager(lore.ore.coListManager);
@@ -245,6 +246,7 @@ Ext.onReady(function() {
 		        region: 'west',
 		        width: 260,
                 split:true,
+	            id : "westPanel",
 		        items: [
 		            new Ext.Toolbar({
 		            	items : [
@@ -537,8 +539,7 @@ Ext.onReady(function() {
 	    							        "xtype": "pagingToolbar",
 	    							        "store": "search",
 	    							        "id": "spager"		                    
-	    							    }
-	    								,
+	    							    },
 	    							    items: [
 	    									{
 							                    "xtype": "codataview",
@@ -555,6 +556,11 @@ Ext.onReady(function() {
 					             title : "History",
 					             tabTip: "List recently viewed Resource Maps",
 							     height: "500px",
+							     listeners: {
+							    	activate: function() {
+					                	new lore.ore.ui.CompoundObjectDragZone(Ext.getCmp('hisview')); 
+							    	}
+						         },
 					             items : [
 					                {   
 	    							    minHeight: 0,
@@ -681,4 +687,6 @@ Ext.onReady(function() {
     
     lore.ore.ui.graphicalEditor = Ext.getCmp("drawingarea");
     Ext.getBody().dom.setAttribute('oncontextmenu', "return false;");
+
+    new lore.ore.ui.CompoundObjectDragZone(Ext.getCmp('cosview'));
 });

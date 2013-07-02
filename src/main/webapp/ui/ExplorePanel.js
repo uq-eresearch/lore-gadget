@@ -754,9 +754,6 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
 	                  if (canv.translateOffsetX == 0){
 	                    var newx = 0 - ((1100 - ep.getWidth()) / 2);
 	                    var newy = 0 - ((1100 - ep.getHeight()) / 2);
-	                    console.log("Yoman");
-	                    console.log(newx);
-	                    console.log(newy);
 	                    canv.translate(newx,newy);
 	                  }
 	                }
