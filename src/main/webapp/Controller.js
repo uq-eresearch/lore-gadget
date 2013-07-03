@@ -942,7 +942,7 @@ Ext.apply(lore.ore.Controller.prototype, {
             scope: this,
             fn : function(btn, theurl) {
                 if (btn == 'ok') {
-                    lore.ore.controller.addFromCorbiculaURL(theurl);
+                    lore.ore.controller.addFromCorbiculaURL(theurl, true);
                 }
             },
             prompt : true
@@ -953,7 +953,7 @@ Ext.apply(lore.ore.Controller.prototype, {
      * with an entry in Corbicula.
      * @param {} uri
      */
-    addFromCorbiculaURL: function(uri){ 
+    addFromCorbiculaURL: function(uri, createNew){ 
     	var params = {};
 	    params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
 	    params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
@@ -1001,11 +1001,17 @@ Ext.apply(lore.ore.Controller.prototype, {
 	                    }
 	                }
 	                if (subjects.length > 0) {
-	   				   lore.ore.controller.createCompoundObject(true, function(){           	 
-	   					   for (var i = 0; i < subjects.length; i++) {
-	   						   lore.ore.controller.addHuNIResource(subjects[i], relations);
-	   					   }
-	   				   });
+	                	if (createNew) {
+	 	   				    lore.ore.controller.createCompoundObject(true, function(){           	 
+		   					    for (var i = 0; i < subjects.length; i++) {
+		   						    lore.ore.controller.addHuNIResource(subjects[i], relations);
+		   					    }
+		   				    });
+	                	} else {
+	                		for (var i = 0; i < subjects.length; i++) {
+	                			lore.ore.controller.addHuNIResource(subjects[i], relations);
+		   					}
+	                	}
 	                }
 	            }
 	    	} else {
@@ -1179,7 +1185,7 @@ Ext.apply(lore.ore.Controller.prototype, {
             }
 	    }, params);
     },
-    loadHuNICompoundObject : function(title, uri, rdf) {
+    loadHuNICompoundObject : function(title, uri, rdf, x, y) {
     	var props = {"dc:title_0" : title};
     	                
         var rdfDoc;
@@ -1229,8 +1235,14 @@ Ext.apply(lore.ore.Controller.prototype, {
             return;
         }
         
-        var figure = lore.ore.ui.graphicalEditor.addFigure({url:uri, props: props, 
-        	oh: 170, h: 30, w: 180}, true);
+        if (x && y) {
+        	lore.ore.ui.graphicalEditor.addFigure({url:uri, props: props, 
+        		x: x, y: y, oh: 170, h: 30, w: 180}, true);
+        } else {
+        	lore.ore.ui.graphicalEditor.addFigure({url:uri, props: props, 
+            	oh: 170, h: 30, w: 180}, true);
+        }
+        
         lore.ore.ui.graphicalEditor.showResource(uri);
     },
     /**

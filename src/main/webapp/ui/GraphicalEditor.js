@@ -79,20 +79,61 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
 		                'ddGroup' : 'coDD',
 		                'copy' : false
 		        });
-		        droptarget.notifyDrop = function(dd, e, data) {
-		            var ge = lore.ore.ui.graphicalEditor;
-		            var coGraph = ge.coGraph;
-		            var figopts = {
-		                url : data.draggedRecord.data.uri,
-		                x : (e.xy[0] - coGraph.getAbsoluteX() + coGraph.getScrollLeft()),
-		                y : (e.xy[1] - coGraph.getAbsoluteY() + coGraph.getScrollTop()),
-		                props : {
-		                    "rdf:type_0" : lore.constants.RESOURCE_MAP,
-		                    "dc:title_0" : data.draggedRecord.data.title
-		                }
-		            };
-		            ge.addFigure(figopts);
-		            
+		        droptarget.notifyDrop = function(dd, e, data) {		        	
+		        	if (data.draggedRecord.data.type) {
+		        		var params = {};
+		        	    params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
+		        	    params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
+		        	    gadgets.io.makeRequest(encodeURI(data.draggedRecord.data.uri), function(response){
+		        	    	var xmldoc = response.data;
+		                    var result = xmldoc.getElementsByTagNameNS(lore.constants.NAMESPACES["sparql"], "result");
+	                    	var graphuri;
+	                    	
+		                    if (result.length > 0){
+		                        for (var i = 0; i < result.length; i++) {
+		                        	var s,  g, resource;
+		                        	var bindings = result[i].getElementsByTagName('binding');
+		                            for (var j = 0; j < bindings.length; j++){  
+		                            	attr = bindings[j].getAttribute('name');
+		                            	if (attr == 's') {
+		                            		s = lore.util.safeGetFirstChildValue(
+		                            				bindings[j].getElementsByTagName('uri'));
+		                            	} else if (attr == 'g') {
+		                            		g = lore.util.safeGetFirstChildValue(
+		                            				bindings[j].getElementsByTagName('uri'));
+		                            	} else if (attr == 'resource') {
+		                            		resource = lore.util.safeGetFirstChildValue(
+		                            				bindings[j].getElementsByTagName('uri'));
+		                            	}
+		                            }
+		                        	if (s == resource && data.draggedRecord.data.uri == resource) {
+		                        		graphuri = g;
+		                        	}
+		                        }
+		                    }
+
+		                	var coGraph = lore.ore.ui.graphicalEditor.coGraph;
+		                    lore.ore.reposAdapter.loadCompoundObject(graphuri, function(rdf) {
+			        			lore.ore.controller.loadHuNICompoundObject(
+			        					data.draggedRecord.data.title, data.draggedRecord.data.uri, rdf, 
+			        					(e.xy[0] - coGraph.getAbsoluteX() + coGraph.getScrollLeft()),
+			        					(e.xy[1] - coGraph.getAbsoluteY() + coGraph.getScrollTop()));
+			                });
+		        	    }, params);       
+		        	} else {
+		        		var ge = lore.ore.ui.graphicalEditor;
+		            	var coGraph = ge.coGraph;
+		            	var figopts = {
+		            		url : data.draggedRecord.data.uri,
+		                	x : (e.xy[0] - coGraph.getAbsoluteX() + coGraph.getScrollLeft()),
+		                	y : (e.xy[1] - coGraph.getAbsoluteY() + coGraph.getScrollTop()),
+		                	props : {
+		                    	"rdf:type_0" : (data.draggedRecord.data.type ? "" : lore.constants.RESOURCE_MAP),
+		                    	"dc:title_0" : data.draggedRecord.data.title
+		                	}
+		            	};
+		            	ge.addFigure(figopts);
+		        	}
 		            return true;
 		        };
 		    }

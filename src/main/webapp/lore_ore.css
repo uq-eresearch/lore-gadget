@@ -418,6 +418,9 @@ div.coListing:hover {
 .edit-icon {
     background-image: url(./skin/icons/pencil.png);
 }
+.object-icon {
+    background-image: url(./skin/icons/object.png);
+}
 
 /* Property panel:  relationship icons */
 .rel-to {

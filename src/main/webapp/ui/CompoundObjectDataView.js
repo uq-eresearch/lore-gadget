@@ -17,7 +17,7 @@ lore.ore.ui.CompoundObjectDataView = Ext.extend(Ext.DataView, {
                     '<tpl if="isObject"><img src="' + lore.constants.baseUrl + 'skin/icons/object.png"></tpl>',
                     '<tpl if="isPrivate"><img style="float:left;position:absolute;left:11px" src="' + lore.constants.baseUrl + 'skin/icons/eye.png"></tpl>',
                     '</div>',
-                    '<div>{title}</div>',
+                    '<div style="padding-left: 20px;">{title}</div>',
                     '<div class="detailText">',
                         '<tpl if="typeof modified != \'undefined\' && modified != null">Last modified {[fm.date(values.modified,\'j M Y, g:ia\')]}</tpl>',
                         '<tpl if="typeof accessed != \'undefined\' && accessed != null">Last accessed {[fm.date(values.accessed,\'j M Y, g:ia\')]}</tpl>',
@@ -106,21 +106,43 @@ lore.ore.ui.CompoundObjectDataView = Ext.extend(Ext.DataView, {
                  });
                  
                  cm.add(cm.localDelete);
+                                  
+                 cm.addResourceMap = new Ext.menu.Item({
+                	 text : "Add as nested Resource Map",
+                     iconCls: "add-icon",
+                     scope: this,
+                     handler : function(obj, evt) {
+                         lore.ore.ui.graphicalEditor.addFigure({url:this.sel.data.uri,
+                             props:{
+                             "rdf:type_0": lore.constants.RESOURCE_MAP,
+                             "dc:title_0": this.sel.data.title}});
+                     }
+                  });
                  
-                 cm.add({
-                    text : "Add as nested Resource Map",
-                    iconCls: "add-icon",
-                    scope: this,
-                    handler : function(obj, evt) {
-                    	if (this.sel.data.type) {
-                    		lore.ore.controller.addHuNIResource(this.sel.data.uri);
-                    	} else {
-                            lore.ore.ui.graphicalEditor.addFigure({url:this.sel.data.uri,
-                                props:{
-                                "rdf:type_0": lore.constants.RESOURCE_MAP,
-                                "dc:title_0": this.sel.data.title}});
-                    	}
-                 }});
+                 cm.add(cm.addResourceMap);
+                 
+                 cm.addBasic = new Ext.menu.Item({
+                     text : "Add as basic object",
+                     iconCls: "add-icon",
+                     scope: this,
+                     handler : function(obj,evt) {
+                         lore.ore.controller.addHuNIResource(this.sel.data.uri);
+                     }
+                  });
+                  
+                  cm.add(cm.addBasic);
+                  
+                  cm.addCompound = new Ext.menu.Item({
+                      text : "Add with relations",
+                      iconCls: "add-icon",
+                      scope: this,
+                      handler : function(obj,evt) {
+                          lore.ore.controller.addFromCorbiculaURL(this.sel.data.uri, false);
+                      }
+                   });
+                   
+                   cm.add(cm.addCompound);
+                 
                  if (this.id == 'cohview'){
                     cm.add({
                        text: "Do not show in history",
@@ -140,16 +162,25 @@ lore.ore.ui.CompoundObjectDataView = Ext.extend(Ext.DataView, {
                     if(lore.ore.reposAdapter && this.sel.data.uri.match(lore.ore.reposAdapter.idPrefix)){
                         menu.localLoad.show();
                         menu.localDelete.show();
+                        menu.addResourceMap.show();
+                        menu.addBasic.hide();
+                        menu.addCompound.hide();
                         menu.remoteMsg.hide();
                         menu.remoteLoad.hide();
                     } else if(this.sel.data.type){
                         menu.remoteLoad.hide();
                         menu.remoteMsg.hide();
+                        menu.addResourceMap.hide();
+                        menu.addBasic.show();
+                        menu.addCompound.show();
                         menu.localDelete.hide();
                         menu.localLoad.hide();
                     } else {
                         menu.remoteLoad.show();
                         menu.remoteMsg.show();
+                        menu.addResourceMap.show();
+                        menu.addBasic.hide();
+                        menu.addCompound.hide();
                         menu.localDelete.hide();
                         menu.localLoad.hide();
                     }

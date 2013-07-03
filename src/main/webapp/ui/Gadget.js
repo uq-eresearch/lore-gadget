@@ -689,4 +689,7 @@ Ext.onReady(function() {
     Ext.getBody().dom.setAttribute('oncontextmenu', "return false;");
 
     new lore.ore.ui.CompoundObjectDragZone(Ext.getCmp('cosview'));
+    
+    lore.ore.controller.createCompoundObject();
+    Ext.getCmp("propertytabs").activate("searchPanel");
 });
