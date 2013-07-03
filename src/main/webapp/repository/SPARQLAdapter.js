@@ -51,10 +51,17 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
 	    	queryURL += encodeURIComponent("?item (<http://xmlns.com/foaf/0.1/name>|<http://xmlns.com/foaf/0.1/firstName>|");
 	    	queryURL += encodeURIComponent("<http://xmlns.com/foaf/0.1/lastName>|<http://www.w3.org/2004/02/skos/core#prefLabel>) ?textValue. ");
 	    	queryURL += encodeURIComponent("FILTER(REGEX(?textValue, '" + matchval + "', 'i'))} ");
-	    	queryURL += encodeURIComponent("OPTIONAL {?item <http://xmlns.com/foaf/0.1/firstName> ?name}");
-	    	queryURL += encodeURIComponent("OPTIONAL {?item <http://xmlns.com/foaf/0.1/lastName> ?name}");
+	    	queryURL += encodeURIComponent("OPTIONAL {");
+	    	queryURL += encodeURIComponent("SELECT ?item (CONCAT(?fname, ' ', ?lname) AS ?name)");
+	    	queryURL += encodeURIComponent("WHERE {");
+	    	queryURL += encodeURIComponent("?item <http://xmlns.com/foaf/0.1/firstName> ?fname.");
+	    	queryURL += encodeURIComponent("?item <http://xmlns.com/foaf/0.1/lastName> ?lname.");
+	    	queryURL += encodeURIComponent("}");
+	    	queryURL += encodeURIComponent("GROUP BY ?item ?fname ?lname");
+	    	queryURL += encodeURIComponent("}");
 	    	queryURL += encodeURIComponent("OPTIONAL {?item <http://xmlns.com/foaf/0.1/name> ?name}");
-	    	queryURL += encodeURIComponent("OPTIONAL {?item <http://www.w3.org/2004/02/skos/core#prefLabel> ?name}}");
+	    	queryURL += encodeURIComponent("OPTIONAL {?item <http://www.w3.org/2004/02/skos/core#prefLabel> ?name}");
+	    	queryURL += encodeURIComponent("}");
 		   	queryURL += "&output=xml";   
 		   	lore.debug.ore("SPARQLAdapter.getBasicObjects", queryURL);
 
@@ -100,7 +107,10 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
 		                         } else if (attr == 'type'){
 		                             var node = bindings[j].getElementsByTagName('uri'); 
 		                             var type = lore.util.safeGetFirstChildValue(node);
-		                             
+
+		                             while (type.indexOf("/") != -1) {
+		                            	 type = type.substring(type.indexOf("/") + 1);
+	                            	 }
 		                             while (type.indexOf("_") != -1) {
 		                            	 type = type.substring(type.indexOf("_") + 1);
 	                            	 }
@@ -119,9 +129,6 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
 		                         } 
 	                        }
 	                        
-	                        if (!props.title) {
-	                        	//props.title = 
-	                        }
 	                        coList.push(props);
 	                    }
 	                    lore.ore.coListManager.add(coList, "search");

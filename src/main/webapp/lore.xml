@@ -2,7 +2,7 @@
 <Module>
 
   <ModulePrefs author="Simon McNaughton" author_email="simon.mcnaughton@uqconnect.edu.au"
-    description="Literature Object Re-use and Exchange" title="LORE"  height="600" width= "500"/>
+    description="Literature Object Re-use and Exchange" title="LORE"  height="595" width= "500"/>
 
   <Content type="html" view="home, profile, preview"><![CDATA[
         <script type="text/javascript" src="lib/jquery-1.6.3.min.js"></script>
