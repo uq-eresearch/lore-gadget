@@ -92,17 +92,21 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                     {
                         xtype: 'htmleditor',
                         propEditor: this,
-                        plugins: [ new Ext.ux.form.HtmlEditor.IndentOutdent(), new Ext.ux.form.HtmlEditor.ToggleFormatting()],
+                        //plugins: [ new Ext.ux.form.HtmlEditor.IndentOutdent(), new Ext.ux.form.HtmlEditor.ToggleFormatting()],
                         width: 400,
                         height: 150,
+                        enableAlignments: false,
                         enableColors: false,
                         enableFont: false,
+                        enableFontSize: false,
+                        enableFormat: false,
                         enableLinks: false,
+                        enableLists: false,
                         enableSourceEdit: false
                     }
                 ],
                 bbar: [
-                    {
+                    /*{
                         xtype: 'buttongroup',               
                         columns: 3,
                         items: [
@@ -173,7 +177,7 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                                 }
                             }
                         ]
-                    },
+                    },*/
                     '->',
                     {
                         xtype: 'button',
