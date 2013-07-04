@@ -986,7 +986,8 @@ lore.util = {
     },
     /** Remove any markup from the provided value */
     stripHTML : function(val, doc){
-    	if (typeof Components != "undefined") {
+    	return val;
+        /*if (typeof Components != "undefined") {
 	        var fragment = Components.classes["@mozilla.org/feed-unescapehtml;1"]  
 	                .getService(Components.interfaces.nsIScriptableUnescapeHTML)  
 	                .parseFragment(val, false, null, doc.body);
@@ -1007,7 +1008,7 @@ lore.util = {
 	        return serializedContent;
     	} else {
     		return val;
-    	}
+    	}*/
     },
     /**
      * Basic HTML Sanitizer using Firefox's parseFragment

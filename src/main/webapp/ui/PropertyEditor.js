@@ -62,6 +62,7 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
                 autoWidth: true,
                 layout: 'fit',
                 animateTarget: 'properties',
+                resizable: false,
                 focus: function() {
                     this.getComponent(0).focus();
                 },

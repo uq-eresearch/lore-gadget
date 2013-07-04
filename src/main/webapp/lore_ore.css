@@ -481,3 +481,6 @@ div.coListing:hover {
 .x-tbar-page-prev {
 	width: 7px !important;
 }
+.x-window-bbar {
+	width: 400px !important;
+}
