@@ -482,7 +482,7 @@ div.coListing:hover {
 	width: 7px !important;
 }
 .x-window-bbar {
-	width: 400px !important;
+	min-width: 400px !important;
 }
 .x-slide-panel {
 	overflow: hidden !important;
