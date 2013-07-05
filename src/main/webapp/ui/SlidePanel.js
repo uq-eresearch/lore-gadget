@@ -5,6 +5,7 @@
   * @extends Ext.Panel
   */
 lore.ore.ui.SlidePanel = Ext.extend(Ext.Panel,{ 
+   bodyCfg : { cls:'x-panel-body x-slide-panel' },
    constructor: function (config){
         config = config || {};
         this.ssid = config.ssid; // id of parent SlideShowPanel

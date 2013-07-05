@@ -198,7 +198,7 @@ Ext.onReady(function() {
 	                            items : [{
                                     id : 'newss',
                                     xtype : "slideshowpanel",
-                                    height : "512"
+                                    height : "505"
                                     //autoScroll : true
                                 }]
 	                        },	{

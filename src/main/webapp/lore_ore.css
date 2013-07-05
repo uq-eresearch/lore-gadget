@@ -484,3 +484,6 @@ div.coListing:hover {
 .x-window-bbar {
 	width: 400px !important;
 }
+.x-slide-panel {
+	overflow: hidden !important;
+}
