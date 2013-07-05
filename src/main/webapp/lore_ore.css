@@ -487,3 +487,6 @@ div.coListing:hover {
 .x-slide-panel {
 	overflow: hidden !important;
 }
+.x-details-panel { 
+	overflow: visible !important;
+}

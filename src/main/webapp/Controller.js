@@ -1049,36 +1049,43 @@ Ext.apply(lore.ore.Controller.prototype, {
             method: "GET",
             disableCaching: false,
             success: function (xhr) {
-            	var databank = jQuery.rdf.databank();
-    	        for (ns in lore.constants.NAMESPACES) {
-    	            databank.prefix(ns, lore.constants.NAMESPACES[ns]);
-    	        }
-    	        databank.load(xhr.responseXML);
-    	        var loadedRDF = jQuery.rdf({
-    	            databank : databank
-    	        });
-    	        
-    	        var remQuery = loadedRDF.where('?s <http://www.openarchives.org/ore/terms/aggregates> ?o');
-    	        var isPrivate = false;
-    	                        
-    	        if (remQuery.length > 0) {
-            		lore.ore.facetImportWin.getComponent(0).removeAll();
-            		
-    	        	for (var i = 0; i < remQuery.length; i++) {
-    	        		var value = remQuery.get(i).o.value.toString();
-    	        		lore.ore.facetImportWin.getComponent(0).add({
-    	                    name: value,
-    	                    boxLabel: value,
-    	                    checked: true
-    	                });
-    	        	}  
-                    lore.ore.facetImportWin.show();
-    	        } else {
-    	        	Ext.getBody().unmask();
+            	try {
+		        	var databank = jQuery.rdf.databank();
+			        for (ns in lore.constants.NAMESPACES) {
+			            databank.prefix(ns, lore.constants.NAMESPACES[ns]);
+			        }
+			        databank.load(xhr.responseXML);
+			        var loadedRDF = jQuery.rdf({
+			            databank : databank
+			        });
+			        
+			        var remQuery = loadedRDF.where('?s <http://www.openarchives.org/ore/terms/aggregates> ?o');
+			        var isPrivate = false;
+			                        
+			        if (remQuery.length > 0) {
+		        		lore.ore.facetImportWin.getComponent(0).removeAll();
+		        		
+			        	for (var i = 0; i < remQuery.length; i++) {
+			        		var value = remQuery.get(i).o.value.toString();
+			        		lore.ore.facetImportWin.getComponent(0).add({
+			                    name: value,
+			                    boxLabel: value,
+			                    checked: true
+			                });
+			        	}  
+		                lore.ore.facetImportWin.show();
+			        } else {
+			        	Ext.getBody().unmask();
+			            lore.ore.ui.vp.warning("No Resources found");
+			            lore.debug.ore("Error: No Resources found", loadedRDF);
+			            return;
+			        }
+            	} catch (e){
+            		Ext.getBody().unmask();
     	            lore.ore.ui.vp.warning("No Resources found");
-    	            lore.debug.ore("Error: No Resources found", loadedRDF);
+    	            lore.debug.ore("Error: No Resources found", e);
     	            return;
-    	        }
+            	}
             },
             failure: function(response, opts) {
 	            lore.ore.ui.vp.warning("No Resources found");

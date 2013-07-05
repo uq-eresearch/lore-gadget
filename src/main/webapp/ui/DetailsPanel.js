@@ -5,8 +5,9 @@
 lore.ore.ui.DetailsPanel = Ext.extend(Ext.Panel,{ 
    constructor: function (config){
         config = config || {};
-        config.bodyStyle = "padding:20px;font-family: arial;font-size:90%; overflow: visible;"; 
-        config.bwrapStyle = "overflow-y: visible; overflow-x: hidden;";
+        config.bodyCfg = { cls:'x-details-panel', 
+        		style: "padding:20px;font-family: arial;font-size:90%; overflow: visible;"};
+        config.bwrapStyle = "overflow: visible;";
         config.autoScroll = true;
         lore.ore.ui.DetailsPanel.superclass.constructor.call(this, config);
         this.loaded = "";
