@@ -174,7 +174,8 @@ Ext.onReady(function() {
 	                            tabTip: "View or edit the Resource Map graphically",
 	                            id : "drawingarea",
 	                            xtype : "grapheditor",
-	                            iconCls: "graph-icon"
+	                            iconCls: "graph-icon",
+		                        style: "height: 100%; overflow: auto;"
 	                        },{
 	                            title : "Resource List",
 	                            tabTip: "View or edit the list of resources in the Resource Map",
