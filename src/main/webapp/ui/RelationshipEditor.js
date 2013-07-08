@@ -177,7 +177,8 @@ lore.ore.ui.RelationshipEditor = Ext.extend(Ext.grid.EditorGridPanel,{
             viewConfig : {
                 forceFit : true,
                 deferEmptyText: false,
-                emptyText: "No relationships"
+                emptyText: "No relationships",
+                scrollOffset: 0
             },
             tools : [/*{
                         id : 'plus',

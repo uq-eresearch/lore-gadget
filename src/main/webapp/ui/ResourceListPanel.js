@@ -50,7 +50,8 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
                 viewConfig: {
                     deferEmptyText: false,
                     emptyText: 'Empty Resource Map',
-                    forceFit: true
+                    forceFit: true,
+                    scrollOffset: 0
                 }, 
                 colModel: this.defaultCM
             });

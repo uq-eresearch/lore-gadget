@@ -16,7 +16,7 @@ lore.ore.ui.ExplorePanel = Ext.extend(Ext.Panel,{
             items: [
                 {
                     region : "north",
-                    split: true,
+                    //split: true,
                     id: "exploreHistory",
                     useSplitTips: true,
                     height: 28,

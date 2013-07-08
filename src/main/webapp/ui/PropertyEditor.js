@@ -354,7 +354,8 @@ lore.ore.ui.PropertyEditor = Ext.extend(Ext.grid.EditorGridPanel,{
             viewConfig : {
                 forceFit : true,
                 deferEmptyText: false,
-                emptyText: "No resource selected"
+                emptyText: "No resource selected",
+                scrollOffset: 0
             },
             tools : [{
                         id : 'plus',
