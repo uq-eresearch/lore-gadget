@@ -243,12 +243,8 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
     showContextMenu: function(grid, rowIndex, e){
         try{
         var rec = this.store.getAt(rowIndex);
-        this.tmptitle = rec.get("title");
+        this.tmptitle = Ext.util.Format.ellipsis(rec.get("title"), 40);
         this.tmpurl = rec.get("uri");
-        
-        if (this.tmptitle.length > 45) {
-        	this.tmptitle = this.tmptitle.substring(0, 42) + '...';
-        }
         
         this.tmpPlaceholder = rec.get("isPlaceholder");
         this.tmpColor = rec.get("properties").getProperty(lore.constants.NAMESPACES["layout"] + "highlightColor",0).value;
@@ -268,6 +264,7 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
                         closable : true,
                         height: 53,
                         width : 300,
+                        resizable : false,
                         listeners: {
                             beforeclose: function(){
                             	Ext.getBody().unmask();

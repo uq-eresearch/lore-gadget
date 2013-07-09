@@ -226,6 +226,8 @@
 	overflow:hidden;
 	font-size:smaller;
 	color:#51666b;
+	padding-left: 4px; 
+	padding-right: 4px;
 }
 #remsmilview {
 	padding-left: 20px;	
