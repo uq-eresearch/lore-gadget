@@ -381,6 +381,9 @@ div.coListing:hover {
 .detailText {
 	padding-left:20px;color:#51666b;font-size:87%
 }
+.descriptionText {
+	padding-left:20px;color:#51666b;font-size:87%;font-style:italic;
+}
 .detailsselected {
     background-color: yellow;
 }
@@ -422,6 +425,9 @@ div.coListing:hover {
 }
 .object-icon {
     background-image: url(./skin/icons/object.png);
+}
+.launch-icon {
+	background-image: url(./skin/icons/page_go.png);
 }
 
 /* Property panel:  relationship icons */

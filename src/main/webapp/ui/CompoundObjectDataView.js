@@ -8,16 +8,17 @@ lore.ore.ui.CompoundObjectDataView = Ext.extend(Ext.DataView, {
             plugins: new Ext.DataView.DragSelector({dragSafe:true}),
             tpl :  new Ext.XTemplate(               
                 '<tpl for=".">',
-                '<tpl if="type"><div class="coListing"></tpl>',
-                '<tpl if="!type"><div class="coListing" onclick="lore.ore.controller.loadCompoundObjectFromURL(\'{uri}\')"></tpl>',
+                '<tpl if="!entryType.match(lore.constants.COMPOUND_OBJECT_TYPE)"><div class="coListing"></tpl>',
+                '<tpl if="entryType.match(lore.constants.COMPOUND_OBJECT_TYPE)"><div class="coListing" onclick="lore.ore.controller.loadCompoundObjectFromURL(\'{uri}\')"></tpl>',
                     '<table><tr valign="top"><td>{[this.genNumber(values.uri)]}</td><td>',
                     '<div style="float:left;padding:2px;">',
-                    '<tpl if="lore.ore.reposAdapter && uri.match(lore.ore.reposAdapter.idPrefix) && !isObject"><img src="' + lore.constants.baseUrl + 'skin/icons/oaioreicon-sm.png"></tpl>',
-                    '<tpl if="lore.ore.reposAdapter && !uri.match(lore.ore.reposAdapter.idPrefix) && !isObject"><img src="' + lore.constants.baseUrl + 'skin/icons/oaioreicon-grey.png"></tpl>',
-                    '<tpl if="isObject"><img src="' + lore.constants.baseUrl + 'skin/icons/object.png"></tpl>',
+                    '<tpl if="lore.ore.reposAdapter && uri.match(lore.ore.reposAdapter.idPrefix) && entryType.match(lore.constants.COMPOUND_OBJECT_TYPE)"><img src="' + lore.constants.baseUrl + 'skin/icons/oaioreicon-sm.png"></tpl>',
+                    '<tpl if="lore.ore.reposAdapter && !uri.match(lore.ore.reposAdapter.idPrefix) && entryType.match(lore.constants.COMPOUND_OBJECT_TYPE)"><img src="' + lore.constants.baseUrl + 'skin/icons/oaioreicon-grey.png"></tpl>',
+                    '<tpl if="!entryType.match(lore.constants.COMPOUND_OBJECT_TYPE)"><img src="' + lore.constants.baseUrl + 'skin/icons/object.png"></tpl>',
                     '<tpl if="isPrivate"><img style="float:left;position:absolute;left:11px" src="' + lore.constants.baseUrl + 'skin/icons/eye.png"></tpl>',
                     '</div>',
                     '<div style="padding-left: 20px;">{title}</div>',
+                    '<tpl if="description"><div class="descriptionText">{description}</div></tpl>',
                     '<div class="detailText">',
                         '<tpl if="typeof modified != \'undefined\' && modified != null">Last modified {[fm.date(values.modified,\'j M Y, g:ia\')]}</tpl>',
                         '<tpl if="typeof accessed != \'undefined\' && accessed != null">Last accessed {[fm.date(values.accessed,\'j M Y, g:ia\')]}</tpl>',
@@ -142,6 +143,37 @@ lore.ore.ui.CompoundObjectDataView = Ext.extend(Ext.DataView, {
                    });
                    
                    cm.add(cm.addCompound);
+                   
+                   cm.addHuni = new Ext.menu.Item({
+                       text : "Add to graphical editor",
+                       iconCls: "add-icon",
+                       scope: this,
+                       handler : function(obj,evt) {
+                    	   	var ge = lore.ore.ui.graphicalEditor;
+   		            		var coGraph = ge.coGraph;
+   		            		var figopts = {
+   		            			url : this.sel.data.uri,
+   		            			props : {
+   		            				"dc:type_0" : this.sel.data.type,
+   		            				"dc:title_0" : this.sel.data.title
+   		            			}
+   		            		};
+   		            		ge.addFigure(figopts);
+                       }
+                    });
+                    
+                    cm.add(cm.addHuni);
+                   
+                   cm.showBrowser = new Ext.menu.Item({
+                       text : "View resource in browser",
+                       iconCls: "launch-icon",
+                       scope: this,
+                       handler : function(obj,evt) {
+                    	   lore.util.launchTab(this.sel.data.uri, window);  
+                       }
+                    });
+                    
+                    cm.add(cm.showBrowser);
                  
                  if (this.id == 'cohview'){
                     cm.add({
@@ -160,29 +192,45 @@ lore.ore.ui.CompoundObjectDataView = Ext.extend(Ext.DataView, {
                  
                  cm.on('beforeshow',function(menu){
                     if(lore.ore.reposAdapter && this.sel.data.uri.match(lore.ore.reposAdapter.idPrefix)){
+                        menu.addResourceMap.show();
                         menu.localLoad.show();
                         menu.localDelete.show();
-                        menu.addResourceMap.show();
+                        menu.remoteMsg.hide();
+                        menu.remoteLoad.hide();
                         menu.addBasic.hide();
                         menu.addCompound.hide();
-                        menu.remoteMsg.hide();
-                        menu.remoteLoad.hide();
-                    } else if(this.sel.data.type){
-                        menu.remoteLoad.hide();
-                        menu.remoteMsg.hide();
-                        menu.addResourceMap.hide();
-                        menu.addBasic.show();
-                        menu.addCompound.show();
+                        menu.addHuni.hide();
+                        menu.showBrowser.hide();
+                    } else if(this.sel.data.entryType == lore.constants.COMPOUND_OBJECT_TYPE){
+                        menu.addResourceMap.show();
                         menu.localDelete.hide();
                         menu.localLoad.hide();
-                    } else {
                         menu.remoteLoad.show();
                         menu.remoteMsg.show();
-                        menu.addResourceMap.show();
                         menu.addBasic.hide();
                         menu.addCompound.hide();
+                        menu.addHuni.hide();
+                        menu.showBrowser.hide();
+                    } else if(this.sel.data.entryType == lore.constants.HUNI_OBJECT_TYPE){
+                        menu.addResourceMap.hide();
                         menu.localDelete.hide();
                         menu.localLoad.hide();
+                        menu.remoteLoad.hide();
+                        menu.remoteMsg.hide();
+                        menu.addBasic.hide();
+                        menu.addCompound.hide();
+                        menu.addHuni.show();
+                        menu.showBrowser.show();
+                    } else {
+                        menu.addResourceMap.hide();
+                        menu.localDelete.hide();
+                        menu.localLoad.hide();
+                        menu.remoteLoad.hide();
+                        menu.remoteMsg.hide();
+                        menu.addBasic.show();
+                        menu.addCompound.show();
+                        menu.addHuni.hide();
+                        menu.showBrowser.hide();
                     }
                  },this);
                         

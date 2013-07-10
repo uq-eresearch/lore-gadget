@@ -221,7 +221,10 @@ lore.constants = {
      * with a given 'danno:source' value.
      */
      DANNO_RESTRICT_SOURCE : "danno_source",
-    
+
+     COMPOUND_OBJECT_TYPE : "ct",
+     BASIC_OBJECT_TYPE : "bt",
+     HUNI_OBJECT_TYPE : "ht",
     
     textm : {
     // Calais web service (text mining)

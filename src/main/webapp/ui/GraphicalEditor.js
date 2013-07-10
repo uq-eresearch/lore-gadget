@@ -80,7 +80,7 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
 		                'copy' : false
 		        });
 		        droptarget.notifyDrop = function(dd, e, data) {		        	
-		        	if (data.draggedRecord.data.type) {
+		        	if (data.draggedRecord.data.entryType == lore.constants.BASIC_OBJECT_TYPE) {
 		        		var params = {};
 		        	    params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
 		        	    params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
@@ -120,7 +120,7 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
 			        					(e.xy[1] - coGraph.getAbsoluteY() + coGraph.getScrollTop()));
 			                });
 		        	    }, params);       
-		        	} else {
+		        	} else if (data.draggedRecord.data.entryType == lore.constants.HUNI_OBJECT_TYPE) {
 		        		var ge = lore.ore.ui.graphicalEditor;
 		            	var coGraph = ge.coGraph;
 		            	var figopts = {
@@ -128,7 +128,20 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
 		                	x : (e.xy[0] - coGraph.getAbsoluteX() + coGraph.getScrollLeft()),
 		                	y : (e.xy[1] - coGraph.getAbsoluteY() + coGraph.getScrollTop()),
 		                	props : {
-		                    	"rdf:type_0" : (data.draggedRecord.data.type ? "" : lore.constants.RESOURCE_MAP),
+		                    	"dc:type_0" : data.draggedRecord.data.type,
+		                    	"dc:title_0" : data.draggedRecord.data.title
+		                	}
+		            	};
+		            	ge.addFigure(figopts);
+		        	} else if (data.draggedRecord.data.entryType == lore.constants.COMPOUND_OBJECT_TYPE) {
+		        		var ge = lore.ore.ui.graphicalEditor;
+		            	var coGraph = ge.coGraph;
+		            	var figopts = {
+		            		url : data.draggedRecord.data.uri,
+		                	x : (e.xy[0] - coGraph.getAbsoluteX() + coGraph.getScrollLeft()),
+		                	y : (e.xy[1] - coGraph.getAbsoluteY() + coGraph.getScrollTop()),
+		                	props : {
+		                    	"rdf:type_0" : lore.constants.RESOURCE_MAP,
 		                    	"dc:title_0" : data.draggedRecord.data.title
 		                	}
 		            	};

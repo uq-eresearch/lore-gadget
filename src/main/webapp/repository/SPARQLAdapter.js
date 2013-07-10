@@ -35,6 +35,7 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
         
         if (isSearchQuery) {
         	//lore.ore.reposAdapter.getBasicObjects(matchval);
+        	//lore.ore.reposAdapter.getBasicHuniObjects(matchval);
         }
         lore.ore.reposAdapter.getResourceMapObjects(matchuri, matchpred, matchval, isSearchQuery);
     },
@@ -97,7 +98,7 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
 	                    	var props = {};
 	                    	props.creator = "Corbicula";
 	                    	props.type = "";
-	                    	props.isObject = true;
+	                    	props.entryType = lore.constants.BASIC_OBJECT_TYPE;
 	                    	
 	                        for (var j = 0; j < bindings.length; j++){  
 		                         attr = bindings[j].getAttribute('name');
@@ -144,6 +145,105 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
                 	lore.debug.ore("Error: Unable to load URL " + opts.url, response);
                 }
 	        }); 
+	    } catch (e) {
+	        lore.debug.ore("Error: Unable to retrieve Resource Maps",e);
+	        lore.ore.ui.vp.warning("Unable to retrieve Resource Maps");
+	    }
+    },
+    getBasicHuniObjects : function(matchval){            
+    	try {
+	    	if (matchval == null || matchval == "") {
+	    		return;
+	    	}
+	    	
+	    	if (matchval.indexOf(" ") != -1) {
+	    		var split = matchval.split(" ");
+	    		matchval = "";
+	    		for (var i = 0; i < split.length; i++) {
+	    			matchval += split[i];
+	    			if (i < (split.length - 1)) {
+	    				matchval += "%20AND%20";
+	    			}
+	    		}
+	    	}
+	    	
+	    	var queryURL = "http://huni.esrc.unimelb.edu.au/solr/huni/select?q=(text:" 
+	    		+ matchval + "%20OR%20text_rev:" + matchval + ")&rows=999999&wt=json" 
+		   	lore.debug.ore("SPARQLAdapter.getBasicHuniObjects", queryURL);
+		   	
+		    var oThis = this;
+		    var params = {};
+		    params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON;
+		    params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.GET;
+		    
+		   	if (lore.ore.repos.SPARQLAdapter.maskCount == 0) {
+			   	lore.ore.repos.SPARQLAdapter.mask.show();
+		   	}
+		   	lore.ore.repos.SPARQLAdapter.maskCount += 1;
+		    
+		    gadgets.io.makeRequest(queryURL, function(response){
+    		   	lore.ore.repos.SPARQLAdapter.maskCount += -1;
+    		   	if (lore.ore.repos.SPARQLAdapter.maskCount <= 0) {
+    			   	lore.ore.repos.SPARQLAdapter.mask.hide();
+    		   	}
+    		   	
+		    	var docs = response.data.response.docs;
+	    		var coList = [];
+	    		var uris = [];
+	    		
+		    	for (var i = 0; i < docs.length; i++) {  
+	            	var props = {};
+	            	props.creator = "Huni";
+	            	props.type = "";
+	            	props.entryType = lore.constants.HUNI_OBJECT_TYPE;
+	            	
+	            	var doc = docs[i];
+	            	if (doc.type) {
+	            		props.type = doc.type;
+	            	}
+	            	
+	            	if (doc.prov_source) {
+	            		props.uri = doc.prov_source;
+	            	}
+	            	
+	            	if (doc.name) {
+	            		props.title = doc.name;
+	            	} else if (doc.title) {
+	            		props.title = doc.title[0];
+	            	} else if (doc.family_name && doc.given_name) {
+	            		props.title = doc.given_name + " " + doc.family_name;
+	            	} else if (doc.family_name) {
+	            		props.title = doc.family_name;
+	            	} else if (doc.given_name) {
+	            		props.title = doc.given_name;
+	            	}
+	            	
+	            	if (doc.description) {
+	            		props.description = doc.description[0];
+	            	} else if (doc.bio) {
+	            		props.description = doc.bio;
+	            	}
+	            	
+	            	if (props.description) {
+	            		props.description = props.description.replace("\n","");
+            			props.description = Ext.util.Format.ellipsis(props.description, 100);
+            			if (props.description.toUpperCase() == "NONE") {
+            				props.description = null;
+            			}
+	            	}
+	            	
+	            	if (doc.prov_short) {
+	            		props.creator = doc.prov_short;
+	            	}
+	            	
+	            	if (props.uri && (uris.indexOf(props.uri) == -1)) {
+	            		coList.push(props);
+	            		uris.push(props.uri);
+	            	}
+		    	}
+                lore.ore.coListManager.add(coList, "search");
+		    }, params);
+	        
 	    } catch (e) {
 	        lore.debug.ore("Error: Unable to retrieve Resource Maps",e);
 	        lore.ore.ui.vp.warning("Unable to retrieve Resource Maps");
@@ -441,7 +541,7 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
         var bindings, node, attr, nodeVal;
         props.title = "Untitled";
         props.creator = "Anonymous";
-        props.isObject = false;
+        props.entryType = lore.constants.COMPOUND_OBJECT_TYPE;
         try {  
            bindings = result.getElementsByTagName('binding');
            for (var j = 0; j < bindings.length; j++){  

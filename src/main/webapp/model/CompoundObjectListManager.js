@@ -37,9 +37,11 @@ lore.ore.model.CompoundObjectListManager = function(){
                     }, {
                         "name" : "isPrivate"
                     }, {
-                    	"name" : "isObject"
+                    	"name" : "entryType"
                     }, {
                     	"name" : "type"
+                    }, {
+                    	"name" : "description"                    	
                     }]
        }),
        "browse" : new Ext.ux.data.PagingJsonStore({
@@ -73,9 +75,11 @@ lore.ore.model.CompoundObjectListManager = function(){
                     }, {
                         "name" : "isPrivate"
                     }, {
-                    	"name" : "isObject"
+                    	"name" : "entryType"
                     }, {
                     	"name" : "type"
+                    }, {
+                    	"name" : "description"                    	
                     }]
        }),
         "history" : new Ext.ux.data.PagingJsonStore({
@@ -109,9 +113,11 @@ lore.ore.model.CompoundObjectListManager = function(){
                     }, {
                         "name" : "isPrivate"
                     }, {
-                    	"name" : "isObject"
+                    	"name" : "entryType"
                     }, {
                     	"name" : "type"
+                    }, {
+                    	"name" : "description"                    	
                     }]
        })
     };
