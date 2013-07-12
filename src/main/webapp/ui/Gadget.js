@@ -453,6 +453,17 @@ Ext.onReady(function() {
 									    frame:true,
 									    defaults:{autoHeight: true},
 									    applyTo: 'tabs2',
+							            listeners: {
+							                'tabchange': function(tabPanel, tab){
+							                    if (Ext.get("searchResultPanel")) {
+							                    	if (tab.title == "Keyword") { 
+							                    		Ext.get("cosview").dom.parentElement.style.height = "432px";
+							                    	} else {
+							                    		Ext.get("cosview").dom.parentElement.style.height = "316px";
+							                    	}
+							                    }
+							                }
+							            },
 									    items : [ 
 									        new Ext.Panel({
 									         	layout : "hbox",
@@ -535,6 +546,8 @@ Ext.onReady(function() {
 	    							    border : false,
 	    							    layout: "anchor",
 	    							    "id": "searchResultPanel",
+	    							    tbarStyle: "height: 27px",
+	    							    bodyStyle: "height: 432px",
 	    							    autoScroll: true, 
 	    							    "tbar": {
 	    							        "xtype": "pagingToolbar",

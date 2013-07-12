@@ -12,9 +12,9 @@ lore.ore.ui.CompoundObjectDataView = Ext.extend(Ext.DataView, {
                 '<tpl if="entryType.match(lore.constants.COMPOUND_OBJECT_TYPE)"><div class="coListing" onclick="lore.ore.controller.loadCompoundObjectFromURL(\'{uri}\')"></tpl>',
                     '<table><tr valign="top"><td>{[this.genNumber(values.uri)]}</td><td>',
                     '<div style="float:left;padding:2px;">',
-                    '<tpl if="lore.ore.reposAdapter && uri.match(lore.ore.reposAdapter.idPrefix) && entryType.match(lore.constants.COMPOUND_OBJECT_TYPE)"><img src="' + lore.constants.baseUrl + 'skin/icons/oaioreicon-sm.png"></tpl>',
-                    '<tpl if="lore.ore.reposAdapter && !uri.match(lore.ore.reposAdapter.idPrefix) && entryType.match(lore.constants.COMPOUND_OBJECT_TYPE)"><img src="' + lore.constants.baseUrl + 'skin/icons/oaioreicon-grey.png"></tpl>',
-                    '<tpl if="!entryType.match(lore.constants.COMPOUND_OBJECT_TYPE)"><img src="' + lore.constants.baseUrl + 'skin/icons/object.png"></tpl>',
+                    '<tpl if="lore.ore.reposAdapter && uri.match(lore.ore.reposAdapter.idPrefix) && !(entryType.match(lore.constants.BASIC_OBJECT_TYPE) || entryType.match(lore.constants.HUNI_OBJECT_TYPE))"><img src="' + lore.constants.baseUrl + 'skin/icons/oaioreicon-sm.png"></tpl>',
+                    '<tpl if="lore.ore.reposAdapter && !uri.match(lore.ore.reposAdapter.idPrefix) && !(entryType.match(lore.constants.BASIC_OBJECT_TYPE) || entryType.match(lore.constants.HUNI_OBJECT_TYPE))"><img src="' + lore.constants.baseUrl + 'skin/icons/oaioreicon-grey.png"></tpl>',
+                    '<tpl if="entryType.match(lore.constants.BASIC_OBJECT_TYPE) || entryType.match(lore.constants.HUNI_OBJECT_TYPE)"><img src="' + lore.constants.baseUrl + 'skin/icons/object.png"></tpl>',
                     '<tpl if="isPrivate"><img style="float:left;position:absolute;left:11px" src="' + lore.constants.baseUrl + 'skin/icons/eye.png"></tpl>',
                     '</div>',
                     '<div style="padding-left: 20px;">{title}</div>',
@@ -144,25 +144,22 @@ lore.ore.ui.CompoundObjectDataView = Ext.extend(Ext.DataView, {
                    
                    cm.add(cm.addCompound);
                    
-                   cm.addHuni = new Ext.menu.Item({
+                   cm.addResource = new Ext.menu.Item({
                        text : "Add to graphical editor",
                        iconCls: "add-icon",
                        scope: this,
                        handler : function(obj,evt) {
-                    	   	var ge = lore.ore.ui.graphicalEditor;
-   		            		var coGraph = ge.coGraph;
-   		            		var figopts = {
-   		            			url : this.sel.data.uri,
-   		            			props : {
-   		            				"dc:type_0" : this.sel.data.type,
+                           lore.ore.ui.graphicalEditor.addFigure({
+                        	   url:this.sel.data.uri,
+                               props:{
+   		            				//"dc:type_0" : this.sel.data.type,
    		            				"dc:title_0" : this.sel.data.title
-   		            			}
-   		            		};
-   		            		ge.addFigure(figopts);
+                               }
+                           });
                        }
                     });
                     
-                    cm.add(cm.addHuni);
+                    cm.add(cm.addResource);
                    
                    cm.showBrowser = new Ext.menu.Item({
                        text : "View resource in browser",
@@ -199,7 +196,7 @@ lore.ore.ui.CompoundObjectDataView = Ext.extend(Ext.DataView, {
                         menu.remoteLoad.hide();
                         menu.addBasic.hide();
                         menu.addCompound.hide();
-                        menu.addHuni.hide();
+                        menu.addResource.hide();
                         menu.showBrowser.hide();
                     } else if(this.sel.data.entryType == lore.constants.COMPOUND_OBJECT_TYPE){
                         menu.addResourceMap.show();
@@ -209,7 +206,7 @@ lore.ore.ui.CompoundObjectDataView = Ext.extend(Ext.DataView, {
                         menu.remoteMsg.show();
                         menu.addBasic.hide();
                         menu.addCompound.hide();
-                        menu.addHuni.hide();
+                        menu.addResource.hide();
                         menu.showBrowser.hide();
                     } else if(this.sel.data.entryType == lore.constants.HUNI_OBJECT_TYPE){
                         menu.addResourceMap.hide();
@@ -219,7 +216,7 @@ lore.ore.ui.CompoundObjectDataView = Ext.extend(Ext.DataView, {
                         menu.remoteMsg.hide();
                         menu.addBasic.hide();
                         menu.addCompound.hide();
-                        menu.addHuni.show();
+                        menu.addResource.show();
                         menu.showBrowser.show();
                     } else {
                         menu.addResourceMap.hide();
@@ -229,7 +226,7 @@ lore.ore.ui.CompoundObjectDataView = Ext.extend(Ext.DataView, {
                         menu.remoteMsg.hide();
                         menu.addBasic.show();
                         menu.addCompound.show();
-                        menu.addHuni.hide();
+                        menu.addResource.hide();
                         menu.showBrowser.hide();
                     }
                  },this);

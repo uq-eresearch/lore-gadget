@@ -128,7 +128,7 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
 		                	x : (e.xy[0] - coGraph.getAbsoluteX() + coGraph.getScrollLeft()),
 		                	y : (e.xy[1] - coGraph.getAbsoluteY() + coGraph.getScrollTop()),
 		                	props : {
-		                    	"dc:type_0" : data.draggedRecord.data.type,
+		                    	//"dc:type_0" : data.draggedRecord.data.type,
 		                    	"dc:title_0" : data.draggedRecord.data.title
 		                	}
 		            	};
