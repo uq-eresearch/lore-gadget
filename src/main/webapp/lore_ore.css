@@ -74,6 +74,10 @@
 	list-style-image: url(./skin/icons/oaioreicon-sm.png); 
 	padding-top:2px;
 }
+.objecticon {
+	list-style-image: url(./skin/icons/object.png); 
+	padding-top:2px;
+}
 .rdficon {
 	background-image: url(./skin/icons/ore/rdf.png) !important;	
 }

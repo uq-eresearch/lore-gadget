@@ -23,6 +23,7 @@ lore.ore.model.CompoundObject = Ext.extend(Ext.util.Observable, {
                     {name: 'index', type: 'int', defaultValue: '1000'}, // for storing order information, large default value ensures resources are initially added at the end
                     {name: 'representsCO', type: 'boolean', defaultValue: false}, // indicates if this represents a nested Resource Map
                     {name: 'representsAnno',type: 'boolean', defaultValue: false}, // indicates if this represents an annotation
+                    {name: 'representsBasic', type: 'boolean', defaultValue: false}, // indicates if this represents a Basic Object
                     {name: 'isPlaceholder', type: 'boolean', defaultValue: false}, // indicates if this resource has a generated URI, being a placeholder for some concept/thing
                     {name: 'properties'} // all other properties, key is property uri, value is array of Property objects
                 ] 

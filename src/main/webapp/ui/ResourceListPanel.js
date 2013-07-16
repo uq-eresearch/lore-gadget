@@ -89,6 +89,8 @@ lore.ore.ui.ResourceListPanel = Ext.extend(Ext.grid.GridPanel,{
             iconcls = "annoicon";
         } else if (rec.get('representsCO')){
             iconcls = "oreicon";
+        } else if (rec.get('representsBasic')){
+            iconcls = "objecticon";
         } else {
             var dc = lore.constants.NAMESPACES["dc"];
             var dctype = props.getProperty(dc+"type",0);

@@ -127,8 +127,13 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
 		            		url : data.draggedRecord.data.uri,
 		                	x : (e.xy[0] - coGraph.getAbsoluteX() + coGraph.getScrollLeft()),
 		                	y : (e.xy[1] - coGraph.getAbsoluteY() + coGraph.getScrollTop()),
+		                	h: 60, 
+		                	w: 180,
+		                	oh: 170, 
+		                	rdftype : lore.constants.BASIC_OBJECT_TYPE,
 		                	props : {
 		                    	//"dc:type_0" : data.draggedRecord.data.type,
+		                		"rdf:type_0" : lore.constants.BASIC_OBJECT_TYPE,
 		                    	"dc:title_0" : data.draggedRecord.data.title
 		                	}
 		            	};
@@ -456,6 +461,7 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
         }
         var fig = null;
         var theURL = lore.util.preEncode(opts.url);
+        var figRepresentsBasic = false;
         var figRepresentsCO = false;
         var figRepresentsAnno = false;
         opts.props = opts.props || {};
@@ -495,6 +501,8 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
                             || opts.rdftype.match(lore.constants.NAMESPACES["vanno"]) 
                             || opts.rdftype.match(lore.constants.NAMESPACES["annoreply"])){
                     figRepresentsAnno = true;
+                } else if (opts.rdftype.match(lore.constants.BASIC_OBJECT_TYPE)) {
+                	figRepresentsBasic = true;
                 }
             }
             if (!opts.batch){
@@ -523,6 +531,7 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
                         title: title,
                         representsCO: figRepresentsCO,
                         representsAnno: figRepresentsAnno,
+                        representsBasic: figRepresentsBasic,
                         isPlaceholder: opts.placeholder,
                         properties: figProps
                         

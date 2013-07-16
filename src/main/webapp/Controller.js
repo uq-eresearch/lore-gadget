@@ -1193,7 +1193,7 @@ Ext.apply(lore.ore.Controller.prototype, {
 	    }, params);
     },
     loadHuNICompoundObject : function(title, uri, rdf, x, y) {
-    	var props = {"dc:title_0" : title};
+    	var props = {"dc:title_0" : title, "rdftype" : lore.constants.BASIC_OBJECT_TYPE};
     	                
         var rdfDoc;
         if (typeof rdf != 'object') {
@@ -1244,9 +1244,11 @@ Ext.apply(lore.ore.Controller.prototype, {
         
         if (x && y) {
         	lore.ore.ui.graphicalEditor.addFigure({url:uri, props: props, 
+            	rdftype : lore.constants.BASIC_OBJECT_TYPE,
         		x: x, y: y, oh: 170, h: 30, w: 180}, true);
         } else {
         	lore.ore.ui.graphicalEditor.addFigure({url:uri, props: props, 
+            	rdftype : lore.constants.BASIC_OBJECT_TYPE,
             	oh: 170, h: 30, w: 180}, true);
         }
         

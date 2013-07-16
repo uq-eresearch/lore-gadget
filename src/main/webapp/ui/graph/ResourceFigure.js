@@ -446,6 +446,8 @@ Ext.extend(lore.ore.ui.graph.ResourceFigure, lore.ore.ui.graph.EntityFigure, {
                         || rdftype.match(lore.constants.NAMESPACES["annoreply"]))){
             this.icontype = "annoicon";
             typeTitle = "Annotation";
+        } else if (rdftype && (rdftype.match(lore.constants.BASIC_OBJECT_TYPE))){
+        	this.icontype = "objecticon";
         } else if (overrideType){
             this.icontype = lore.ore.controller.lookupIcon(overrideType,true);
         } else if (dctype){
