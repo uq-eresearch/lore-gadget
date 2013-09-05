@@ -21,9 +21,8 @@ Ext.onReady(function() {
     });
     
     lore.ore.ui.vp = new lore.ore.ui.Viewport();
-    lore.ore.reposAdapter = new lore.ore.repos.SPARQLAdapter(
-    		//"http://localhost/op", "/data", "http://localhost/op/data/");
-    		"http://corbicula.huni.net.au/dataset", "/graph-store", "http://corbicula.huni.net.au/dataset/data/");
+    lore.ore.reposAdapter = new lore.ore.repos.SPARQLAdapter(lore.constants.repositoryBaseURL, 
+    		lore.constants.repositoryGraphStoreEndPoint , lore.constants.repositoryGraphNamePrefix);
     lore.ore.coListManager = new lore.ore.model.CompoundObjectListManager();
     lore.ore.historyManager = new lore.ore.model.HistoryManager(lore.ore.coListManager);
     lore.ore.cache = new lore.ore.model.CompoundObjectCache();  
@@ -182,7 +181,7 @@ Ext.onReady(function() {
 	                            id : "remlistview",
 	                            iconCls: "list-icon",
 		                        style: "height: 100%; overflow: auto;"
-	                        },  {
+	                        },{
 	                            title : "Details",
 	                            id: "remdetailsview",
 	                            tabTip: "View detailed description of Resource Map contents including properties and relationships",

@@ -42,6 +42,14 @@ lore.ore.model.CompoundObjectListManager = function(){
                     	"name" : "type"
                     }, {
                     	"name" : "description"                    	
+                    }, {
+                    	"name" : "latitude"
+                    }, {
+                    	"name" : "longitude"
+                    }, {
+                    	"name" : "date_begin"
+                    }, {
+                    	"name" : "date_end"
                     }]
        }),
        "browse" : new Ext.ux.data.PagingJsonStore({
@@ -80,6 +88,14 @@ lore.ore.model.CompoundObjectListManager = function(){
                     	"name" : "type"
                     }, {
                     	"name" : "description"                    	
+                    }, {
+                    	"name" : "latitude"
+                    }, {
+                    	"name" : "longitude"
+                    }, {
+                    	"name" : "date_begin"
+                    }, {
+                    	"name" : "date_end"
                     }]
        }),
         "history" : new Ext.ux.data.PagingJsonStore({
@@ -118,6 +134,14 @@ lore.ore.model.CompoundObjectListManager = function(){
                     	"name" : "type"
                     }, {
                     	"name" : "description"                    	
+                    }, {
+                    	"name" : "latitude"
+                    }, {
+                    	"name" : "longitude"
+                    }, {
+                    	"name" : "date_begin"
+                    }, {
+                    	"name" : "date_end"
                     }]
        })
     };

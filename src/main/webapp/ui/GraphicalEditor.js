@@ -123,6 +123,24 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
 		        	} else if (data.draggedRecord.data.entryType == lore.constants.HUNI_OBJECT_TYPE) {
 		        		var ge = lore.ore.ui.graphicalEditor;
 		            	var coGraph = ge.coGraph;
+		            	
+                 	    var objProps = {
+		                    //"rdf:type_0" : lore.constants.BASIC_OBJECT_TYPE,
+		                    "dc:title_0" : data.draggedRecord.data.title
+		                };
+		                if (data.draggedRecord.data.latitude){
+		                    objProps["dc:latitude_0"] = data.draggedRecord.data.latitude;
+		                }
+		                if (data.draggedRecord.data.longitude){
+		                    objProps["dc:longitude_0"] = data.draggedRecord.data.longitude;
+		                }
+	                    if (data.draggedRecord.data.date_begin) {
+	                	    objProps["dc:date-begin_0"] = data.draggedRecord.data.date_begin;
+	                    }
+	                    if (data.draggedRecord.data.date_end) {
+	                 	    objProps["dc:date-end_0"] = data.draggedRecord.data.date_end;
+	                    }
+		            	
 		            	var figopts = {
 		            		url : data.draggedRecord.data.uri,
 		                	x : (e.xy[0] - coGraph.getAbsoluteX() + coGraph.getScrollLeft()),
@@ -130,12 +148,8 @@ lore.ore.ui.graphicalEditor = Ext.extend(Ext.Panel,{
 		                	h: 60, 
 		                	w: 180,
 		                	oh: 170, 
-		                	rdftype : lore.constants.BASIC_OBJECT_TYPE,
-		                	props : {
-		                    	//"dc:type_0" : data.draggedRecord.data.type,
-		                		"rdf:type_0" : lore.constants.BASIC_OBJECT_TYPE,
-		                    	"dc:title_0" : data.draggedRecord.data.title
-		                	}
+		                	//rdftype : lore.constants.BASIC_OBJECT_TYPE,
+		                	props : objProps
 		            	};
 		            	ge.addFigure(figopts);
 		        	} else if (data.draggedRecord.data.entryType == lore.constants.COMPOUND_OBJECT_TYPE) {

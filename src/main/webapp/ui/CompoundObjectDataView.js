@@ -148,13 +148,30 @@ lore.ore.ui.CompoundObjectDataView = Ext.extend(Ext.DataView, {
                        text : "Add to graphical editor",
                        iconCls: "add-icon",
                        scope: this,
-                       handler : function(obj,evt) {
+                       handler : function(obj,evt) {      
+                    	   var objProps = {
+  		                	   //"rdf:type_0" : lore.constants.BASIC_OBJECT_TYPE,
+   		                       "dc:title_0" : this.sel.data.title
+   		                   };
+   		                   if (this.sel.data.latitude){
+   		                	   objProps["dc:latitude_0"] = this.sel.data.latitude;
+   		                   }
+   		                   if (this.sel.data.longitude){
+   		                	   objProps["dc:longitude_0"] = this.sel.data.longitude;
+   		                   }
+   		                   if (this.sel.data.date_begin) {
+   		                	   objProps["dc:date_begin_0"] = this.sel.data.date_begin;
+   		                   }
+   		                   if (this.sel.data.date_end) {
+   		                	   objProps["dc:date_end_0"] = this.sel.data.date_end;
+   		                   }
                            lore.ore.ui.graphicalEditor.addFigure({
-                        	   url:this.sel.data.uri,
-                               props:{
-   		            				//"dc:type_0" : this.sel.data.type,
-   		            				"dc:title_0" : this.sel.data.title
-                               }
+	   		            		url : this.sel.data.uri,
+	   		                	h: 60, 
+	   		                	w: 180,
+	   		                	oh: 170, 
+	   		                	//rdftype : lore.constants.BASIC_OBJECT_TYPE,
+	   		                	props : objProps
                            });
                        }
                     });

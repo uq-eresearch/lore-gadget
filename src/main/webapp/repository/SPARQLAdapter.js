@@ -225,11 +225,31 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
 	            	}
 	            	
 	            	if (props.description) {
-	            		props.description = props.description.replace("\n","");
             			props.description = Ext.util.Format.ellipsis(props.description, 100);
+            			
+            			while(props.description.indexOf("\n") != -1) {
+    	            		props.description = props.description.replace("\n","");
+            			}
+            			while(props.description.indexOf("\r") != -1) {
+    	            		props.description = props.description.replace("\r","");            				
+            			}
+            			
             			if (props.description.toUpperCase() == "NONE") {
             				props.description = null;
             			}
+	            	}
+	            	
+	            	if (doc.latitude) {
+	            		props.latitude = doc.latitude;
+	            	}
+	            	if (doc.longitude) {
+	            		props.longitude = doc.longitude;
+	            	}
+	            	if (doc.date_begin) {
+	            		props.date_begin = doc.date_begin;
+	            	}
+	            	if (doc.date_end) {
+	            		props.date_end = doc.date_end;
 	            	}
 	            	
 	            	if (doc.prov_short) {
@@ -302,7 +322,6 @@ lore.ore.repos.SPARQLAdapter = Ext.extend(lore.ore.repos.RepositoryAdapter,{
 		   	queryURL += encodeURIComponent("}}");
 		   	queryURL += "&output=xml";   
 		   	lore.debug.ore("SPARQLAdapter.getCompoundObjects", queryURL);
-		   	
 		    var oThis = this;
 		    var params = {};
 		    params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;

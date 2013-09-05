@@ -9,8 +9,16 @@ if (typeof lore !== "object"){
     var lore = {};   
 }
 lore.constants = {
-	 //baseUrl: "http://localhost:8080/lore/", 
-	 baseUrl: "http://115.146.93.139/virtual_lab/toolLibrary/annotation/lore-test-2/",	
+	 /*baseUrl: "http://localhost:8080/lore/", 	 
+	 repositoryBaseURL: "http://localhost/op",
+	 repositoryGraphStoreEndPoint: "/data",
+	 repositoryGraphNamePrefix: "http://localhost/op/data/",*/
+
+	 baseUrl: "http://115.146.93.139/virtual_lab/toolLibrary/annotation/lore-test-2/", 	 
+	 repositoryBaseURL: "http://corbicula.huni.net.au/dataset",
+	 repositoryGraphStoreEndPoint: "/graph-store",
+	 repositoryGraphNamePrefix: "http://corbicula.huni.net.au/dataset/data/",
+	 
      nsprefix : function(ns, defaultNS) {
         var nssize = 0;
         for (var prefix in this.NAMESPACES) {
@@ -241,7 +249,7 @@ lore.constants = {
           relIcon    : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAEXSURBVDjLY/j//z8DJZhhmBpg2POQn2wDDDof8HvOe3osYtXzDzCxuM2vP3gvfn4MJIfXAP22e0Ies58eK9r2+r//3Kf3YOIhq17eK9v95j9ITrv2jhBWA/Ra7kVEr375vXDrq/9+s57eUy+4IY0kJx2w6Nk9kFzE0uffgXIRKAboNtxlC1/+/GPljjdABc9+q+ZcM0Z3qmb5LWOQXOmml/8DZz7+qJB0hQ3FBerFNyNC5z/9nrXqxX+Pvgf35OMuSSPJSXtPfXQPJBc089F3oFwE1jBQTLkiZNtw51jq4qf/XVvuwsPAa9Kjexkrnv8HyclFXxTCGwsyERf4LctvHvPuvAePBf8pDz/Y1N45BpIbKUmZFAwAR3nW32nUrY0AAAAASUVORK5CYII="
     },
     
-    pageSize : 12
+    pageSize : 10
 };
 if (typeof Components !== "undefined"){
     // For Firefox code modules

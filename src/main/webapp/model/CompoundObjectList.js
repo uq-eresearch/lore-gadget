@@ -39,6 +39,14 @@ lore.ore.model.CompoundObjectList = Ext.extend(Ext.ux.data.PagingJsonStore, {
                     	"name" : "type"
                     }, {
                     	"name" : "description"                    	
+                    }, {
+                    	"name" : "latitude"
+                    }, {
+                    	"name" : "longitude"
+                    }, {
+                    	"name" : "date_begin"
+                    }, {
+                    	"name" : "date_end"
                     }]
        });
        lore.ore.model.CompoundObjectList.superclass.constructor.call(this,this.config);
