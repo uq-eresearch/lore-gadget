@@ -1,7 +1,7 @@
 # lore-gadget
 ---
 
-The Open Annotation lorestore OpenSocial Gadget was developed at the UQ ITEE eResearch Lab: http://itee.uq.edu.au/~eresearch
+The Open Annotation lorestore OpenSocial Gadget was developed at the [UQ ITEE eResearch Lab](http://itee.uq.edu.au/~eresearch) for the [HuNI (Humanities Networked Infrastructure)](http://huni.net.au/) project with funding from the [NeCTAR (National eResearch Collaborative Tools and Resources)](http://nectar.org.au/) program.
 
 ## About
 
